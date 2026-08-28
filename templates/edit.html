@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Memory</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --ink:#1b1b1f; --panel:#232328; --panel-2:#28282e;
+    --parchment:#ece5d6; --parchment-dim:#a7a297;
+    --brass:#b98f4f; --brass-dim:#8a6c3e; --alert:#c1666b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono', monospace;
+    background:radial-gradient(circle at 50% 0%, #26262c, var(--ink) 60%);
+    color:var(--parchment);
+    padding:40px 16px;
+  }
+  body::before{
+    content:""; position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(236,229,214,.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(236,229,214,.028) 1px, transparent 1px);
+    background-size:34px 34px;
+    pointer-events:none;
+  }
+
+  .card{
+    position:relative; z-index:1;
+    background:var(--panel);
+    width:min(520px, 92vw);
+    padding:40px 36px 34px;
+    border-radius:2px;
+    border:1px solid #333338;
+  }
+  .card::before{
+    content:""; position:absolute; top:14px; bottom:14px; left:0; width:1px;
+    background:repeating-linear-gradient(to bottom, var(--brass-dim) 0 6px, transparent 6px 12px);
+  }
+
+  .eyebrow{
+    font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::after{ content:""; flex:1; height:1px; background:#3a3a41; }
+
+  h1{
+    font-family:'Fraunces', serif; font-weight:600; font-size:24px;
+    margin:0 0 26px; color:var(--parchment);
+  }
+
+  label{
+    display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--parchment-dim); margin-bottom:6px;
+  }
+  .field{ margin-bottom:22px; }
+
+  textarea, input[type="file"]{
+    width:100%;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    color:var(--parchment);
+    background:var(--panel-2);
+    border:1px solid #3a3a41;
+    border-radius:2px;
+    padding:12px 14px;
+    outline:none;
+  }
+  textarea{ resize:vertical; min-height:70px; }
+  textarea:focus, input[type="file"]:focus{ border-color:var(--brass); }
+
+  .photo-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(84px, 1fr));
+    gap:10px;
+  }
+  .photo-item{
+    position:relative;
+  }
+  .photo-item img{
+    width:100%; aspect-ratio:1/1; object-fit:cover;
+    border-radius:2px; border:1px solid #3a3a41;
+    display:block;
+  }
+  .photo-item label.remove{
+    position:absolute; top:4px; right:4px;
+    display:flex; align-items:center; gap:4px;
+    background:rgba(27,27,31,.85);
+    padding:3px 6px;
+    border-radius:2px;
+    font-size:10px;
+    color:var(--alert);
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    cursor:pointer;
+  }
+  .photo-item input[type="checkbox"]{ accent-color:var(--alert); margin:0; }
+
+  .hint{
+    font-size:11px;
+    color:var(--parchment-dim);
+    margin-top:8px;
+  }
+
+  .row{ display:flex; gap:10px; margin-top:8px; }
+  button, .cancel{
+    flex:1;
+    text-align:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px; letter-spacing:.05em; text-transform:uppercase;
+    padding:13px 16px; border-radius:2px; cursor:pointer;
+    text-decoration:none;
+  }
+  button{ background:var(--brass); color:var(--ink); border:none; }
+  button:hover{ background:#c9a05e; }
+  .cancel{ background:var(--panel-2); color:var(--parchment-dim); border:1px solid #3a3a41; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="eyebrow">Edit Entry #{{ memory.id }}</div>
+  <h1>Edit Memory</h1>
+
+  <form method="POST" enctype="multipart/form-data" action="{{ url_for('edit_memory', memory_id=memory.id) }}">
+
+    <div class="field">
+      <label for="description">Caption</label>
+      <textarea id="description" name="description">{{ memory.description }}</textarea>
+    </div>
+
+    <div class="field">
+      <label>Current photos</label>
+      <div class="photo-grid">
+        {% for photo in memory.photos %}
+        <div class="photo-item">
+          <img src="{{ url_for('static', filename='uploads/' + photo.filename) }}" alt="">
+          <label class="remove">
+            <input type="checkbox" name="remove_photos" value="{{ photo.id }}">
+            Remove
+          </label>
+        </div>
+        {% else %}
+        <p class="hint">No photos yet.</p>
+        {% endfor %}
+      </div>
+      <p class="hint">Check "Remove" on any photo you want to delete, then save.</p>
+    </div>
+
+    <div class="field">
+      <label for="new_photos">Add more photos</label>
+      <input id="new_photos" type="file" name="new_photos" accept="image/*" multiple>
+    </div>
+
+    <div class="row">
+      <a class="cancel" href="{{ url_for('admin_dashboard') }}">Cancel</a>
+      <button type="submit">Save Changes</button>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

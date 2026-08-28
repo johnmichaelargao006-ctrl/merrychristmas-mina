@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Something Special For You</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+  :root{
+    --blush:#f7e9ea;
+    --blush-2:#f1dde0;
+    --wine:#6b2737;
+    --deep-rose:#a83a54;
+    --cream:#fffaf4;
+    --gold:#c99a4a;
+    --pine:#3f5c4e;
+    --ink:#3a2a2f;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Cormorant Garamond', serif;
+    background:
+      radial-gradient(circle at 15% 20%, var(--blush-2), transparent 45%),
+      radial-gradient(circle at 85% 80%, var(--blush-2), transparent 45%),
+      radial-gradient(circle, rgba(169,58,84,.07) 1.5px, transparent 1.5px),
+      var(--blush);
+    background-size:auto, auto, 46px 46px, auto;
+    overflow:hidden;
+    position:relative;
+  }
+
+  /* falling snow */
+  #snow{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:1;
+  }
+  .flake{
+    position:absolute;
+    top:-10px;
+    color:var(--gold);
+    opacity:.55;
+    user-select:none;
+    animation-name:fall;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) translateX(var(--drift,0px)); }
+  }
+
+  .card{
+    position:relative;
+    z-index:2;
+    background:var(--cream);
+    width:min(420px, 90vw);
+    padding:56px 40px 44px;
+    border-radius:4px;
+    box-shadow:0 30px 60px -20px rgba(107,39,55,.25), 0 2px 0 var(--gold);
+    text-align:center;
+  }
+
+  /* gift-tag ribbon tab at top of card */
+  .tag{
+    position:absolute;
+    top:-22px;
+    left:50%;
+    transform:translateX(-50%) rotate(-3deg);
+    background:var(--wine);
+    color:var(--cream);
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:14px;
+    letter-spacing:.05em;
+    padding:6px 18px;
+    border-radius:2px;
+    box-shadow:0 6px 14px -6px rgba(0,0,0,.35);
+  }
+  .tag::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-6px;
+    width:2px;
+    height:12px;
+    background:var(--gold);
+    transform:translateX(-50%);
+  }
+
+  .icon{
+    font-size:22px;
+    display:block;
+    margin-bottom:6px;
+  }
+
+  h1{
+    font-family:'Playfair Display', serif;
+    font-weight:600;
+    font-size:30px;
+    color:var(--wine);
+    margin:0 0 6px;
+    letter-spacing:.01em;
+  }
+
+  p.sub{
+    color:var(--ink);
+    opacity:.75;
+    font-size:18px;
+    margin:0 0 30px;
+    line-height:1.4;
+  }
+
+  form{ display:flex; flex-direction:column; gap:16px; }
+
+  .field{
+    position:relative;
+  }
+  .field input{
+    width:100%;
+    font-family:'Cormorant Garamond', serif;
+    font-size:18px;
+    padding:14px 16px 14px 40px;
+    border:1px solid #e3cfd3;
+    background:#fffdfb;
+    border-radius:3px;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .field input::placeholder{ color:#b79aa0; font-style:italic; }
+  .field input:focus{
+    border-color:var(--deep-rose);
+    box-shadow:0 0 0 3px rgba(168,58,84,.12);
+  }
+  .field .lock{
+    position:absolute;
+    left:14px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:15px;
+    opacity:.65;
+  }
+
+  button{
+    margin-top:6px;
+    font-family:'Playfair Display', serif;
+    font-weight:600;
+    font-size:16px;
+    letter-spacing:.03em;
+    color:var(--cream);
+    background:linear-gradient(135deg, var(--deep-rose), var(--wine));
+    border:none;
+    padding:14px 20px;
+    border-radius:3px;
+    cursor:pointer;
+    box-shadow:0 10px 22px -10px rgba(107,39,55,.55);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  button:hover{ transform:translateY(-1px); box-shadow:0 14px 26px -10px rgba(107,39,55,.6); }
+  button:active{ transform:translateY(0); }
+
+  .hint{
+    margin-top:18px;
+    font-size:14px;
+    color:var(--pine);
+    opacity:.8;
+  }
+
+  .back{
+    display:inline-block;
+    margin-top:10px;
+    font-size:14px;
+    color:var(--deep-rose);
+    text-decoration:none;
+    border-bottom:1px solid transparent;
+  }
+  .back:hover{ border-bottom-color:var(--deep-rose); }
+
+  .error{
+    background:#fbe9ea;
+    color:#9b2f3a;
+    border:1px solid #f0c6cb;
+    font-family:'Cormorant Garamond', serif;
+    font-size:15px;
+    padding:10px 14px;
+    border-radius:3px;
+    margin-bottom:4px;
+  }
+</style>
+</head>
+<body>
+
+<div id="snow"></div>
+
+<div class="card">
+  <div class="tag">a keepsake, wrapped for you</div>
+  <span class="icon">🤍</span>
+  <h1>Something Special For You</h1>
+  <p class="sub">Enter the password to unlock our little winter of memories.</p>
+
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+  <form method="POST" action="{{ url_for('gallery_login') }}">
+    <div class="field">
+      <span class="lock">🔒</span>
+      <input type="password" name="password" placeholder="Enter password…" required autofocus>
+    </div>
+    <button type="submit">✧ View Our Memories ✧</button>
+  </form>
+
+  <p class="hint">The password was sent to you 🔑</p>
+  <a class="back" href="{{ url_for('welcome') }}">← Back to Welcome Page</a>
+</div>
+
+<script>
+  // gentle falling snow, built once on load
+  const container = document.getElementById('snow');
+  const glyphs = ['❄', '❅', '❆', '·'];
+  const COUNT = 34;
+
+  for (let i = 0; i < COUNT; i++) {
+    const f = document.createElement('span');
+    f.className = 'flake';
+    f.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+    const size = 10 + Math.random() * 16;
+    const left = Math.random() * 100;
+    const duration = 9 + Math.random() * 10;
+    const delay = Math.random() * -20;
+    const drift = (Math.random() * 80 - 40) + 'px';
+
+    f.style.left = left + 'vw';
+    f.style.fontSize = size + 'px';
+    f.style.setProperty('--drift', drift);
+    f.style.animationDuration = duration + 's';
+    f.style.animationDelay = delay + 's';
+
+    container.appendChild(f);
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --ink:#1b1b1f;
+    --panel:#232328;
+    --panel-2:#28282e;
+    --parchment:#ece5d6;
+    --parchment-dim:#a7a297;
+    --brass:#b98f4f;
+    --brass-dim:#8a6c3e;
+    --alert:#c1666b;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'JetBrains Mono', monospace;
+    background:
+      radial-gradient(circle at 50% 0%, #26262c, var(--ink) 60%);
+    color:var(--parchment);
+    position:relative;
+  }
+
+  /* faint ledger grid texture */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(rgba(236,229,214,.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(236,229,214,.028) 1px, transparent 1px);
+    background-size:34px 34px;
+    pointer-events:none;
+  }
+
+  .card{
+    position:relative;
+    background:var(--panel);
+    width:min(380px, 90vw);
+    padding:44px 38px 36px;
+    border-radius:2px;
+    border:1px solid #333338;
+  }
+
+  /* ledger-binding stitch on the left edge */
+  .card::before{
+    content:"";
+    position:absolute;
+    top:14px; bottom:14px; left:0;
+    width:1px;
+    background:repeating-linear-gradient(
+      to bottom, var(--brass-dim) 0 6px, transparent 6px 12px
+    );
+  }
+
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin-bottom:14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .eyebrow::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:#3a3a41;
+  }
+
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:26px;
+    color:var(--parchment);
+    margin:0 0 6px;
+  }
+
+  p.sub{
+    font-size:13px;
+    color:var(--parchment-dim);
+    margin:0 0 30px;
+    line-height:1.5;
+  }
+
+  label{
+    display:block;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--parchment-dim);
+    margin-bottom:6px;
+  }
+
+  .field{ margin-bottom:18px; }
+
+  input{
+    width:100%;
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px;
+    color:var(--parchment);
+    background:var(--panel-2);
+    border:1px solid #3a3a41;
+    border-radius:2px;
+    padding:12px 14px;
+    outline:none;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  input::placeholder{ color:#5c5c63; }
+  input:focus{
+    border-color:var(--brass);
+    background:#2c2c33;
+  }
+
+  button{
+    width:100%;
+    margin-top:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-weight:500;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink);
+    background:var(--brass);
+    border:none;
+    padding:13px 16px;
+    border-radius:2px;
+    cursor:pointer;
+    transition:background .15s ease, transform .15s ease;
+  }
+  button:hover{ background:#c9a05e; transform:translateY(-1px); }
+  button:active{ transform:translateY(0); }
+
+  .back{
+    display:block;
+    text-align:center;
+    margin-top:22px;
+    font-size:12px;
+    color:var(--parchment-dim);
+    text-decoration:none;
+  }
+  .back:hover{ color:var(--brass); }
+
+  .error{
+    background:rgba(193,102,107,.12);
+    border:1px solid rgba(193,102,107,.4);
+    color:var(--alert);
+    font-size:12px;
+    padding:10px 12px;
+    border-radius:2px;
+    margin-bottom:18px;
+  }
+
+  .keyhole{
+    width:34px; height:34px;
+    border-radius:50%;
+    border:1px solid var(--brass-dim);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    color:var(--brass);
+    margin-bottom:18px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="keyhole">⌁</div>
+  <div class="eyebrow">Restricted</div>
+  <h1>Admin Access</h1>
+  <p class="sub">Sign in to manage memories and view visitor sessions.</p>
+
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+  <form method="POST" action="{{ url_for('admin_login') }}">
+    <div class="field">
+      <label for="username">Username</label>
+      <input id="username" type="text" name="username" placeholder="username" required autofocus>
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" name="password" placeholder="••••••••" required>
+    </div>
+    <button type="submit">Sign In</button>
+  </form>
+
+  <a class="back" href="{{ url_for('welcome') }}">← Back to Welcome</a>
+</div>
+
+</body>
+</html>

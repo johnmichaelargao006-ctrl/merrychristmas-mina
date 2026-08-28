@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory — {{ memory.title or 'Special Memory' }}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    position: relative;
+    overflow-x: hidden;
+    color: #ffffff;
+    background: none;
+  }
+
+  /* ✅ BRIGHT BACKGROUND VIDEO */
+  .bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center center;
+    z-index: -3;
+    filter: brightness(1.4) contrast(1.1) saturate(1.2);
+    transform: scale(1.05);
+  }
+
+  .bg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .sparkle {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    width: 95%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px 20px;
+    text-align: center;
+  }
+
+  header {
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 42px;
+    color: #b84075;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+  }
+  h1::before { content: "✨ "; }
+  h1::after { content: " ✨"; }
+
+  /* ✅ PHOTO VIEWER */
+  .photo-viewer {
+    position: relative;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 20px;
+    padding: 25px;
+    margin: 20px auto 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    max-width: 900px;
+  }
+
+  .main-photo-container {
+    position: relative;
+    width: 100%;
+    min-height: 550px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .main-photo {
+    max-width: 100%;
+    max-height: 600px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+
+  /* ✅ PREV / NEXT BUTTONS */
+  .nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff7eb8, #c94880);
+    color: #fff;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+  }
+  .nav-btn.prev-btn { left: 15px; }
+  .nav-btn.next-btn { right: 15px; }
+
+  /* ✅ PHOTO COUNTER */
+  .photo-counter {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: bold;
+  }
+
+  /* ✅ VIEW MESSAGE BUTTON */
+  .view-message-btn {
+    margin: 10px 0 30px;
+    padding: 14px 35px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(135deg, #ff7eb8, #c94880);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+  .view-message-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ✅ POPUP MESSAGE */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+  }
+  .modal.show {
+    display: flex;
+  }
+
+  .modal-content {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 35px;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 2px solid #b84075;
+  }
+
+  .modal-content h2 {
+    color: #ff7eb8;
+    margin-bottom: 20px;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .modal-content p {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    color: #ffffff;
+  }
+
+  .close-btn {
+    background: linear-gradient(135deg, #ff7eb8, #c94880);
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  /* ✅ THUMBNAILS */
+  .thumbnails-title {
+    font-size: 16px;
+    color: #d65890;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px rgba(0,0,0,0.6);
+  }
+  .thumbnails {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .thumb {
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 3px solid transparent;
+  }
+  .thumb.active {
+    border-color: #d65890;
+  }
+
+  /* ✅ BACK TO GALLERY BUTTON */
+  .back-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    font-size: 16px;
+    color: #fff;
+    background: linear-gradient(135deg, #ff7eb8, #c94880);
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    margin-bottom: 40px;
+  }
+
+  /* ✅ FOOTER — BLACK TEXT FOR EASY READING */
+  footer {
+    text-align: center;
+    padding: 20px 15px;
+    margin-top: 20px;
+    color: #000000; /* ✅ BLACK TEXT — EASY TO READ! */
+    font-size: 15px;
+    letter-spacing: 1px;
+    font-weight: bold;
+  }
+  footer strong {
+    color: #b84075; /* ✅ Your name stays pink and highlighted */
+    font-weight: bold;
+  }
+  .footer-date {
+    font-size: 13px;
+    color: #000000; /* ✅ BLACK DATE — EASY TO READ! */
+    margin-top: 5px;
+    display: block;
+  }
+
+  /* ✅ MOBILE */
+  @media (max-width: 600px) {
+    h1 { font-size: 28px; }
+    .main-photo-container { min-height: 350px; }
+    .main-photo { max-height: 400px; }
+    .nav-btn { width: 42px; height: 42px; font-size: 18px; }
+    .thumb { width: 70px; height: 70px; }
+    .modal-content { padding: 25px; }
+    .modal-content p { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ✅ BRIGHT BACKGROUND VIDEO -->
+<video class="bg-video" autoplay muted loop playsinline>
+  <source src="{{ url_for('static', filename='uploads/petal-bg.mp4') }}" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+<div class="bg-overlay"></div>
+
+<div class="container">
+  <header>
+    <h1>{{ memory.title or 'A Special Memory' }}</h1>
+  </header>
+
+  <!-- ✅ PHOTO VIEWER -->
+  <div class="photo-viewer">
+    <div class="main-photo-container">
+      {% set first_photo = memory.photos[0] if memory.photos else None %}
+      {% if first_photo %}
+      <img id="mainImage" class="main-photo" src="{{ url_for('static', filename='uploads/' + first_photo.filename) }}" alt="Memory Photo">
+      {% else %}
+      <p style="font-size:18px; color:#fff; font-weight:bold;">No photos in this memory yet</p>
+      {% endif %}
+    </div>
+
+    {% if memory.photos and memory.photos|length > 0 %}
+    <button class="nav-btn prev-btn" onclick="prevPhoto()">&#8249;</button>
+    <button class="nav-btn next-btn" onclick="nextPhoto()">&#8250;</button>
+    <p class="photo-counter">Photo <span id="photoIndex">1</span> of {{ memory.photos|length }}</p>
+    {% endif %}
+  </div>
+
+  <!-- ✅ VIEW MESSAGE BUTTON -->
+  <button class="view-message-btn" onclick="openMessage()">💌 Click to View My Message</button>
+
+  <!-- ✅ POPUP MESSAGE BOX -->
+  <div id="messageModal" class="modal">
+    <div class="modal-content">
+      <h2>✨ Special Message ✨</h2>
+      {% if memory.description %}
+      <p>{{ memory.description }}</p>
+      {% else %}
+      <p>You are so special to me. Thank you for being you. 🤍</p>
+      {% endif %}
+      <button class="close-btn" onclick="closeMessage()">Close</button>
+    </div>
+  </div>
+
+  <!-- ✅ THUMBNAILS -->
+  {% if memory.photos and memory.photos|length > 0 %}
+  <p class="thumbnails-title">✨ Click to view ✨</p>
+  <div class="thumbnails">
+    {% for photo in memory.photos %}
+    <img class="thumb {% if loop.index == 1 %}active{% endif %}" 
+         src="{{ url_for('static', filename='uploads/' + photo.filename) }}" 
+         alt="Thumbnail"
+         onclick="showPhoto({{ loop.index0 }})">
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ✅ BACK TO GALLERY BUTTON -->
+  <a class="back-btn" href="{{ url_for('gallery') }}">← Back to Gallery</a>
+
+  <!-- ✅ FOOTER — BLACK TEXT, EASY TO READ -->
+  <footer>
+    Made with ❤️ by <strong>Ian Argao "Koian"</strong>
+    <span class="footer-date">✨ Created: <span id="currentDate"></span> ✨</span>
+  </footer>
+</div>
+
+<script>
+  // ✅ PHOTO NAVIGATION
+  const photos = [
+    {% for photo in memory.photos %}
+      "{{ url_for('static', filename='uploads/' + photo.filename) }}",
+    {% endfor %}
+  ];
+  let currentIndex = 0;
+  const total = photos.length;
+
+  function showPhoto(index) {
+    if (index < 0) index = total - 1;
+    if (index >= total) index = 0;
+    currentIndex = index;
+    document.getElementById('mainImage').src = photos[currentIndex];
+    document.getElementById('photoIndex').textContent = currentIndex + 1;
+    document.querySelectorAll('.thumb').forEach((t, i) => {
+      t.classList.toggle('active', i === currentIndex);
+    });
+  }
+  function prevPhoto() { showPhoto(currentIndex - 1); }
+  function nextPhoto() { showPhoto(currentIndex + 1); }
+
+  // ✅ POPUP FUNCTIONS
+  function openMessage() {
+    document.getElementById('messageModal').classList.add('show');
+  }
+  function closeMessage() {
+    document.getElementById('messageModal').classList.remove('show');
+  }
+  window.onclick = function(e) {
+    const modal = document.getElementById('messageModal');
+    if (e.target === modal) {
+      modal.classList.remove('show');
+    }
+  }
+
+  // ✅ AUTO DATE IN FOOTER
+  const today = new Date();
+  const dateString = today.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  document.getElementById('currentDate').textContent = dateString;
+</script>
+
+<script>
+  // ✅ SPARKLES EFFECT
+  const colors = ['#fff8e8', '#ffeef2', '#ffe4ee', '#ffdce8', '#fff0f5'];
+  for (let i = 0; i < 35; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    const size = 4 + Math.random() * 7;
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+    s.style.background = colors[Math.floor(Math.random() * colors.length)];
+    s.style.boxShadow = `0 0 ${size * 2}px ${s.style.background}`;
+    s.style.top = (Math.random() * 100) + 'vh';
+    s.style.left = (Math.random() * 100) + 'vw';
+    s.style.opacity = 0.2 + Math.random() * 0.3;
+    document.body.appendChild(s);
+  }
+</script>
+
+</body>
+</html>

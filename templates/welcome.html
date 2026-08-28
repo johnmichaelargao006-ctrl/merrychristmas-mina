@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merry Christmas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+  :root{
+    --blush:#f7e9ea;
+    --blush-2:#f1dde0;
+    --wine:#6b2737;
+    --deep-rose:#a83a54;
+    --cream:#fffaf4;
+    --gold:#c99a4a;
+    --pine:#3f5c4e;
+    --ink:#3a2a2f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Cormorant Garamond', serif;
+    background:
+      radial-gradient(circle at 15% 20%, var(--blush-2), transparent 45%),
+      radial-gradient(circle at 85% 80%, var(--blush-2), transparent 45%),
+      radial-gradient(circle, rgba(169,58,84,.07) 1.5px, transparent 1.5px),
+      var(--blush);
+    background-size:auto, auto, 46px 46px, auto;
+    overflow:hidden;
+    position:relative;
+  }
+  #snow{ position:fixed; inset:0; pointer-events:none; z-index:1; }
+  .flake{
+    position:absolute; top:-10px; color:var(--gold); opacity:.55;
+    animation-name:fall; animation-timing-function:linear; animation-iteration-count:infinite;
+  }
+  @keyframes fall{ to{ transform:translateY(110vh) translateX(var(--drift,0px)); } }
+
+  .card{
+    position:relative;
+    z-index:2;
+    background:var(--cream);
+    width:min(460px, 90vw);
+    padding:52px 44px 46px;
+    border-radius:4px;
+    box-shadow:0 30px 60px -20px rgba(107,39,55,.25), 0 2px 0 var(--gold);
+    text-align:center;
+  }
+
+  .sprigs{
+    font-size:15px;
+    letter-spacing:.3em;
+    color:var(--pine);
+    margin-bottom:14px;
+  }
+
+  h1{
+    font-family:'Playfair Display', serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:38px;
+    color:var(--wine);
+    margin:0 0 18px;
+    line-height:1.15;
+  }
+
+  p{
+    font-size:19px;
+    color:var(--ink);
+    opacity:.8;
+    line-height:1.5;
+    margin:0 0 26px;
+  }
+
+  .line{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-size:17px;
+    color:var(--deep-rose);
+    margin-bottom:30px;
+  }
+
+  a.cta{
+    display:inline-block;
+    font-family:'Playfair Display', serif;
+    font-weight:600;
+    font-size:16px;
+    letter-spacing:.03em;
+    color:var(--cream);
+    background:linear-gradient(135deg, var(--deep-rose), var(--wine));
+    text-decoration:none;
+    padding:14px 30px;
+    border-radius:3px;
+    box-shadow:0 10px 22px -10px rgba(107,39,55,.55);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  a.cta:hover{ transform:translateY(-1px); box-shadow:0 14px 26px -10px rgba(107,39,55,.6); }
+</style>
+</head>
+<body>
+
+<div id="snow"></div>
+
+<div class="card">
+  <div class="sprigs">❆ ✦ ❆</div>
+  <h1>Merry Christmas,<br>Mina</h1>
+  <p>Wishing you the happiest holidays, filled with love, warmth, and every small joy.</p>
+  <div class="line">🤍 A little something is waiting for you 🤍</div>
+  <a class="cta" href="{{ url_for('gallery_login') }}">✧ Enter Password ✧</a>
+</div>
+
+<script>
+  const container = document.getElementById('snow');
+  const glyphs = ['❄', '❅', '❆', '·'];
+  for (let i = 0; i < 30; i++) {
+    const f = document.createElement('span');
+    f.className = 'flake';
+    f.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+    f.style.left = (Math.random() * 100) + 'vw';
+    f.style.fontSize = (10 + Math.random() * 16) + 'px';
+    f.style.setProperty('--drift', (Math.random() * 80 - 40) + 'px');
+    f.style.animationDuration = (9 + Math.random() * 10) + 's';
+    f.style.animationDelay = (Math.random() * -20) + 's';
+    container.appendChild(f);
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload New Photo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --ink:#1b1b1f; --panel:#232328; --panel-2:#28282e;
+    --parchment:#ece5d6; --parchment-dim:#a7a297;
+    --brass:#b98f4f; --brass-dim:#8a6c3e; --alert:#c1666b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono', monospace;
+    background:radial-gradient(circle at 50% 0%, #26262c, var(--ink) 60%);
+    color:var(--parchment);
+  }
+  body::before{
+    content:""; position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(236,229,214,.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(236,229,214,.028) 1px, transparent 1px);
+    background-size:34px 34px;
+    pointer-events:none;
+  }
+
+  .card{
+    position:relative; z-index:1;
+    background:var(--panel);
+    width:min(440px, 90vw);
+    padding:40px 36px 34px;
+    border-radius:2px;
+    border:1px solid #333338;
+  }
+  .card::before{
+    content:""; position:absolute; top:14px; bottom:14px; left:0; width:1px;
+    background:repeating-linear-gradient(to bottom, var(--brass-dim) 0 6px, transparent 6px 12px);
+  }
+
+  .eyebrow{
+    font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::after{ content:""; flex:1; height:1px; background:#3a3a41; }
+
+  h1{
+    font-family:'Fraunces', serif; font-weight:600; font-size:24px;
+    margin:0 0 26px; color:var(--parchment);
+  }
+
+  label{
+    display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--parchment-dim); margin-bottom:6px;
+  }
+  .field{ margin-bottom:20px; }
+
+  textarea, input[type="file"]{
+    width:100%;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    color:var(--parchment);
+    background:var(--panel-2);
+    border:1px solid #3a3a41;
+    border-radius:2px;
+    padding:12px 14px;
+    outline:none;
+  }
+  textarea{ resize:vertical; min-height:80px; }
+  textarea:focus, input[type="file"]:focus{ border-color:var(--brass); }
+
+  .flash{
+    background:rgba(193,102,107,.12);
+    border:1px solid rgba(193,102,107,.4);
+    color:var(--alert);
+    font-size:12px; padding:10px 12px; border-radius:2px;
+    margin-bottom:18px;
+  }
+
+  .row{ display:flex; gap:10px; margin-top:8px; }
+  button, .cancel{
+    flex:1;
+    text-align:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px; letter-spacing:.05em; text-transform:uppercase;
+    padding:13px 16px; border-radius:2px; cursor:pointer;
+    text-decoration:none;
+  }
+  button{ background:var(--brass); color:var(--ink); border:none; }
+  button:hover{ background:#c9a05e; }
+  .cancel{ background:var(--panel-2); color:var(--parchment-dim); border:1px solid #3a3a41; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="eyebrow">New Entry</div>
+  <h1>Upload New Photo</h1>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for m in messages %}<div class="flash">{{ m }}</div>{% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+    <div class="field">
+      <label for="description">Caption</label>
+      <textarea id="description" name="description" placeholder="A special memory…"></textarea>
+    </div>
+    <div class="field">
+      <label for="photos">Photos</label>
+      <input id="photos" type="file" name="photos" accept="image/*" multiple required>
+    </div>
+    <div class="row">
+      <a class="cancel" href="{{ url_for('admin_dashboard') }}">Cancel</a>
+      <button type="submit">Save Memory</button>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messages</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  .monitor-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: #000000;
+    z-index: 10;
+  }
+
+  .monitor-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #000000;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+  }
+
+  .home-button {
+    width: 36px;
+    height: 36px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    margin: 0 auto;
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+  }
+
+  .dog-icon {
+    font-size: 32px;
+  }
+
+  .screen-content {
+    margin: 40px 0 60px 0;
+    min-height: calc(100vh - 100px);
+    background: linear-gradient(135deg, #ffe6ef, #ffd9e6);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    padding: 40px 20px;
+  }
+
+  .screen-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(#d699b3 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.3;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .header-title {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .header-title .dots {
+    color: #d65890;
+    letter-spacing: 8px;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .header-title h1 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 28px;
+    color: #802b54;
+    margin-bottom: 5px;
+  }
+
+  .header-title p {
+    font-size: 14px;
+    color: #996680;
+    font-style: italic;
+  }
+
+  .message-box {
+    background: #fff9f5;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(184, 64, 117, 0.2);
+    overflow: hidden;
+    border: 2px solid #000000;
+  }
+
+  .messages-area {
+    padding: 25px;
+    height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .message-left {
+    align-self: flex-start;
+    background: #f2e5e9;
+    color: #4d2e3c;
+    padding: 10px 14px;
+    border-radius: 16px 16px 16px 4px;
+    max-width: 75%;
+  }
+
+  .message-right {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #d65890, #b84075);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 16px 16px 4px 16px;
+    max-width: 75%;
+  }
+
+  .message-text {
+    font-size: 15px;
+    margin-bottom: 4px;
+    word-wrap: break-word;
+  }
+
+  .message-time {
+    font-size: 10px;
+    opacity: 0.7;
+  }
+
+  .empty-thread {
+    margin: auto;
+    text-align: center;
+    color: #996680;
+    font-style: italic;
+    font-size: 15px;
+  }
+
+  .input-area {
+    display: flex;
+    gap: 10px;
+    padding: 18px 20px;
+    border-top: 1px solid #f0e0e6;
+    background: #fff;
+  }
+
+  .input-area input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #f0d9e3;
+    border-radius: 24px;
+    font-size: 14px;
+    outline: none;
+    background: #fff9fb;
+  }
+
+  .input-area input:focus {
+    border-color: #d65890;
+  }
+
+  .send-btn {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #d65890, #b84075);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .send-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .back-link {
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  .back-link a {
+    color: #d65890;
+    font-size: 13px;
+    text-decoration: none;
+    font-style: italic;
+  }
+
+  .back-link a:hover {
+    text-decoration: underline;
+  }
+
+  .messages-area::-webkit-scrollbar {
+    width: 6px;
+  }
+  .messages-area::-webkit-scrollbar-thumb {
+    background: #f0d9e3;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 768px) {
+    .monitor-top { height: 30px; }
+    .monitor-bottom { height: 50px; padding: 0 20px; }
+    .dog-icon { font-size: 24px; }
+    .home-button { width: 30px; height: 30px; }
+    .screen-content { margin: 30px 0 50px 0; min-height: calc(100vh - 80px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="monitor-top"></div>
+
+<div class="screen-content">
+  <div class="container">
+    <div class="header-title">
+      <div class="dots">✧ ✧ ✧</div>
+      <h1>A Little Note</h1>
+      <p>Say whatever's on your heart 🤍</p>
+    </div>
+
+    <div class="message-box">
+      <div class="messages-area" id="messagesArea">
+        {% for msg in thread %}
+        <div class="message-{{ 'right' if msg.sender == 'mina' else 'left' }}">
+          <div class="message-text">{{ msg.body }}</div>
+          <div class="message-time">
+            {% if msg.created_at %}
+              {{ msg.created_at.strftime('%b %d, %I:%M %p') }}
+            {% endif %}
+          </div>
+        </div>
+        {% else %}
+        <p class="empty-thread">Say hello 🤍</p>
+        {% endfor %}
+      </div>
+
+      <form method="POST" action="{{ url_for('mina_messages') }}" class="input-area">
+        <input type="text" name="body" id="messageInput" placeholder="Type a message..." required autocomplete="off">
+        <button type="submit" class="send-btn">Send</button>
+      </form>
+    </div>
+
+    <div class="back-link">
+      <a href="{{ url_for('gallery') }}">← Back to Gallery</a>
+    </div>
+  </div>
+</div>
+
+<div class="monitor-bottom">
+  <span class="dog-icon">🐶</span>
+  <div class="home-button"></div>
+  <span class="dog-icon">🐕</span>
+</div>
+
+<script>
+  const messagesArea = document.getElementById('messagesArea');
+  messagesArea.scrollTop = messagesArea.scrollHeight;
+</script>
+
+</body>
+</html>
