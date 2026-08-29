@@ -6,7 +6,6 @@
 <title>Something Special For You</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
-
   :root{
     --blush:#f7e9ea;
     --blush-2:#f1dde0;
@@ -17,9 +16,7 @@
     --pine:#3f5c4e;
     --ink:#3a2a2f;
   }
-
   *{box-sizing:border-box;}
-
   body{
     margin:0;
     min-height:100vh;
@@ -36,7 +33,6 @@
     overflow:hidden;
     position:relative;
   }
-
   /* falling snow */
   #snow{
     position:fixed;
@@ -57,7 +53,6 @@
   @keyframes fall{
     to{ transform:translateY(110vh) translateX(var(--drift,0px)); }
   }
-
   .card{
     position:relative;
     z-index:2;
@@ -68,7 +63,6 @@
     box-shadow:0 30px 60px -20px rgba(107,39,55,.25), 0 2px 0 var(--gold);
     text-align:center;
   }
-
   /* gift-tag ribbon tab at top of card */
   .tag{
     position:absolute;
@@ -95,13 +89,11 @@
     background:var(--gold);
     transform:translateX(-50%);
   }
-
   .icon{
     font-size:22px;
     display:block;
     margin-bottom:6px;
   }
-
   h1{
     font-family:'Playfair Display', serif;
     font-weight:600;
@@ -110,7 +102,6 @@
     margin:0 0 6px;
     letter-spacing:.01em;
   }
-
   p.sub{
     color:var(--ink);
     opacity:.75;
@@ -118,9 +109,7 @@
     margin:0 0 30px;
     line-height:1.4;
   }
-
   form{ display:flex; flex-direction:column; gap:16px; }
-
   .field{
     position:relative;
   }
@@ -128,7 +117,7 @@
     width:100%;
     font-family:'Cormorant Garamond', serif;
     font-size:18px;
-    padding:14px 16px 14px 40px;
+    padding:14px 48px 14px 40px; /* ✅ extra right padding for eye icon */
     border:1px solid #e3cfd3;
     background:#fffdfb;
     border-radius:3px;
@@ -149,7 +138,21 @@
     font-size:15px;
     opacity:.65;
   }
-
+  /* ✅ EYE ICON — Show/Hide Password */
+  .eye-icon{
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:17px;
+    cursor:pointer;
+    opacity:.65;
+    transition:opacity .2s ease;
+    user-select:none;
+  }
+  .eye-icon:hover{
+    opacity:1;
+  }
   button{
     margin-top:6px;
     font-family:'Playfair Display', serif;
@@ -167,14 +170,12 @@
   }
   button:hover{ transform:translateY(-1px); box-shadow:0 14px 26px -10px rgba(107,39,55,.6); }
   button:active{ transform:translateY(0); }
-
   .hint{
     margin-top:18px;
     font-size:14px;
     color:var(--pine);
     opacity:.8;
   }
-
   .back{
     display:inline-block;
     margin-top:10px;
@@ -184,7 +185,6 @@
     border-bottom:1px solid transparent;
   }
   .back:hover{ border-bottom-color:var(--deep-rose); }
-
   .error{
     background:#fbe9ea;
     color:#9b2f3a;
@@ -198,35 +198,45 @@
 </style>
 </head>
 <body>
-
 <div id="snow"></div>
-
 <div class="card">
   <div class="tag">a keepsake, wrapped for you</div>
   <span class="icon">🤍</span>
   <h1>Something Special For You</h1>
   <p class="sub">Enter the password to unlock our little winter of memories.</p>
-
   {% if error %}<div class="error">{{ error }}</div>{% endif %}
-
   <form method="POST" action="{{ url_for('gallery_login') }}">
     <div class="field">
       <span class="lock">🔒</span>
-      <input type="password" name="password" placeholder="Enter password…" required autofocus>
+      <input type="password" id="password-input" name="password" placeholder="Enter password…" required autofocus>
+      <!-- ✅ EYE ICON — Click to Toggle -->
+      <span class="eye-icon" id="eye-toggle" onclick="togglePassword()">👁️</span>
     </div>
     <button type="submit">✧ View Our Memories ✧</button>
   </form>
-
   <p class="hint">The password was sent to you 🔑</p>
   <a class="back" href="{{ url_for('welcome') }}">← Back to Welcome Page</a>
 </div>
 
 <script>
+  // ✅ Show/Hide Password Function
+  function togglePassword() {
+    const input = document.getElementById('password-input');
+    const eye = document.getElementById('eye-toggle');
+    
+    if (input.type === 'password') {
+      input.type = 'text';
+      eye.textContent = '🙈'; // Closed eye when visible
+    } else {
+      input.type = 'password';
+      eye.textContent = '👁️'; // Open eye when hidden
+    }
+  }
+
   // gentle falling snow, built once on load
   const container = document.getElementById('snow');
   const glyphs = ['❄', '❅', '❆', '·'];
   const COUNT = 34;
-
   for (let i = 0; i < COUNT; i++) {
     const f = document.createElement('span');
     f.className = 'flake';
@@ -236,16 +246,13 @@
     const duration = 9 + Math.random() * 10;
     const delay = Math.random() * -20;
     const drift = (Math.random() * 80 - 40) + 'px';
-
     f.style.left = left + 'vw';
     f.style.fontSize = size + 'px';
     f.style.setProperty('--drift', drift);
     f.style.animationDuration = duration + 's';
     f.style.animationDelay = delay + 's';
-
     container.appendChild(f);
   }
 </script>
-
 </body>
 </html>

@@ -3,210 +3,2832 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap');
 
-  :root{
-    --ink:#1b1b1f; --panel:#232328; --panel-2:#28282e;
-    --parchment:#ece5d6; --parchment-dim:#a7a297;
-    --brass:#b98f4f; --brass-dim:#8a6c3e; --alert:#c1666b;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0; min-height:100vh;
+<title>Admin Dashboard</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root{
+    --ink:#1b1b1f;
+    --panel:#232328;
+    --panel-2:#28282e;
+    --parchment:#ece5d6;
+    --parchment-dim:#a7a297;
+    --brass:#b98f4f;
+    --brass-dim:#8a6c3e;
+    --alert:#c1666b;
+    --muted:#6b6b72;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    min-height:100%;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
     font-family:'JetBrains Mono', monospace;
-    background:radial-gradient(circle at 50% 0%, #26262c, var(--ink) 60%);
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            #26262c,
+            var(--ink) 60%
+        );
     color:var(--parchment);
-    padding:48px 5vw 90px;
-  }
-  body::before{
-    content:""; position:fixed; inset:0;
+
+    padding:48px 5vw 30px;
+
+    display:flex;
+    flex-direction:column;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
     background-image:
-      linear-gradient(rgba(236,229,214,.028) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(236,229,214,.028) 1px, transparent 1px);
+        linear-gradient(
+            rgba(236,229,214,.028) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(236,229,214,.028) 1px,
+            transparent 1px
+        );
     background-size:34px 34px;
     pointer-events:none;
-  }
+    z-index:0;
+}
 
-  .top{
-    max-width:1040px; margin:0 auto 40px;
-    display:flex; align-items:center; justify-content:space-between;
-    flex-wrap:wrap; gap:16px;
-    position:relative; z-index:1;
-  }
-  h1{
-    font-family:'Fraunces', serif; font-weight:600; font-size:26px;
-    margin:0; display:flex; align-items:center; gap:10px;
-  }
-  .actions{ display:flex; gap:10px; }
-  .btn{
-    font-family:'JetBrains Mono', monospace;
-    font-size:12px; letter-spacing:.06em; text-transform:uppercase;
-    text-decoration:none;
-    padding:11px 18px;
-    border-radius:2px;
-    border:1px solid transparent;
-    transition:transform .15s ease;
-  }
-  .btn:hover{ transform:translateY(-1px); }
-  .btn.primary{ background:var(--brass); color:var(--ink); }
-  .btn.ghost{ background:var(--panel-2); color:var(--parchment-dim); border-color:#3a3a41; }
+/* =========================================
+   MAIN CONTENT
+========================================= */
 
-  .panel{
-    max-width:1040px; margin:0 auto 32px;
+.main-content{
+    flex:1;
+    width:100%;
+}
+
+/* =========================================
+   TOP
+========================================= */
+
+.top{
+    max-width:1040px;
+    margin:0 auto 40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    flex-wrap:wrap;
+    gap:16px;
+
+    position:relative;
+    z-index:1;
+}
+
+h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:26px;
+    margin:0;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+/* =========================================
+   MOBILE HAMBURGER
+========================================= */
+
+.mobile-menu-btn{
+    display:none;
+
+    width:42px;
+    height:42px;
+
+    background:var(--panel-2);
+    color:var(--parchment);
+
+    border:1px solid #3a3a41;
+    border-radius:3px;
+
+    font-size:20px;
+    cursor:pointer;
+
+    align-items:center;
+    justify-content:center;
+}
+
+.mobile-menu-btn:hover{
+    color:var(--brass);
+    border-color:var(--brass-dim);
+}
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.sidebar-overlay{
+    display:none;
+}
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:-290px;
+
+    width:270px;
+    height:100vh;
+
     background:var(--panel);
+    border-right:1px solid #3a3a41;
+
+    z-index:5000;
+
+    transition:left .25s ease;
+
+    box-shadow:10px 0 35px rgba(0,0,0,.35);
+
+    overflow-y:auto;
+}
+
+.sidebar.open{
+    left:0;
+}
+
+.sidebar-header{
+    height:70px;
+
+    padding:0 18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    border-bottom:1px solid #333338;
+}
+
+.sidebar-title{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    color:var(--parchment);
+}
+
+.sidebar-close{
+    width:35px;
+    height:35px;
+
+    background:var(--panel-2);
+    border:1px solid #3a3a41;
+
+    color:var(--parchment-dim);
+
+    cursor:pointer;
+    font-size:17px;
+}
+
+.sidebar-close:hover{
+    color:var(--brass);
+    border-color:var(--brass-dim);
+}
+
+.sidebar-nav{
+    padding:18px 12px;
+}
+
+.sidebar-section-title{
+    color:var(--parchment-dim);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+
+    padding:12px 12px 8px;
+}
+
+.sidebar-item{
+    width:100%;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:13px 12px;
+
+    margin-bottom:5px;
+
+    background:transparent;
+
+    border:1px solid transparent;
+
+    color:var(--parchment-dim);
+
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+
+    text-align:left;
+
+    cursor:pointer;
+
+    text-decoration:none;
+
+    border-radius:2px;
+}
+
+.sidebar-item:hover{
+    background:rgba(185,143,79,.10);
+    color:var(--brass);
+    border-color:#3a3a41;
+}
+
+.sidebar-item.active{
+    background:rgba(185,143,79,.14);
+    color:var(--brass);
+    border-color:var(--brass-dim);
+}
+
+.sidebar-divider{
+    height:1px;
+    background:#333338;
+    margin:14px 0;
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+
+    letter-spacing:.06em;
+    text-transform:uppercase;
+
+    text-decoration:none;
+
+    padding:11px 18px;
+
+    border-radius:2px;
+
+    border:1px solid transparent;
+
+    transition:
+        transform .15s ease,
+        background .2s ease;
+
+    cursor:pointer;
+
+    white-space:nowrap;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn.primary{
+    background:var(--brass);
+    color:var(--ink);
+}
+
+.btn.ghost{
+    background:var(--panel-2);
+    color:var(--parchment-dim);
+    border-color:#3a3a41;
+}
+
+/* =========================================
+   PANELS
+========================================= */
+
+.panel{
+    max-width:1040px;
+
+    margin:0 auto 32px;
+
+    background:var(--panel);
+
     border:1px solid #333338;
     border-radius:2px;
-    position:relative; z-index:1;
+
+    position:relative;
+    z-index:1;
+
     overflow:hidden;
-  }
-  .panel::before{
-    content:""; position:absolute; top:14px; bottom:14px; left:0; width:1px;
-    background:repeating-linear-gradient(to bottom, var(--brass-dim) 0 6px, transparent 6px 12px);
-  }
+}
 
-  .panel-header{
+.panel::before{
+    content:"";
+
+    position:absolute;
+
+    top:14px;
+    bottom:14px;
+    left:0;
+
+    width:1px;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            var(--brass-dim) 0 6px,
+            transparent 6px 12px
+        );
+}
+
+.panel-header{
     padding:20px 26px 16px;
-    font-size:13px; letter-spacing:.14em; text-transform:uppercase;
-    color:var(--brass);
-    display:flex; align-items:center; gap:8px;
-    border-bottom:1px solid #333338;
-  }
 
-  table{ width:100%; border-collapse:collapse; }
-  th, td{
-    text-align:left;
-    padding:13px 26px;
     font-size:13px;
-    border-bottom:1px solid #2c2c33;
-  }
-  th{
-    color:var(--parchment-dim);
-    font-weight:500;
+
+    letter-spacing:.14em;
     text-transform:uppercase;
+
+    color:var(--brass);
+
+    display:flex;
+    align-items:center;
+
+    gap:8px;
+
+    border-bottom:1px solid #333338;
+}
+
+/* =========================================
+   TABLE
+========================================= */
+
+.table-scroll{
+    width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+table{
+    width:100%;
+    min-width:560px;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    text-align:left;
+
+    padding:13px 26px;
+
+    font-size:13px;
+
+    border-bottom:1px solid #2c2c33;
+}
+
+th{
+    color:var(--parchment-dim);
+
+    font-weight:500;
+
+    text-transform:uppercase;
+
     letter-spacing:.06em;
+
     font-size:11px;
-  }
-  tr:last-child td{ border-bottom:none; }
-  td.dim{ color:var(--parchment-dim); }
-  .thumb-sm{
-    width:44px; height:44px; object-fit:cover; border-radius:2px;
+
+    white-space:nowrap;
+}
+
+tr:last-child td{
+    border-bottom:none;
+}
+
+td.dim{
+    color:var(--parchment-dim);
+}
+
+tr.hidden-row{
+    opacity:.45;
+    background:rgba(0,0,0,.15);
+}
+
+.empty-row td{
+    text-align:center;
+
+    color:var(--parchment-dim);
+
+    padding:26px;
+}
+
+/* =========================================
+   THUMBNAIL
+========================================= */
+
+.thumb-sm{
+    width:44px;
+    height:44px;
+
+    object-fit:cover;
+
+    border-radius:2px;
+
     border:1px solid #3a3a41;
-  }
-  .del-btn{
-    background:none; border:1px solid var(--alert); color:var(--alert);
-    font-family:'JetBrains Mono', monospace; font-size:11px;
-    padding:6px 10px; border-radius:2px; cursor:pointer;
-    text-transform:uppercase; letter-spacing:.05em;
-  }
-  .del-btn:hover{ background:rgba(193,102,107,.12); }
 
-  .empty-row td{ text-align:center; color:var(--parchment-dim); padding:26px; }
+    cursor:pointer;
 
-  footer{
-    text-align:center; margin-top:50px;
-    color:var(--parchment-dim); font-size:12px;
-    position:relative; z-index:1;
-  }
+    transition:
+        transform .15s ease,
+        border-color .15s ease;
+}
+
+.thumb-sm:hover{
+    transform:scale(1.08);
+    border-color:var(--brass);
+}
+
+/* =========================================
+   DELETE BUTTON
+========================================= */
+
+.del-btn{
+    background:none;
+
+    border:1px solid var(--alert);
+
+    color:var(--alert);
+
+    font-family:'JetBrains Mono', monospace;
+
+    font-size:11px;
+
+    padding:6px 10px;
+
+    border-radius:2px;
+
+    cursor:pointer;
+
+    text-transform:uppercase;
+
+    letter-spacing:.05em;
+
+    white-space:nowrap;
+}
+
+.del-btn:hover{
+    background:rgba(193,102,107,.12);
+}
+
+/* =========================================
+   ROW ACTION MENU
+========================================= */
+
+.menu-wrap{
+    position:relative;
+
+    display:flex;
+
+    justify-content:flex-end;
+}
+
+.burger-btn{
+    background:var(--panel-2);
+
+    border:1px solid #3a3a41;
+
+    color:var(--parchment-dim);
+
+    width:32px;
+    height:32px;
+
+    border-radius:2px;
+
+    cursor:pointer;
+
+    font-size:14px;
+
+    line-height:1;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    transition:
+        color .15s ease,
+        border-color .15s ease;
+}
+
+.burger-btn:hover,
+.burger-btn[aria-expanded="true"]{
+    color:var(--brass);
+    border-color:var(--brass-dim);
+}
+
+.dropdown-menu{
+    display:none;
+
+    position:fixed;
+
+    min-width:150px;
+
+    background:var(--panel-2);
+
+    border:1px solid #3a3a41;
+
+    border-radius:2px;
+
+    box-shadow:0 10px 28px rgba(0,0,0,.45);
+
+    z-index:1000;
+
+    overflow:hidden;
+}
+
+.dropdown-menu.open{
+    display:block;
+}
+
+.dropdown-menu form{
+    margin:0;
+}
+
+.menu-item{
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    width:100%;
+
+    padding:10px 14px;
+
+    font-size:12px;
+
+    color:var(--parchment);
+
+    background:none;
+
+    border:none;
+
+    text-align:left;
+
+    text-decoration:none;
+
+    cursor:pointer;
+
+    font-family:'JetBrains Mono', monospace;
+
+    user-select:none;
+}
+
+.menu-item:hover{
+    background:rgba(185,143,79,.14);
+    color:var(--brass);
+}
+
+.menu-item input[type="checkbox"]{
+    cursor:pointer;
+    margin:0;
+}
+
+.menu-item-danger{
+    color:var(--alert);
+}
+
+.menu-item-danger:hover{
+    background:rgba(193,102,107,.14);
+    color:var(--alert);
+}
+
+/* =========================================
+   COMMENTS & LIKES
+========================================= */
+
+.interaction-type{
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    font-size:12px;
+
+    font-weight:500;
+}
+
+.interaction-like{
+    color:#ff6b9d;
+}
+
+.interaction-comment{
+    color:var(--brass);
+}
+
+.interaction-message{
+    color:var(--parchment);
+
+    max-width:320px;
+
+    line-height:1.5;
+
+    word-break:break-word;
+}
+
+.like-count{
+    color:#ff6b9d;
+    font-weight:500;
+}
+
+.comment-count{
+    color:var(--brass);
+    font-weight:500;
+}
+
+/* =========================================
+   COMMENT BUTTON
+========================================= */
+
+.comment-button{
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:5px;
+
+    background:none;
+
+    border:1px solid transparent;
+
+    color:var(--brass);
+
+    font-family:'JetBrains Mono', monospace;
+
+    font-size:13px;
+
+    padding:6px 8px;
+
+    border-radius:2px;
+
+    cursor:pointer;
+
+    transition:
+        background .15s ease,
+        border-color .15s ease,
+        transform .15s ease;
+}
+
+.comment-button:hover{
+    background:rgba(185,143,79,.12);
+
+    border-color:var(--brass-dim);
+
+    transform:translateY(-1px);
+}
+
+.comment-button.no-comments{
+    cursor:default;
+    opacity:.6;
+}
+
+.comment-button.no-comments:hover{
+    background:none;
+    border-color:transparent;
+    transform:none;
+}
+
+/* =========================================
+   MEMORY MINI
+========================================= */
+
+.memory-mini{
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+}
+
+.memory-mini img{
+    width:42px;
+    height:42px;
+
+    object-fit:cover;
+
+    border-radius:2px;
+
+    border:1px solid #3a3a41;
+}
+
+.memory-mini-title{
+    color:var(--parchment);
+
+    font-size:12px;
+
+    max-width:220px;
+
+    line-height:1.4;
+}
+
+.interaction-empty{
+    text-align:center;
+
+    color:var(--parchment-dim);
+
+    padding:28px;
+}
+
+/* =========================================
+   COMMENTS MODAL
+========================================= */
+
+.comments-overlay{
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(10,10,12,.78);
+
+    z-index:3000;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+}
+
+.comments-overlay.open{
+    display:flex;
+}
+
+.comments-modal{
+    width:min(650px,94vw);
+
+    max-height:85vh;
+
+    background:var(--panel);
+
+    border:1px solid #3a3a41;
+
+    border-radius:3px;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+
+    overflow:hidden;
+
+    display:flex;
+
+    flex-direction:column;
+}
+
+.comments-modal-header{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    padding:18px 20px;
+
+    border-bottom:1px solid #3a3a41;
+
+    background:var(--panel-2);
+}
+
+.comments-modal-title{
+    font-family:'Fraunces', serif;
+
+    font-size:20px;
+
+    color:var(--parchment);
+
+    margin:0;
+}
+
+.comments-modal-subtitle{
+    margin-top:4px;
+
+    font-size:11px;
+
+    color:var(--parchment-dim);
+
+    line-height:1.5;
+}
+
+.comments-close{
+    width:34px;
+    height:34px;
+
+    flex-shrink:0;
+
+    border:1px solid #3a3a41;
+
+    background:var(--panel);
+
+    color:var(--parchment-dim);
+
+    cursor:pointer;
+
+    border-radius:2px;
+
+    font-size:17px;
+}
+
+.comments-close:hover{
+    color:var(--brass);
+    border-color:var(--brass-dim);
+}
+
+.comments-list{
+    overflow-y:auto;
+
+    padding:10px 20px 20px;
+}
+
+.comment-card{
+    padding:15px 0;
+
+    border-bottom:1px solid #333338;
+}
+
+.comment-card:last-child{
+    border-bottom:none;
+}
+
+.comment-card-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:12px;
+}
+
+.comment-body{
+    color:var(--parchment);
+
+    font-size:13px;
+
+    line-height:1.65;
+
+    word-break:break-word;
+
+    white-space:pre-wrap;
+}
+
+.comment-date{
+    margin-top:7px;
+
+    color:var(--parchment-dim);
+
+    font-size:10px;
+}
+
+.comment-delete-form{
+    flex-shrink:0;
+}
+
+.comment-delete-btn{
+    border:1px solid var(--alert);
+
+    background:transparent;
+
+    color:var(--alert);
+
+    font-family:'JetBrains Mono', monospace;
+
+    font-size:10px;
+
+    padding:6px 9px;
+
+    border-radius:2px;
+
+    cursor:pointer;
+
+    text-transform:uppercase;
+}
+
+.comment-delete-btn:hover{
+    background:rgba(193,102,107,.14);
+}
+
+.no-comments-message{
+    text-align:center;
+
+    padding:35px 15px;
+
+    color:var(--parchment-dim);
+
+    font-size:12px;
+}
+
+/* =========================================
+   LIGHTBOX
+========================================= */
+
+.lightbox-overlay{
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(15,15,17,.86);
+
+    z-index:4000;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:40px;
+}
+
+.lightbox-overlay.open{
+    display:flex;
+}
+
+.lightbox-content{
+    max-width:90vw;
+
+    max-height:90vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:14px;
+}
+
+.lightbox-content img{
+    max-width:90vw;
+
+    max-height:78vh;
+
+    object-fit:contain;
+
+    border:1px solid #3a3a41;
+
+    border-radius:2px;
+
+    background:var(--panel);
+}
+
+.lightbox-caption{
+    color:var(--parchment-dim);
+
+    font-size:12px;
+
+    text-align:center;
+
+    max-width:70vw;
+}
+
+.lightbox-close{
+    position:fixed;
+
+    top:22px;
+    right:28px;
+
+    width:38px;
+    height:38px;
+
+    background:var(--panel-2);
+
+    border:1px solid #3a3a41;
+
+    color:var(--parchment);
+
+    border-radius:2px;
+
+    font-size:18px;
+
+    line-height:1;
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    z-index:4001;
+}
+
+.lightbox-close:hover{
+    color:var(--brass);
+
+    border-color:var(--brass-dim);
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer{
+    width:100%;
+
+    max-width:1040px;
+
+    margin:20px auto 0;
+
+    padding:20px 0 10px;
+
+    text-align:center;
+
+    color:var(--parchment-dim);
+
+    font-size:12px;
+
+    position:relative;
+
+    z-index:1;
+}
+
+/* =========================================
+   MOBILE SECTION SWITCHING
+========================================= */
+
+.mobile-section{
+    display:block;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width:720px){
+
+    body{
+        padding:28px 4vw 20px;
+    }
+
+    .top{
+        margin-bottom:25px;
+    }
+
+    h1{
+        font-size:22px;
+    }
+
+    .actions{
+        width:100%;
+    }
+
+    .btn{
+        flex:1 1 auto;
+
+        text-align:center;
+
+        padding:10px 14px;
+    }
+
+    .panel-header{
+        padding:16px 18px 14px;
+
+        font-size:12px;
+    }
+
+    th,
+    td{
+        padding:11px 16px;
+
+        font-size:12.5px;
+    }
+
+    .interaction-message{
+        max-width:220px;
+    }
+
+    .comments-overlay{
+        padding:12px;
+    }
+
+    .comments-modal{
+        width:100%;
+        max-height:88vh;
+    }
+
+    .comments-modal-header{
+        padding:15px;
+    }
+
+    .comments-list{
+        padding:8px 15px 15px;
+    }
+}
+
+/* =========================================
+   PHONE
+========================================= */
+
+@media (max-width:480px){
+
+    body{
+        padding:18px 12px 15px;
+
+        min-height:100vh;
+    }
+
+    /* HEADER */
+
+    .top{
+        width:100%;
+
+        margin-bottom:20px;
+
+        flex-direction:row;
+
+        align-items:center;
+
+        justify-content:flex-start;
+
+        gap:10px;
+    }
+
+    .mobile-menu-btn{
+        display:flex;
+
+        flex-shrink:0;
+    }
+
+    h1{
+        font-size:19px;
+
+        gap:7px;
+
+        line-height:1.2;
+    }
+
+    /* Hide desktop buttons */
+
+    .top .actions{
+        display:none;
+    }
+
+    /* SIDEBAR OVERLAY */
+
+    .sidebar-overlay{
+        display:none;
+
+        position:fixed;
+
+        inset:0;
+
+        background:rgba(0,0,0,.55);
+
+        z-index:4999;
+    }
+
+    .sidebar-overlay.open{
+        display:block;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar{
+        width:280px;
+
+        left:-300px;
+    }
+
+    .sidebar.open{
+        left:0;
+    }
+
+    /* MOBILE ONLY ONE SECTION */
+
+    .mobile-section{
+        display:none;
+    }
+
+    .mobile-section.active{
+        display:block;
+    }
+
+    /* PANEL */
+
+    .panel{
+        width:100%;
+
+        margin:0 auto 20px;
+    }
+
+    .panel-header{
+        padding:15px 16px;
+
+        font-size:11px;
+
+        line-height:1.5;
+
+        letter-spacing:.08em;
+    }
+
+    /* TABLE */
+
+    .table-scroll{
+        overflow-x:auto;
+
+        width:100%;
+    }
+
+    table{
+        min-width:560px;
+    }
+
+    th,
+    td{
+        padding:9px 12px;
+
+        font-size:11px;
+    }
+
+    th{
+        font-size:9px;
+    }
+
+    .thumb-sm{
+        width:36px;
+        height:36px;
+    }
+
+    .del-btn{
+        padding:5px 8px;
+
+        font-size:10px;
+    }
+
+    .comment-button{
+        font-size:12px;
+
+        padding:5px 6px;
+    }
+
+    .comments-modal-title{
+        font-size:18px;
+    }
+
+    .comment-body{
+        font-size:12px;
+    }
+
+    .comment-card-top{
+        gap:8px;
+    }
+
+    .comment-delete-btn{
+        font-size:9px;
+
+        padding:5px 7px;
+    }
+
+    /* FOOTER */
+
+    footer{
+        font-size:10px;
+
+        margin-top:auto;
+
+        padding:20px 0 5px;
+    }
+}
 </style>
 </head>
+
 <body>
 
-<div class="top">
-  <h1>🔧 Admin Dashboard</h1>
-  <div class="actions">
-    <a class="btn ghost" href="{{ url_for('admin_messages') }}">💬 Messages</a>
-    <a class="btn primary" href="{{ url_for('upload') }}">+ Upload New Photo</a>
-    <a class="btn ghost" href="{{ url_for('admin_logout') }}">Logout</a>
-  </div>
-</div>
+<!-- =========================================
+     MOBILE SIDEBAR
+========================================= -->
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-  <div class="panel" style="max-width:1040px;">
-    <div style="padding:16px 26px; color:var(--brass); font-size:13px;">
-      {% for m in messages %}{{ m }}{% endfor %}
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+    onclick="closeSidebar()"
+></div>
+
+<aside class="sidebar" id="adminSidebar">
+
+    <div class="sidebar-header">
+
+        <div class="sidebar-title">
+            🔧 Admin Menu
+        </div>
+
+        <button
+            type="button"
+            class="sidebar-close"
+            onclick="closeSidebar()"
+        >
+            ✕
+        </button>
+
     </div>
-  </div>
-  {% endif %}
-{% endwith %}
 
-<div class="panel">
-  <div class="panel-header">📊 Visitor Activity Logs — Mina's Sessions</div>
-  <table>
-    <thead>
-      <tr>
-        <th>📅 Login Time</th>
-        <th>⏱ Logout Time</th>
-        <th>⏳ Duration</th>
-        <th>🖼 Pictures Viewed</th>
-        <th>📍 IP Address</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for v in visits %}
-      <tr>
-        <td>{{ v.login_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-        <td class="dim">{{ v.logout_time.strftime('%Y-%m-%d %H:%M:%S') if v.logout_time else 'Active / closed browser' }}</td>
-        <td>{{ v.duration_display }}</td>
-        <td>{{ v.pictures_viewed or 'None yet' }}</td>
-        <td>{{ v.ip_address }}</td>
-      </tr>
-      {% else %}
-      <tr class="empty-row"><td colspan="5">No visits logged yet.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <nav class="sidebar-nav">
+
+        <div class="sidebar-section-title">
+            Dashboard
+        </div>
+
+        <!-- VISITOR LOGS -->
+
+        <button
+            type="button"
+            class="sidebar-item active"
+            data-section="visitorSection"
+            onclick="showSection('visitorSection', this)"
+        >
+            📊
+            <span>Visitor Activity Logs</span>
+        </button>
+
+        <!-- MEMORIES -->
+
+        <button
+            type="button"
+            class="sidebar-item"
+            data-section="memoriesSection"
+            onclick="showSection('memoriesSection', this)"
+        >
+            📷
+            <span>Uploaded Memories</span>
+        </button>
+
+        <!-- COMMENTS -->
+
+        <button
+            type="button"
+            class="sidebar-item"
+            data-section="commentsSection"
+            onclick="showSection('commentsSection', this)"
+        >
+            💬
+            <span>All Comments</span>
+        </button>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section-title">
+            Actions
+        </div>
+
+        <!-- MESSAGES -->
+
+        <a
+            class="sidebar-item"
+            href="{{ url_for('admin_messages') }}"
+        >
+            💬
+            <span>Messages</span>
+        </a>
+
+        <!-- UPLOAD -->
+
+        <a
+            class="sidebar-item"
+            href="{{ url_for('upload') }}"
+        >
+            ➕
+            <span>Upload New Photo</span>
+        </a>
+
+        <!-- LOGOUT -->
+
+        <a
+            class="sidebar-item"
+            href="{{ url_for('admin_logout') }}"
+        >
+            🚪
+            <span>Logout</span>
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- =========================================
+     MAIN CONTENT
+========================================= -->
+
+<div class="main-content">
+
+    <!-- =====================================
+         TOP
+    ====================================== -->
+
+    <div class="top">
+
+        <!-- MOBILE HAMBURGER -->
+
+        <button
+            type="button"
+            class="mobile-menu-btn"
+            onclick="openSidebar()"
+            aria-label="Open admin menu"
+        >
+            ☰
+        </button>
+
+        <h1>
+            🔧 Admin Dashboard
+        </h1>
+
+        <!-- DESKTOP ACTIONS -->
+
+        <div class="actions">
+
+            <a
+                class="btn ghost"
+                href="{{ url_for('admin_messages') }}"
+            >
+                💬 Messages
+            </a>
+
+            <a
+                class="btn primary"
+                href="{{ url_for('upload') }}"
+            >
+                + Upload New Photo
+            </a>
+
+            <a
+                class="btn ghost"
+                href="{{ url_for('admin_logout') }}"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         FLASH MESSAGES
+    ====================================== -->
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+        <div
+            class="panel"
+            style="max-width:1040px;"
+        >
+
+            <div
+                style="
+                    padding:16px 26px;
+                    color:var(--brass);
+                    font-size:13px;
+                "
+            >
+
+                {% for m in messages %}
+
+                    {{ m }}
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- =====================================
+         VISITOR ACTIVITY
+    ====================================== -->
+
+    <div
+        class="mobile-section active"
+        id="visitorSection"
+    >
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                📊 Visitor Activity Logs — Mina's Sessions
+
+            </div>
+
+            <div class="table-scroll">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                📅 Login Time
+                            </th>
+
+                            <th>
+                                ⏱ Logout Time
+                            </th>
+
+                            <th>
+                                ⏳ Duration
+                            </th>
+
+                            <th>
+                                🖼 Pictures Viewed
+                            </th>
+
+                            <th>
+                                📍 IP Address
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for v in visits %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ v.login_time.strftime('%Y-%m-%d %H:%M:%S') }}
+
+                            </td>
+
+                            <td class="dim">
+
+                                {{
+                                    v.logout_time.strftime(
+                                        '%Y-%m-%d %H:%M:%S'
+                                    )
+                                    if v.logout_time
+                                    else 'Active / closed browser'
+                                }}
+
+                            </td>
+
+                            <td>
+
+                                {{ v.duration_display }}
+
+                            </td>
+
+                            <td>
+
+                                {{ v.pictures_viewed or 'None yet' }}
+
+                            </td>
+
+                            <td>
+
+                                {{ v.ip_address }}
+
+                            </td>
+
+                        </tr>
+
+                        {% else %}
+
+                        <tr class="empty-row">
+
+                            <td colspan="5">
+
+                                No visits logged yet.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         UPLOADED MEMORIES
+    ====================================== -->
+
+    <div
+        class="mobile-section"
+        id="memoriesSection"
+    >
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                📷 Uploaded Memories
+                ({{ memories|length }})
+
+            </div>
+
+            <div class="table-scroll">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Photo</th>
+
+                            <th>Description</th>
+
+                            <th>Uploaded</th>
+
+                            <th>❤️ Likes</th>
+
+                            <th>💬 Comments</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for m in memories %}
+
+                        <tr
+                            id="row-{{ m.id }}"
+                            class="{% if m.is_hidden %}hidden-row{% endif %}"
+                        >
+
+                            <!-- ID -->
+
+                            <td>
+                                {{ m.id }}
+                            </td>
+
+
+                            <!-- PHOTO -->
+
+                            <td>
+
+                                {% if m.cover_photo %}
+
+                                <img
+                                    class="thumb-sm"
+                                    src="{{
+                                        url_for(
+                                            'static',
+                                            filename='uploads/' + m.cover_photo.filename
+                                        )
+                                    }}"
+                                    alt="Memory #{{ m.id }} photo"
+                                    onclick='openLightbox(
+                                        {{ url_for(
+                                            "static",
+                                            filename="uploads/" + m.cover_photo.filename
+                                        )|tojson }},
+                                        {{ (m.description | default("", true))|tojson }}
+                                    )'
+                                >
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- DESCRIPTION -->
+
+                            <td class="dim">
+
+                                {{ m.description }}
+
+                            </td>
+
+
+                            <!-- UPLOADED -->
+
+                            <td class="dim">
+
+                                {{ m.uploaded_at.strftime('%Y-%m-%d') }}
+
+                            </td>
+
+
+                            <!-- LIKES -->
+
+                            <td>
+
+                                <span class="like-count">
+
+                                    ❤️ {{ m.like_count }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- COMMENTS -->
+
+                            <td>
+
+                                {% if m.comment_count > 0 %}
+
+                                <button
+                                    type="button"
+                                    class="comment-button"
+                                    onclick="openComments({{ m.id }})"
+                                    title="View comments"
+                                >
+
+                                    💬
+
+                                    <span class="comment-count">
+
+                                        {{ m.comment_count }}
+
+                                    </span>
+
+                                </button>
+
+                                {% else %}
+
+                                <button
+                                    type="button"
+                                    class="comment-button no-comments"
+                                    title="No comments yet"
+                                    disabled
+                                >
+
+                                    💬
+
+                                    <span>
+                                        0
+                                    </span>
+
+                                </button>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTION -->
+
+                            <td>
+
+                                <div class="menu-wrap">
+
+                                    <!-- BURGER -->
+
+                                    <button
+                                        type="button"
+                                        class="burger-btn"
+                                        aria-label="Row actions"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                        onclick="toggleRowMenu(
+                                            event,
+                                            {{ m.id }}
+                                        )"
+                                    >
+                                        ☰
+                                    </button>
+
+
+                                    <!-- DROPDOWN -->
+
+                                    <div
+                                        class="dropdown-menu"
+                                        id="menu-{{ m.id }}"
+                                        role="menu"
+                                    >
+
+                                        <!-- HIDE -->
+
+                                        <form
+                                            method="POST"
+                                            action="{{
+                                                url_for(
+                                                    'toggle_hide_memory',
+                                                    memory_id=m.id
+                                                )
+                                            }}"
+                                        >
+
+                                            <label
+                                                class="menu-item hide-label"
+                                                role="menuitem"
+                                            >
+
+                                                <input
+                                                    type="checkbox"
+                                                    onchange="this.form.submit()"
+
+                                                    {% if m.is_hidden %}
+                                                        checked
+                                                    {% endif %}
+                                                >
+
+                                                <span>
+
+                                                    {{
+                                                        'Unhide'
+                                                        if m.is_hidden
+                                                        else 'Hide'
+                                                    }}
+
+                                                </span>
+
+                                            </label>
+
+                                        </form>
+
+
+                                        <!-- EDIT -->
+
+                                        <a
+                                            class="menu-item"
+                                            role="menuitem"
+                                            href="{{
+                                                url_for(
+                                                    'edit_memory',
+                                                    memory_id=m.id
+                                                )
+                                            }}"
+                                        >
+
+                                            ✎ Edit
+
+                                        </a>
+
+
+                                        <!-- DELETE -->
+
+                                        <form
+                                            method="POST"
+                                            action="{{
+                                                url_for(
+                                                    'delete_memory',
+                                                    memory_id=m.id
+                                                )
+                                            }}"
+                                            onsubmit="
+                                                return confirm(
+                                                    'Delete this memory permanently?'
+                                                );
+                                            "
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="menu-item menu-item-danger"
+                                                role="menuitem"
+                                            >
+
+                                                🗑 Delete
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% else %}
+
+                        <tr class="empty-row">
+
+                            <td colspan="7">
+
+                                Nothing uploaded yet.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         ALL COMMENTS
+    ====================================== -->
+
+    <div
+        class="mobile-section"
+        id="commentsSection"
+    >
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                💬 All Comments
+
+            </div>
+
+            <div class="table-scroll">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Memory
+                            </th>
+
+                            <th>
+                                Comment
+                            </th>
+
+                            <th>
+                                Date / Time
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for comment in comments %}
+
+                        <tr>
+
+                            <!-- MEMORY -->
+
+                            <td>
+
+                                <div class="memory-mini">
+
+                                    {% if comment.memory
+                                          and comment.memory.cover_photo %}
+
+                                    <img
+                                        src="{{
+                                            url_for(
+                                                'static',
+                                                filename='uploads/' +
+                                                comment.memory.cover_photo.filename
+                                            )
+                                        }}"
+                                        alt="Memory"
+                                    >
+
+                                    {% endif %}
+
+                                    <span class="memory-mini-title">
+
+                                        {{
+                                            comment.memory.description
+                                            if comment.memory
+                                            else 'Deleted Memory'
+                                        }}
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- COMMENT -->
+
+                            <td>
+
+                                <div class="interaction-message">
+
+                                    "{{ comment.body }}"
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- DATE -->
+
+                            <td class="dim">
+
+                                {{
+                                    comment.created_at.strftime(
+                                        '%Y-%m-%d %H:%M:%S'
+                                    )
+                                }}
+
+                            </td>
+
+
+                            <!-- DELETE -->
+
+                            <td>
+
+                                <form
+                                    method="POST"
+                                    action="{{
+                                        url_for(
+                                            'delete_comment',
+                                            comment_id=comment.id
+                                        )
+                                    }}"
+                                    onsubmit="
+                                        return confirm(
+                                            'Delete this comment permanently?'
+                                        );
+                                    "
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="del-btn"
+                                    >
+
+                                        🗑 Delete
+
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        {% else %}
+
+                        <tr class="empty-row">
+
+                            <td colspan="4">
+
+                                No comments yet.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="panel">
-  <div class="panel-header">📷 Uploaded Memories ({{ memories|length }})</div>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Photo</th>
-        <th>Description</th>
-        <th>Uploaded</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for m in memories %}
-      <tr>
-        <td>{{ m.id }}</td>
-        <td>
-          {% if m.cover_photo %}
-            <img class="thumb-sm" src="{{ url_for('static', filename='uploads/' + m.cover_photo.filename) }}" alt="">
-          {% else %}
-            —
-          {% endif %}
-        </td>
-        <td class="dim">{{ m.description }}</td>
-        <td class="dim">{{ m.uploaded_at.strftime('%Y-%m-%d') }}</td>
-        <td>
-          <div style="display:flex; gap:8px;">
-            <a class="btn ghost" style="padding:6px 12px; font-size:11px;"
-               href="{{ url_for('edit_memory', memory_id=m.id) }}">Edit</a>
-            <form method="POST" action="{{ url_for('delete_memory', memory_id=m.id) }}"
-                  onsubmit="return confirm('Delete this memory permanently?');">
-              <button class="del-btn" type="submit">Delete</button>
-            </form>
-          </div>
-        </td>
-      </tr>
-      {% else %}
-      <tr class="empty-row"><td colspan="5">Nothing uploaded yet.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+
+<!-- =========================================
+     FOOTER
+========================================= -->
 
 <footer>
-  🌿 I made it just for you 🌿<br>
-  ✧ Merry Christmas, Mina ✧ | 💗 2026
+
+    🌿 I made it just for you 🌿
+
+    <br>
+
+    ✧ Merry Christmas, Mina ✧ | 💗 2026
+
 </footer>
+
+
+<!-- =========================================
+     COMMENTS MODAL
+========================================= -->
+
+<div
+    class="comments-overlay"
+    id="commentsOverlay"
+    onclick="
+        if(event.target === this){
+            closeComments();
+        }
+    "
+>
+
+    <div class="comments-modal">
+
+        <div class="comments-modal-header">
+
+            <div>
+
+                <h2
+                    class="comments-modal-title"
+                    id="commentsModalTitle"
+                >
+                    💬 Comments
+                </h2>
+
+                <div
+                    class="comments-modal-subtitle"
+                    id="commentsModalSubtitle"
+                >
+                    Memory comments
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="comments-close"
+                onclick="closeComments()"
+                aria-label="Close comments"
+            >
+                ✕
+            </button>
+
+        </div>
+
+
+        <div
+            class="comments-list"
+            id="commentsList"
+        >
+
+            <!-- Comments inserted by JavaScript -->
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     LIGHTBOX
+========================================= -->
+
+<div
+    class="lightbox-overlay"
+    id="lightbox"
+    onclick="
+        if(event.target === this){
+            closeLightbox();
+        }
+    "
+>
+
+    <button
+        class="lightbox-close"
+        aria-label="Close"
+        onclick="closeLightbox()"
+    >
+        ✕
+    </button>
+
+    <div class="lightbox-content">
+
+        <img
+            id="lightbox-img"
+            src=""
+            alt=""
+        >
+
+        <div
+            class="lightbox-caption"
+            id="lightbox-caption"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     COMMENTS DATA
+========================================= -->
+
+<script>
+
+const commentsData = {
+
+{% for m in memories %}
+
+    {{ m.id }}: {
+
+        title:
+            {{ (m.description | default('', true))|tojson }},
+
+        comments: [
+
+            {% for comment in m.comments %}
+
+            {
+
+                id:
+                    {{ comment.id }},
+
+                body:
+                    {{ comment.body|tojson }},
+
+                created_at:
+                    {{ comment.created_at.strftime(
+                        '%B %d, %Y %I:%M %p'
+                    )|tojson }}
+
+            }
+
+            {% if not loop.last %}
+            ,
+            {% endif %}
+
+            {% endfor %}
+
+        ]
+
+    }
+
+    {% if not loop.last %}
+    ,
+    {% endif %}
+
+{% endfor %}
+
+};
+
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+function openSidebar(){
+
+    const sidebar =
+        document.getElementById('adminSidebar');
+
+    const overlay =
+        document.getElementById('sidebarOverlay');
+
+    sidebar.classList.add('open');
+
+    overlay.classList.add('open');
+
+    document.body.style.overflow = 'hidden';
+}
+
+
+function closeSidebar(){
+
+    const sidebar =
+        document.getElementById('adminSidebar');
+
+    const overlay =
+        document.getElementById('sidebarOverlay');
+
+    sidebar.classList.remove('open');
+
+    overlay.classList.remove('open');
+
+    document.body.style.overflow = '';
+}
+
+
+/* =========================================
+   MOBILE SECTION SWITCHER
+========================================= */
+
+function showSection(sectionId, button){
+
+    /* Hide all sections */
+
+    document
+        .querySelectorAll('.mobile-section')
+        .forEach(function(section){
+
+            section.classList.remove('active');
+
+        });
+
+
+    /* Show selected section */
+
+    const selected =
+        document.getElementById(sectionId);
+
+    if(selected){
+
+        selected.classList.add('active');
+
+    }
+
+
+    /* Remove active from menu */
+
+    document
+        .querySelectorAll('.sidebar-item[data-section]')
+        .forEach(function(item){
+
+            item.classList.remove('active');
+
+        });
+
+
+    /* Add active to clicked item */
+
+    if(button){
+
+        button.classList.add('active');
+
+    }
+
+
+    /* Close sidebar */
+
+    closeSidebar();
+
+
+    /* Go to top */
+
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+}
+
+
+/* =========================================
+   COMMENTS MODAL
+========================================= */
+
+function openComments(memoryId){
+
+    closeAllRowMenus();
+
+    const overlay =
+        document.getElementById(
+            'commentsOverlay'
+        );
+
+    const list =
+        document.getElementById(
+            'commentsList'
+        );
+
+    const title =
+        document.getElementById(
+            'commentsModalTitle'
+        );
+
+    const subtitle =
+        document.getElementById(
+            'commentsModalSubtitle'
+        );
+
+    const memory =
+        commentsData[memoryId];
+
+
+    if(!memory){
+
+        return;
+
+    }
+
+
+    title.textContent =
+        '💬 Comments';
+
+
+    subtitle.textContent =
+        memory.title ||
+        'Memory #' + memoryId;
+
+
+    list.innerHTML = '';
+
+
+    if(
+        !memory.comments ||
+        memory.comments.length === 0
+    ){
+
+        list.innerHTML = `
+
+            <div class="no-comments-message">
+
+                No comments yet.
+
+            </div>
+
+        `;
+
+    }
+
+    else{
+
+        memory.comments.forEach(
+            function(comment){
+
+                const card =
+                    document.createElement('div');
+
+                card.className =
+                    'comment-card';
+
+
+                card.innerHTML = `
+
+                    <div class="comment-card-top">
+
+                        <div>
+
+                            <div class="comment-body"></div>
+
+                            <div class="comment-date">
+
+                                ${comment.created_at}
+
+                            </div>
+
+                        </div>
+
+
+                        <form
+                            class="comment-delete-form"
+                            method="POST"
+                            action="/admin/comment/delete/${comment.id}"
+                            onsubmit="
+                                return confirm(
+                                    'Delete this comment permanently?'
+                                );
+                            "
+                        >
+
+                            <button
+                                type="submit"
+                                class="comment-delete-btn"
+                            >
+
+                                🗑 Delete
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                `;
+
+
+                const body =
+                    card.querySelector(
+                        '.comment-body'
+                    );
+
+
+                body.textContent =
+                    comment.body;
+
+
+                list.appendChild(card);
+
+            }
+        );
+
+    }
+
+
+    overlay.classList.add('open');
+
+    document.body.style.overflow = 'hidden';
+}
+
+
+function closeComments(){
+
+    const overlay =
+        document.getElementById(
+            'commentsOverlay'
+        );
+
+    overlay.classList.remove('open');
+
+    document.body.style.overflow = '';
+}
+
+
+/* =========================================
+   ROW BURGER MENU
+========================================= */
+
+function closeAllRowMenus(exceptId){
+
+    document
+        .querySelectorAll(
+            '.dropdown-menu.open'
+        )
+        .forEach(function(menu){
+
+            if(
+                !exceptId ||
+                menu.id !== 'menu-' + exceptId
+            ){
+
+                menu.classList.remove('open');
+
+
+                const btn =
+                    menu.previousElementSibling;
+
+
+                if(btn){
+
+                    btn.setAttribute(
+                        'aria-expanded',
+                        'false'
+                    );
+
+                }
+
+            }
+
+        });
+
+}
+
+
+function toggleRowMenu(evt, id){
+
+    evt.stopPropagation();
+
+
+    const menu =
+        document.getElementById(
+            'menu-' + id
+        );
+
+
+    const btn =
+        evt.currentTarget;
+
+
+    const isOpen =
+        menu.classList.contains('open');
+
+
+    closeAllRowMenus();
+
+
+    if(isOpen){
+
+        menu.classList.remove('open');
+
+        btn.setAttribute(
+            'aria-expanded',
+            'false'
+        );
+
+        return;
+
+    }
+
+
+    const rect =
+        btn.getBoundingClientRect();
+
+
+    menu.style.top =
+        (rect.bottom + 6) + 'px';
+
+
+    menu.style.right =
+        (window.innerWidth - rect.right) + 'px';
+
+
+    menu.style.left =
+        'auto';
+
+
+    menu.classList.add('open');
+
+
+    btn.setAttribute(
+        'aria-expanded',
+        'true'
+    );
+
+}
+
+
+document.addEventListener(
+    'click',
+    function(){
+
+        closeAllRowMenus();
+
+    }
+);
+
+
+/* =========================================
+   KEYBOARD
+========================================= */
+
+document.addEventListener(
+    'keydown',
+    function(e){
+
+        if(e.key === 'Escape'){
+
+            closeSidebar();
+
+            closeAllRowMenus();
+
+            closeComments();
+
+            closeLightbox();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   SCROLL
+========================================= */
+
+window.addEventListener(
+    'scroll',
+    function(){
+
+        closeAllRowMenus();
+
+    },
+    true
+);
+
+
+/* =========================================
+   RESIZE
+========================================= */
+
+window.addEventListener(
+    'resize',
+    function(){
+
+        closeAllRowMenus();
+
+        /*
+         * If screen becomes desktop,
+         * close mobile sidebar.
+         */
+
+        if(window.innerWidth > 480){
+
+            closeSidebar();
+
+            /*
+             * Show all sections on desktop.
+             */
+
+            document
+                .querySelectorAll('.mobile-section')
+                .forEach(function(section){
+
+                    section.classList.add('active');
+
+                });
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   LIGHTBOX
+========================================= */
+
+function openLightbox(src, caption){
+
+    closeAllRowMenus();
+
+
+    const overlay =
+        document.getElementById(
+            'lightbox'
+        );
+
+
+    const img =
+        document.getElementById(
+            'lightbox-img'
+        );
+
+
+    const cap =
+        document.getElementById(
+            'lightbox-caption'
+        );
+
+
+    img.src =
+        src;
+
+
+    img.alt =
+        caption || '';
+
+
+    cap.textContent =
+        caption || '';
+
+
+    overlay.classList.add('open');
+
+
+    document.body.style.overflow =
+        'hidden';
+
+}
+
+
+function closeLightbox(){
+
+    const overlay =
+        document.getElementById(
+            'lightbox'
+        );
+
+
+    if(
+        !overlay.classList.contains('open')
+    ){
+
+        return;
+
+    }
+
+
+    overlay.classList.remove('open');
+
+
+    document.getElementById(
+        'lightbox-img'
+    ).src = '';
+
+
+    document.body.style.overflow =
+        '';
+
+}
+
+</script>
 
 </body>
 </html>

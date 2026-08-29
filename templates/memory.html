@@ -100,6 +100,8 @@
     overflow: hidden;
     border-radius: 14px;
     background: rgba(0, 0, 0, 0.5);
+    touch-action: pan-y;
+    user-select: none;
   }
 
   .main-photo {
@@ -109,6 +111,7 @@
     height: auto;
     object-fit: contain;
     border-radius: 10px;
+    transition: opacity 0.15s ease;
   }
 
   /* ✅ PREV / NEXT BUTTONS */
@@ -140,6 +143,33 @@
     font-weight: bold;
   }
 
+  /* ✅ PHOTO DOTS */
+  .photo-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .photo-dots .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    transition: all 0.25s ease;
+  }
+  .photo-dots .dot:hover {
+    background: rgba(255, 255, 255, 0.6);
+  }
+  .photo-dots .dot.active {
+    background: #ff7eb8;
+    transform: scale(1.35);
+  }
+
   /* ✅ VIEW MESSAGE BUTTON */
   .view-message-btn {
     margin: 10px 0 30px;
@@ -159,9 +189,12 @@
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
   }
 
-  /* ✅ POPUP MESSAGE */
+  /* ✅ POPUP MESSAGE — animated fade + scale */
   .modal {
-    display: none;
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
     position: fixed;
     z-index: 100;
     left: 0;
@@ -171,9 +204,12 @@
     background-color: rgba(0, 0, 0, 0.85);
     align-items: center;
     justify-content: center;
+    transition: opacity 0.3s ease;
   }
   .modal.show {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
 
   .modal-content {
@@ -186,6 +222,11 @@
     text-align: center;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     border: 2px solid #b84075;
+    transform: scale(0.85) translateY(10px);
+    transition: transform 0.3s ease;
+  }
+  .modal.show .modal-content {
+    transform: scale(1) translateY(0);
   }
 
   .modal-content h2 {
@@ -236,6 +277,32 @@
   }
   .thumb.active {
     border-color: #d65890;
+  }
+
+  /* ✅ MEMORY-TO-MEMORY NAVIGATION */
+  .memory-nav {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .memory-nav a {
+    display: inline-block;
+    padding: 10px 22px;
+    font-size: 14px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+  }
+  .memory-nav a:hover {
+    background: linear-gradient(135deg, #ff7eb8, #c94880);
+    border-color: transparent;
+    transform: translateY(-2px);
   }
 
   /* ✅ BACK TO GALLERY BUTTON */
@@ -299,9 +366,21 @@
     <h1>{{ memory.title or 'A Special Memory' }}</h1>
   </header>
 
+  <!-- ✅ MEMORY-TO-MEMORY NAVIGATION -->
+  {% if prev_memory_id or next_memory_id %}
+  <div class="memory-nav">
+    {% if prev_memory_id %}
+    <a href="{{ url_for('memory_detail', memory_id=prev_memory_id) }}">← Previous Memory</a>
+    {% endif %}
+    {% if next_memory_id %}
+    <a href="{{ url_for('memory_detail', memory_id=next_memory_id) }}">Next Memory →</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
   <!-- ✅ PHOTO VIEWER -->
   <div class="photo-viewer">
-    <div class="main-photo-container">
+    <div class="main-photo-container" id="mainPhotoContainer">
       {% set first_photo = memory.photos[0] if memory.photos else None %}
       {% if first_photo %}
       <img id="mainImage" class="main-photo" src="{{ url_for('static', filename='uploads/' + first_photo.filename) }}" alt="Memory Photo">
@@ -311,9 +390,10 @@
     </div>
 
     {% if memory.photos and memory.photos|length > 0 %}
-    <button class="nav-btn prev-btn" onclick="prevPhoto()">&#8249;</button>
-    <button class="nav-btn next-btn" onclick="nextPhoto()">&#8250;</button>
+    <button class="nav-btn prev-btn" onclick="prevPhoto()" aria-label="Previous photo">&#8249;</button>
+    <button class="nav-btn next-btn" onclick="nextPhoto()" aria-label="Next photo">&#8250;</button>
     <p class="photo-counter">Photo <span id="photoIndex">1</span> of {{ memory.photos|length }}</p>
+    <div class="photo-dots" id="photoDots"></div>
     {% endif %}
   </div>
 
@@ -341,6 +421,7 @@
     <img class="thumb {% if loop.index == 1 %}active{% endif %}" 
          src="{{ url_for('static', filename='uploads/' + photo.filename) }}" 
          alt="Thumbnail"
+         loading="lazy"
          onclick="showPhoto({{ loop.index0 }})">
     {% endfor %}
   </div>
@@ -366,18 +447,77 @@
   let currentIndex = 0;
   const total = photos.length;
 
+  // ✅ Build the dot indicators once
+  const dotsContainer = document.getElementById('photoDots');
+  if (dotsContainer && total > 0) {
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to photo ' + (i + 1));
+      dot.onclick = () => showPhoto(i);
+      dotsContainer.appendChild(dot);
+    }
+  }
+
   function showPhoto(index) {
+    if (total === 0) return;
     if (index < 0) index = total - 1;
     if (index >= total) index = 0;
     currentIndex = index;
-    document.getElementById('mainImage').src = photos[currentIndex];
-    document.getElementById('photoIndex').textContent = currentIndex + 1;
+
+    const img = document.getElementById('mainImage');
+    if (img) {
+      img.style.opacity = '0';
+      setTimeout(() => {
+        img.src = photos[currentIndex];
+        img.style.opacity = '1';
+      }, 120);
+    }
+
+    const counter = document.getElementById('photoIndex');
+    if (counter) counter.textContent = currentIndex + 1;
+
     document.querySelectorAll('.thumb').forEach((t, i) => {
       t.classList.toggle('active', i === currentIndex);
+    });
+    document.querySelectorAll('.photo-dots .dot').forEach((d, i) => {
+      d.classList.toggle('active', i === currentIndex);
     });
   }
   function prevPhoto() { showPhoto(currentIndex - 1); }
   function nextPhoto() { showPhoto(currentIndex + 1); }
+
+  // ✅ KEYBOARD NAVIGATION (← → for photos, Esc closes message)
+  document.addEventListener('keydown', (e) => {
+    const modalOpen = document.getElementById('messageModal').classList.contains('show');
+    if (e.key === 'Escape') {
+      closeMessage();
+      return;
+    }
+    if (modalOpen) return; // don't change photos while message is open
+    if (e.key === 'ArrowLeft') prevPhoto();
+    if (e.key === 'ArrowRight') nextPhoto();
+  });
+
+  // ✅ SWIPE NAVIGATION (mobile touch)
+  const swipeArea = document.getElementById('mainPhotoContainer');
+  if (swipeArea) {
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const SWIPE_THRESHOLD = 40;
+
+    swipeArea.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    swipeArea.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const delta = touchEndX - touchStartX;
+      if (Math.abs(delta) < SWIPE_THRESHOLD) return;
+      if (delta < 0) nextPhoto();
+      else prevPhoto();
+    }, { passive: true });
+  }
 
   // ✅ POPUP FUNCTIONS
   function openMessage() {
