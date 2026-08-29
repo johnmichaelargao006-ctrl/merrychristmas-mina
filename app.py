@@ -8,8 +8,8 @@ Features:
 - Admin dashboard
 - Upload memories
 - Hide/unhide memories
-- ❤️ Persistent likes
-- 💬 Persistent comments
+- Persistent likes
+- Persistent comments
 - Visitor logs
 - Admin/Mina messages
 """
@@ -367,6 +367,7 @@ def gallery_required(view):
         if not session.get(
             "gallery_authed"
         ):
+
             return redirect(
                 url_for("gallery_login")
             )
@@ -386,6 +387,7 @@ def admin_required(view):
         if not session.get(
             "is_admin"
         ):
+
             return redirect(
                 url_for("admin_login")
             )
@@ -396,7 +398,7 @@ def admin_required(view):
 
 
 # ============================================================
-# MINA SIDE
+# HOME
 # ============================================================
 
 @app.route("/")
@@ -481,7 +483,6 @@ def gallery():
         "visit_id"
     )
 
-    # Determine which memories this visitor liked
     liked_memory_ids = set()
 
     if visit_id:
@@ -517,8 +518,8 @@ def like_memory(memory_id):
         memory_id
     )
 
-    # Do not allow liking hidden memories
     if memory.is_hidden:
+
         return jsonify({
             "success": False,
             "error": "Memory not available."
@@ -540,7 +541,6 @@ def like_memory(memory_id):
         visit_id=visit_id
     ).first()
 
-    # If already liked -> remove like
     if existing_like:
 
         db.session.delete(
@@ -549,7 +549,6 @@ def like_memory(memory_id):
 
         liked = False
 
-    # Otherwise -> add like
     else:
 
         new_like = Like(
@@ -598,7 +597,6 @@ def add_comment(memory_id):
             "error": "Memory not available."
         }), 404
 
-    # Accept JSON
     data = request.get_json(
         silent=True
     ) or {}
@@ -610,7 +608,6 @@ def add_comment(memory_id):
         )
     ).strip()
 
-    # Also support normal form POST
     if not comment_text:
 
         comment_text = request.form.get(
@@ -674,9 +671,28 @@ def memory_detail(memory_id):
         memory_id
     )
 
+    # ========================================================
+    # IMPORTANT FIX
+    #
+    # If a memory was hidden by the admin, do not show
+    # a 404 / URL error to the visitor.
+    #
+    # Send the visitor back to the gallery instead.
+    # ========================================================
+
     if memory.is_hidden:
 
-        abort(404)
+        flash(
+            "This memory is no longer available."
+        )
+
+        return redirect(
+            url_for("gallery")
+        )
+
+    # ========================================================
+    # COUNT PICTURE VIEW
+    # ========================================================
 
     visit_id = session.get(
         "visit_id"
@@ -879,7 +895,6 @@ def admin_dashboard():
         .all()
     )
 
-    # Get every comment
     comments = (
         Comment.query
         .order_by(
@@ -888,7 +903,6 @@ def admin_dashboard():
         .all()
     )
 
-    # Get every like
     likes = (
         Like.query
         .order_by(
