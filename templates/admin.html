@@ -12,10 +12,21 @@
 
 <title>Admin Dashboard</title>
 
+
 <style>
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap');
+/* =========================================================
+   FONT
+========================================================= */
 
+@import url(
+    'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap'
+);
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
 
 :root{
 
@@ -68,7 +79,7 @@ body{
 
     min-height:100vh;
 
-    font-family:'JetBrains Mono',monospace;
+    font-family:'JetBrains Mono', monospace;
 
     background:
         radial-gradient(
@@ -124,9 +135,9 @@ body::before{
 
 .main-content{
 
-    flex:1;
-
     width:100%;
+
+    flex:1;
 
     position:relative;
 
@@ -136,7 +147,7 @@ body::before{
 
 
 /* =========================================================
-   TOP
+   TOP BAR
 ========================================================= */
 
 .top{
@@ -162,7 +173,7 @@ body::before{
 
 h1{
 
-    font-family:'Fraunces',serif;
+    font-family:'Fraunces', serif;
 
     font-weight:600;
 
@@ -197,7 +208,7 @@ h1{
 
 
 /* =========================================================
-   MAIN BURGER BUTTON
+   MAIN BURGER
 ========================================================= */
 
 .mobile-menu-btn{
@@ -334,7 +345,7 @@ h1{
 
 .sidebar-title{
 
-    font-family:'Fraunces',serif;
+    font-family:'Fraunces', serif;
 
     font-size:20px;
 
@@ -415,7 +426,7 @@ h1{
 
     color:var(--parchment-dim);
 
-    font-family:'JetBrains Mono',monospace;
+    font-family:'JetBrains Mono', monospace;
 
     font-size:12px;
 
@@ -469,7 +480,7 @@ h1{
 
 .btn{
 
-    font-family:'JetBrains Mono',monospace;
+    font-family:'JetBrains Mono', monospace;
 
     font-size:12px;
 
@@ -524,7 +535,7 @@ h1{
 
 
 /* =========================================================
-   SECTIONS
+   SECTION SWITCHING
 ========================================================= */
 
 .mobile-section{
@@ -542,7 +553,7 @@ h1{
 
 
 /* =========================================================
-   PANELS
+   PANEL
 ========================================================= */
 
 .panel{
@@ -682,6 +693,10 @@ h1{
 }
 
 
+/* =========================================================
+   VISITOR STATUS
+========================================================= */
+
 .visitor-status{
 
     display:flex;
@@ -740,6 +755,110 @@ h1{
     color:#8fbe88;
 
     font-weight:500;
+
+}
+
+
+/* =========================================================
+   BULK ACTION BAR
+========================================================= */
+
+.bulk-action-bar{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:11px 26px;
+
+    border-bottom:1px solid #333338;
+
+    background:rgba(0,0,0,.12);
+
+}
+
+
+.select-all-label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    color:var(--parchment);
+
+    font-size:11px;
+
+    cursor:pointer;
+
+}
+
+
+.select-all-label input,
+.visitor-checkbox{
+
+    width:15px;
+
+    height:15px;
+
+    cursor:pointer;
+
+    accent-color:var(--brass);
+
+}
+
+
+.selected-count{
+
+    color:var(--parchment-dim);
+
+    font-size:10px;
+
+}
+
+
+.bulk-delete-btn{
+
+    margin-left:auto;
+
+    border:1px solid var(--alert);
+
+    background:transparent;
+
+    color:var(--alert);
+
+    font-family:'JetBrains Mono', monospace;
+
+    font-size:10px;
+
+    padding:7px 11px;
+
+    border-radius:2px;
+
+    cursor:pointer;
+
+    text-transform:uppercase;
+
+    letter-spacing:.04em;
+
+}
+
+
+.bulk-delete-btn:hover:not(:disabled){
+
+    background:rgba(193,102,107,.14);
+
+}
+
+
+.bulk-delete-btn:disabled{
+
+    opacity:.35;
+
+    cursor:not-allowed;
 
 }
 
@@ -836,7 +955,7 @@ tr.hidden-row{
 
 
 /* =========================================================
-   THUMBNAILS
+   THUMBNAIL
 ========================================================= */
 
 .thumb-sm{
@@ -870,45 +989,7 @@ tr.hidden-row{
 
 
 /* =========================================================
-   DELETE BUTTON
-========================================================= */
-
-.del-btn{
-
-    background:none;
-
-    border:1px solid var(--alert);
-
-    color:var(--alert);
-
-    font-family:'JetBrains Mono',monospace;
-
-    font-size:11px;
-
-    padding:6px 10px;
-
-    border-radius:2px;
-
-    cursor:pointer;
-
-    text-transform:uppercase;
-
-    letter-spacing:.05em;
-
-    white-space:nowrap;
-
-}
-
-
-.del-btn:hover{
-
-    background:rgba(193,102,107,.12);
-
-}
-
-
-/* =========================================================
-   ROW ACTION MENU
+   ROW BURGER MENU
 ========================================================= */
 
 .menu-wrap{
@@ -947,10 +1028,6 @@ tr.hidden-row{
     align-items:center;
 
     justify-content:center;
-
-    transition:
-        color .15s ease,
-        border-color .15s ease;
 
 }
 
@@ -1541,15 +1618,6 @@ tr.hidden-row{
 }
 
 
-.lightbox-close:hover{
-
-    color:var(--brass);
-
-    border-color:var(--brass-dim);
-
-}
-
-
 /* =========================================================
    FOOTER
 ========================================================= */
@@ -1578,7 +1646,7 @@ footer{
 
 
 /* =========================================================
-   RESPONSIVE
+   TABLET
 ========================================================= */
 
 @media (max-width:720px){
@@ -1586,13 +1654,6 @@ footer{
     body{
 
         padding:22px 4vw 15px;
-
-    }
-
-
-    .top{
-
-        margin-bottom:22px;
 
     }
 
@@ -1636,8 +1697,19 @@ footer{
 
     }
 
+
+    .bulk-action-bar{
+
+        padding:10px 16px;
+
+    }
+
 }
 
+
+/* =========================================================
+   PHONE
+========================================================= */
 
 @media (max-width:480px){
 
@@ -1731,6 +1803,40 @@ footer{
     }
 
 
+    .bulk-action-bar{
+
+        padding:9px 15px;
+
+        gap:9px;
+
+        flex-wrap:wrap;
+
+    }
+
+
+    .select-all-label{
+
+        font-size:10px;
+
+    }
+
+
+    .selected-count{
+
+        font-size:9px;
+
+    }
+
+
+    .bulk-delete-btn{
+
+        font-size:9px;
+
+        padding:6px 9px;
+
+    }
+
+
     .table-scroll{
 
         overflow-x:auto;
@@ -1740,7 +1846,7 @@ footer{
 
     table{
 
-        min-width:560px;
+        min-width:620px;
 
     }
 
@@ -1887,10 +1993,16 @@ footer{
         <button
             type="button"
             class="sidebar-close"
-            onclick="closeSidebar()"
-            aria-label="Close admin menu"
+
+            onclick="
+                closeSidebar()
+            "
+
+            aria-label="Close menu"
         >
+
             ✕
+
         </button>
 
     </div>
@@ -1904,11 +2016,16 @@ footer{
         </div>
 
 
-        <!-- VISITOR -->
+        <!-- VISITOR LOGS -->
 
         <button
             type="button"
-            class="sidebar-item active"
+
+            class="
+                sidebar-item
+                active
+            "
+
             data-section="visitorSection"
 
             onclick="
@@ -1932,7 +2049,9 @@ footer{
 
         <button
             type="button"
+
             class="sidebar-item"
+
             data-section="memoriesSection"
 
             onclick="
@@ -1956,7 +2075,9 @@ footer{
 
         <button
             type="button"
+
             class="sidebar-item"
+
             data-section="commentsSection"
 
             onclick="
@@ -2038,7 +2159,7 @@ footer{
 
 
 <!-- =========================================================
-     MAIN CONTENT
+     MAIN
 ========================================================= -->
 
 <div class="main-content">
@@ -2051,14 +2172,21 @@ footer{
     <div class="top">
 
 
-        <!-- BURGER -->
+        <!-- MAIN BURGER -->
 
         <button
             type="button"
+
             class="mobile-menu-btn"
+
             id="mainMenuButton"
-            onclick="toggleSidebar()"
+
+            onclick="
+                toggleSidebar()
+            "
+
             aria-label="Open admin menu"
+
             aria-expanded="false"
         >
 
@@ -2072,15 +2200,18 @@ footer{
         </h1>
 
 
-        <!-- DESKTOP ACTIONS -->
+        <!-- DESKTOP ACTION BUTTONS -->
 
         <div class="actions">
+
 
             <a
                 class="btn ghost"
                 href="{{ url_for('admin_messages') }}"
             >
+
                 💬 Messages
+
             </a>
 
 
@@ -2088,7 +2219,9 @@ footer{
                 class="btn primary"
                 href="{{ url_for('upload') }}"
             >
+
                 + Upload New Photo
+
             </a>
 
 
@@ -2096,8 +2229,11 @@ footer{
                 class="btn ghost"
                 href="{{ url_for('admin_logout') }}"
             >
+
                 Logout
+
             </a>
+
 
         </div>
 
@@ -2114,7 +2250,6 @@ footer{
 
         <div
             class="panel"
-            style="max-width:1040px;"
         >
 
             <div
@@ -2146,13 +2281,21 @@ footer{
 
     <div
         class="mobile-section active"
+
         id="visitorSection"
     >
 
         <div class="panel">
 
 
-            <div class="panel-header visitor-header">
+            <!-- HEADER -->
+
+            <div
+                class="
+                    panel-header
+                    visitor-header
+                "
+            >
 
                 <div class="visitor-title">
 
@@ -2164,13 +2307,14 @@ footer{
 
                 <button
                     type="button"
+
                     class="visitor-refresh-btn"
 
                     onclick="
                         loadVisitorLogs()
                     "
 
-                    title="Refresh visitor logs"
+                    title="Refresh"
                 >
 
                     ↻
@@ -2180,7 +2324,10 @@ footer{
             </div>
 
 
+            <!-- STATUS -->
+
             <div class="visitor-status">
+
 
                 <span
                     class="status-dot"
@@ -2188,181 +2335,304 @@ footer{
                 ></span>
 
 
-                <span id="visitorLiveText">
+                <span
+                    id="visitorLiveText"
+                >
+
                     Connecting...
+
                 </span>
 
 
-                <span class="visitor-update-time">
+                <span
+                    class="visitor-update-time"
+                >
 
                     Updated:
 
-                    <span id="visitorUpdated">
+                    <span
+                        id="visitorUpdated"
+                    >
                         --
                     </span>
 
                 </span>
 
+
             </div>
 
 
-            <div class="table-scroll">
+            <!-- BULK DELETE -->
 
-                <table>
+            <form
+                method="POST"
 
-                    <thead>
+                action="{{
+                    url_for(
+                        'delete_multiple_visitor_logs'
+                    )
+                }}"
 
-                        <tr>
+                id="bulkDeleteForm"
 
-                            <th>
-                                #
-                            </th>
-
-                            <th>
-                                📅 Login Time
-                            </th>
-
-                            <th>
-                                ⏱ Logout Time
-                            </th>
-
-                            <th>
-                                ⏳ Duration
-                            </th>
-
-                            <th>
-                                🖼 Pictures Viewed
-                            </th>
-
-                            <th>
-                                📍 IP Address
-                            </th>
-
-                            <th>
-                                Action
-                            </th>
-
-                        </tr>
-
-                    </thead>
+                onsubmit="
+                    return confirm(
+                        'Delete all selected visitor logs?'
+                    );
+                "
+            >
 
 
-                    <tbody
-                        id="visitorLogsBody"
+                <div
+                    class="bulk-action-bar"
+                >
+
+
+                    <label
+                        class="select-all-label"
                     >
 
-                        {% for v in visits %}
+                        <input
+                            type="checkbox"
 
-                        <tr>
+                            id="selectAllVisitors"
 
-                            <td>
-                                {{ v.id }}
-                            </td>
-
-
-                            <td>
-
-                                {{
-                                    v.login_time.strftime(
-                                        '%Y-%m-%d %H:%M:%S'
-                                    )
-                                }}
-
-                            </td>
+                            onchange="
+                                toggleAllVisitors(this)
+                            "
+                        >
 
 
-                            <td class="dim">
+                        <span>
+                            Select All
+                        </span>
 
-                                {% if v.logout_time %}
+                    </label>
+
+
+                    <span
+                        class="selected-count"
+
+                        id="selectedVisitorCount"
+                    >
+
+                        0 selected
+
+                    </span>
+
+
+                    <button
+                        type="submit"
+
+                        class="bulk-delete-btn"
+
+                        id="bulkDeleteButton"
+
+                        disabled
+                    >
+
+                        🗑 Delete Selected
+
+                    </button>
+
+
+                </div>
+
+
+                <!-- VISITOR TABLE -->
+
+                <div class="table-scroll">
+
+
+                    <table>
+
+
+                        <thead>
+
+                            <tr>
+
+
+                                <th>
+                                    Select
+                                </th>
+
+
+                                <th>
+                                    #
+                                </th>
+
+
+                                <th>
+                                    📅 Login Time
+                                </th>
+
+
+                                <th>
+                                    ⏱ Logout Time
+                                </th>
+
+
+                                <th>
+                                    ⏳ Duration
+                                </th>
+
+
+                                <th>
+                                    🖼 Pictures Viewed
+                                </th>
+
+
+                                <th>
+                                    📍 IP Address
+                                </th>
+
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="visitorLogsBody"
+                        >
+
+
+                            {% for v in visits %}
+
+
+                            <tr>
+
+
+                                <td>
+
+                                    <input
+                                        type="checkbox"
+
+                                        class="visitor-checkbox"
+
+                                        name="visit_ids"
+
+                                        value="{{ v.id }}"
+
+                                        onchange="
+                                            updateVisitorSelection()
+                                        "
+                                    >
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ v.id }}
+
+                                </td>
+
+
+                                <td>
 
                                     {{
-                                        v.logout_time.strftime(
+                                        v.login_time.strftime(
                                             '%Y-%m-%d %H:%M:%S'
                                         )
                                     }}
 
-                                {% else %}
-
-                                    <span
-                                        class="active-session"
-                                    >
-                                        ● Active
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
+                                </td>
 
 
-                            <td>
-                                {{ v.duration_display }}
-                            </td>
+                                <td class="dim">
 
 
-                            <td>
-                                {{ v.pictures_viewed or 0 }}
-                            </td>
+                                    {% if v.logout_time %}
 
 
-                            <td>
-                                {{ v.ip_address or 'Unknown' }}
-                            </td>
+                                        {{
+                                            v.logout_time.strftime(
+                                                '%Y-%m-%d %H:%M:%S'
+                                            )
+                                        }}
 
 
-                            <td>
-
-                                <form
-                                    method="POST"
-
-                                    action="{{
-                                        url_for(
-                                            'delete_visitor_log',
-                                            visit_id=v.id
-                                        )
-                                    }}"
-
-                                    onsubmit="
-                                        return confirm(
-                                            'Delete this visitor log permanently?'
-                                        );
-                                    "
-                                >
-
-                                    <button
-                                        type="submit"
-                                        class="del-btn"
-                                    >
-
-                                        🗑 Delete
-
-                                    </button>
-
-                                </form>
-
-                            </td>
-
-                        </tr>
+                                    {% else %}
 
 
-                        {% else %}
+                                        <span
+                                            class="active-session"
+                                        >
 
-                        <tr class="empty-row">
+                                            ● Active
 
-                            <td colspan="7">
+                                        </span>
 
-                                No visits logged yet.
 
-                            </td>
+                                    {% endif %}
 
-                        </tr>
 
-                        {% endfor %}
+                                </td>
 
-                    </tbody>
 
-                </table>
+                                <td>
 
-            </div>
+                                    {{
+                                        v.duration_display
+                                    }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {{
+                                        v.pictures_viewed
+                                        or 0
+                                    }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {{
+                                        v.ip_address
+                                        or 'Unknown'
+                                    }}
+
+                                </td>
+
+
+                            </tr>
+
+
+                            {% else %}
+
+
+                            <tr
+                                class="empty-row"
+                            >
+
+                                <td colspan="7">
+
+                                    No visits logged yet.
+
+                                </td>
+
+                            </tr>
+
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+            </form>
+
 
         </div>
 
@@ -2375,6 +2645,7 @@ footer{
 
     <div
         class="mobile-section"
+
         id="memoriesSection"
     >
 
@@ -2391,25 +2662,41 @@ footer{
 
             <div class="table-scroll">
 
+
                 <table>
+
 
                     <thead>
 
                         <tr>
 
-                            <th>ID</th>
+                            <th>
+                                ID
+                            </th>
 
-                            <th>Photo</th>
+                            <th>
+                                Photo
+                            </th>
 
-                            <th>Description</th>
+                            <th>
+                                Description
+                            </th>
 
-                            <th>Uploaded</th>
+                            <th>
+                                Uploaded
+                            </th>
 
-                            <th>❤️ Likes</th>
+                            <th>
+                                ❤️ Likes
+                            </th>
 
-                            <th>💬 Comments</th>
+                            <th>
+                                💬 Comments
+                            </th>
 
-                            <th>Action</th>
+                            <th>
+                                Action
+                            </th>
 
                         </tr>
 
@@ -2418,21 +2705,37 @@ footer{
 
                     <tbody>
 
+
                         {% for m in memories %}
+
 
                         <tr
                             id="row-{{ m.id }}"
-                            class="{% if m.is_hidden %}hidden-row{% endif %}"
+
+                            class="
+                                {% if m.is_hidden %}
+                                hidden-row
+                                {% endif %}
+                            "
                         >
 
+
+                            <!-- ID -->
+
                             <td>
+
                                 {{ m.id }}
+
                             </td>
 
 
+                            <!-- PHOTO -->
+
                             <td>
 
+
                                 {% if m.cover_photo %}
+
 
                                 <img
                                     class="thumb-sm"
@@ -2440,43 +2743,64 @@ footer{
                                     src="{{
                                         url_for(
                                             'static',
-                                            filename='uploads/' +
-                                            m.cover_photo.filename
+                                            filename=
+                                                'uploads/' +
+                                                m.cover_photo.filename
                                         )
                                     }}"
 
-                                    alt="Memory #{{ m.id }}"
+                                    alt="
+                                        Memory #{{ m.id }}
+                                    "
 
                                     onclick='openLightbox(
-                                        {{ url_for(
-                                            "static",
-                                            filename="uploads/" +
-                                            m.cover_photo.filename
-                                        )|tojson }},
-                                        {{ (
-                                            m.description
-                                            | default("", true)
-                                        )|tojson }}
+                                        {{
+                                            url_for(
+                                                "static",
+                                                filename=
+                                                    "uploads/" +
+                                                    m.cover_photo.filename
+                                            )|tojson
+                                        }},
+
+                                        {{
+                                            (
+                                                m.description
+                                                | default("", true)
+                                            )|tojson
+                                        }}
                                     )'
                                 >
 
+
                                 {% else %}
+
 
                                     —
 
+
                                 {% endif %}
+
 
                             </td>
 
 
-                            <td class="dim">
+                            <!-- DESCRIPTION -->
+
+                            <td
+                                class="dim"
+                            >
 
                                 {{ m.description }}
 
                             </td>
 
 
-                            <td class="dim">
+                            <!-- UPLOADED -->
+
+                            <td
+                                class="dim"
+                            >
 
                                 {{
                                     m.uploaded_at.strftime(
@@ -2486,6 +2810,8 @@ footer{
 
                             </td>
 
+
+                            <!-- LIKES -->
 
                             <td>
 
@@ -2501,9 +2827,13 @@ footer{
                             </td>
 
 
+                            <!-- COMMENTS -->
+
                             <td>
 
+
                                 {% if m.comment_count > 0 %}
+
 
                                 <button
                                     type="button"
@@ -2515,6 +2845,8 @@ footer{
                                             {{ m.id }}
                                         )
                                     "
+
+                                    title="View comments"
                                 >
 
                                     💬
@@ -2522,12 +2854,16 @@ footer{
                                     <span
                                         class="comment-count"
                                     >
+
                                         {{ m.comment_count }}
+
                                     </span>
 
                                 </button>
 
+
                                 {% else %}
+
 
                                 <button
                                     type="button"
@@ -2548,14 +2884,21 @@ footer{
 
                                 </button>
 
+
                                 {% endif %}
+
 
                             </td>
 
 
+                            <!-- ACTION -->
+
                             <td>
 
-                                <div class="menu-wrap">
+
+                                <div
+                                    class="menu-wrap"
+                                >
 
 
                                     <button
@@ -2563,7 +2906,7 @@ footer{
 
                                         class="burger-btn"
 
-                                        aria-label="Row actions"
+                                        aria-label="Memory actions"
 
                                         aria-expanded="false"
 
@@ -2600,9 +2943,11 @@ footer{
                                             }}"
                                         >
 
+
                                             <label
                                                 class="menu-item"
                                             >
+
 
                                                 <input
                                                     type="checkbox"
@@ -2627,7 +2972,9 @@ footer{
 
                                                 </span>
 
+
                                             </label>
+
 
                                         </form>
 
@@ -2687,16 +3034,22 @@ footer{
 
                                     </div>
 
+
                                 </div>
 
+
                             </td>
+
 
                         </tr>
 
 
                         {% else %}
 
-                        <tr class="empty-row">
+
+                        <tr
+                            class="empty-row"
+                        >
 
                             <td colspan="7">
 
@@ -2706,13 +3059,18 @@ footer{
 
                         </tr>
 
+
                         {% endfor %}
+
 
                     </tbody>
 
+
                 </table>
 
+
             </div>
+
 
         </div>
 
@@ -2725,6 +3083,7 @@ footer{
 
     <div
         class="mobile-section"
+
         id="commentsSection"
     >
 
@@ -2740,7 +3099,9 @@ footer{
 
             <div class="table-scroll">
 
+
                 <table>
+
 
                     <thead>
 
@@ -2769,29 +3130,43 @@ footer{
 
                     <tbody>
 
+
                         {% for comment in comments %}
+
 
                         <tr>
 
 
+                            <!-- MEMORY -->
+
                             <td>
 
-                                <div class="memory-mini">
 
-                                    {% if comment.memory
-                                          and comment.memory.cover_photo %}
+                                <div
+                                    class="memory-mini"
+                                >
+
+
+                                    {% if
+                                        comment.memory
+                                        and
+                                        comment.memory.cover_photo
+                                    %}
+
 
                                     <img
                                         src="{{
                                             url_for(
                                                 'static',
-                                                filename='uploads/' +
-                                                comment.memory.cover_photo.filename
+                                                filename=
+                                                    'uploads/' +
+                                                    comment.memory.cover_photo.filename
                                             )
                                         }}"
 
                                         alt="Memory"
                                     >
+
 
                                     {% endif %}
 
@@ -2808,12 +3183,17 @@ footer{
 
                                     </span>
 
+
                                 </div>
+
 
                             </td>
 
 
+                            <!-- COMMENT -->
+
                             <td>
+
 
                                 <div
                                     class="interaction-message"
@@ -2823,10 +3203,15 @@ footer{
 
                                 </div>
 
+
                             </td>
 
 
-                            <td class="dim">
+                            <!-- DATE -->
+
+                            <td
+                                class="dim"
+                            >
 
                                 {{
                                     comment.created_at.strftime(
@@ -2837,7 +3222,10 @@ footer{
                             </td>
 
 
+                            <!-- DELETE -->
+
                             <td>
+
 
                                 <form
                                     method="POST"
@@ -2856,6 +3244,7 @@ footer{
                                     "
                                 >
 
+
                                     <button
                                         type="submit"
                                         class="del-btn"
@@ -2865,7 +3254,9 @@ footer{
 
                                     </button>
 
+
                                 </form>
+
 
                             </td>
 
@@ -2875,7 +3266,10 @@ footer{
 
                         {% else %}
 
-                        <tr class="empty-row">
+
+                        <tr
+                            class="empty-row"
+                        >
 
                             <td colspan="4">
 
@@ -2885,13 +3279,18 @@ footer{
 
                         </tr>
 
+
                         {% endfor %}
+
 
                     </tbody>
 
+
                 </table>
 
+
             </div>
+
 
         </div>
 
@@ -2922,6 +3321,7 @@ footer{
 
 <div
     class="comments-overlay"
+
     id="commentsOverlay"
 
     onclick="
@@ -2931,33 +3331,48 @@ footer{
     "
 >
 
-    <div class="comments-modal">
+
+    <div
+        class="comments-modal"
+    >
 
 
-        <div class="comments-modal-header">
+        <div
+            class="comments-modal-header"
+        >
+
 
             <div>
 
+
                 <h2
                     class="comments-modal-title"
+
                     id="commentsModalTitle"
                 >
+
                     💬 Comments
+
                 </h2>
 
 
                 <div
                     class="comments-modal-subtitle"
+
                     id="commentsModalSubtitle"
                 >
+
                     Memory comments
+
                 </div>
+
 
             </div>
 
 
             <button
                 type="button"
+
                 class="comments-close"
 
                 onclick="
@@ -2971,15 +3386,18 @@ footer{
 
             </button>
 
+
         </div>
 
 
         <div
             class="comments-list"
+
             id="commentsList"
         >
 
         </div>
+
 
     </div>
 
@@ -2992,6 +3410,7 @@ footer{
 
 <div
     class="lightbox-overlay"
+
     id="lightbox"
 
     onclick="
@@ -3001,7 +3420,10 @@ footer{
     "
 >
 
+
     <button
+        type="button"
+
         class="lightbox-close"
 
         onclick="
@@ -3016,19 +3438,26 @@ footer{
     </button>
 
 
-    <div class="lightbox-content">
+    <div
+        class="lightbox-content"
+    >
+
 
         <img
             id="lightbox-img"
+
             src=""
+
             alt=""
         >
 
 
         <div
             class="lightbox-caption"
+
             id="lightbox-caption"
         ></div>
+
 
     </div>
 
@@ -3048,10 +3477,12 @@ const commentsData = {
     {{ m.id }}: {
 
         title:
-            {{ (
-                m.description
-                | default('', true)
-            )|tojson }},
+            {{
+                (
+                    m.description
+                    | default('', true)
+                )|tojson
+            }},
 
         comments: [
 
@@ -3066,9 +3497,11 @@ const commentsData = {
                     {{ comment.body|tojson }},
 
                 created_at:
-                    {{ comment.created_at.strftime(
-                        '%B %d, %Y %I:%M %p'
-                    )|tojson }}
+                    {{
+                        comment.created_at.strftime(
+                            '%B %d, %Y %I:%M %p'
+                        )|tojson
+                    }}
 
             }
 
@@ -3102,10 +3535,12 @@ function openSidebar(){
             'adminSidebar'
         );
 
+
     const overlay =
         document.getElementById(
             'sidebarOverlay'
         );
+
 
     const menuButton =
         document.getElementById(
@@ -3117,18 +3552,22 @@ function openSidebar(){
         'open'
     );
 
+
     overlay.classList.add(
         'open'
     );
+
 
     menuButton.classList.add(
         'open'
     );
 
+
     menuButton.setAttribute(
         'aria-expanded',
         'true'
     );
+
 
     document.body.style.overflow =
         'hidden';
@@ -3143,10 +3582,12 @@ function closeSidebar(){
             'adminSidebar'
         );
 
+
     const overlay =
         document.getElementById(
             'sidebarOverlay'
         );
+
 
     const menuButton =
         document.getElementById(
@@ -3158,18 +3599,22 @@ function closeSidebar(){
         'open'
     );
 
+
     overlay.classList.remove(
         'open'
     );
+
 
     menuButton.classList.remove(
         'open'
     );
 
+
     menuButton.setAttribute(
         'aria-expanded',
         'false'
     );
+
 
     document.body.style.overflow =
         '';
@@ -3384,7 +3829,9 @@ function openComments(
 
                 card.innerHTML = `
 
-                    <div class="comment-card-top">
+                    <div
+                        class="comment-card-top"
+                    >
 
                         <div>
 
@@ -3404,7 +3851,10 @@ function openComments(
 
 
                         <form
-                            class="comment-delete-form"
+
+                            class="
+                                comment-delete-form
+                            "
 
                             method="POST"
 
@@ -3420,7 +3870,9 @@ function openComments(
                             <button
                                 type="submit"
 
-                                class="comment-delete-btn"
+                                class="
+                                    comment-delete-btn
+                                "
                             >
 
                                 🗑 Delete
@@ -3485,7 +3937,7 @@ function closeComments(){
 
 
 /* =========================================================
-   ROW MENU
+   ROW BURGER MENU
 ========================================================= */
 
 function closeAllRowMenus(){
@@ -3601,6 +4053,165 @@ document.addEventListener(
 
 
 /* =========================================================
+   VISITOR LOG SELECTION
+========================================================= */
+
+function updateVisitorSelection(){
+
+    const checkboxes =
+        document.querySelectorAll(
+            '.visitor-checkbox'
+        );
+
+
+    const checked =
+        document.querySelectorAll(
+            '.visitor-checkbox:checked'
+        );
+
+
+    const selectAll =
+        document.getElementById(
+            'selectAllVisitors'
+        );
+
+
+    const count =
+        document.getElementById(
+            'selectedVisitorCount'
+        );
+
+
+    const deleteButton =
+        document.getElementById(
+            'bulkDeleteButton'
+        );
+
+
+    const total =
+        checkboxes.length;
+
+
+    const selected =
+        checked.length;
+
+
+    if(count){
+
+        count.textContent =
+            selected +
+            ' selected';
+
+    }
+
+
+    if(deleteButton){
+
+        deleteButton.disabled =
+            selected === 0;
+
+    }
+
+
+    if(selectAll){
+
+        selectAll.checked =
+            total > 0 &&
+            selected === total;
+
+
+        selectAll.indeterminate =
+            selected > 0 &&
+            selected < total;
+
+    }
+
+}
+
+
+/* =========================================================
+   SELECT ALL VISITORS
+========================================================= */
+
+function toggleAllVisitors(
+    checkbox
+){
+
+    const checkboxes =
+        document.querySelectorAll(
+            '.visitor-checkbox'
+        );
+
+
+    checkboxes.forEach(
+        function(item){
+
+            item.checked =
+                checkbox.checked;
+
+        }
+    );
+
+
+    updateVisitorSelection();
+
+}
+
+
+/* =========================================================
+   RESET VISITOR SELECTION
+========================================================= */
+
+function resetVisitorSelection(){
+
+    const selectAll =
+        document.getElementById(
+            'selectAllVisitors'
+        );
+
+
+    const deleteButton =
+        document.getElementById(
+            'bulkDeleteButton'
+        );
+
+
+    const count =
+        document.getElementById(
+            'selectedVisitorCount'
+        );
+
+
+    if(selectAll){
+
+        selectAll.checked =
+            false;
+
+        selectAll.indeterminate =
+            false;
+
+    }
+
+
+    if(deleteButton){
+
+        deleteButton.disabled =
+            true;
+
+    }
+
+
+    if(count){
+
+        count.textContent =
+            '0 selected';
+
+    }
+
+}
+
+
+/* =========================================================
    REAL-TIME VISITOR LOGS
 ========================================================= */
 
@@ -3693,7 +4304,9 @@ async function loadVisitorLogs(){
 
             body.innerHTML = `
 
-                <tr class="empty-row">
+                <tr
+                    class="empty-row"
+                >
 
                     <td colspan="7">
 
@@ -3718,17 +4331,56 @@ async function loadVisitorLogs(){
                         );
 
 
+                    const checkbox =
+                        document.createElement(
+                            'input'
+                        );
+
+
+                    checkbox.type =
+                        'checkbox';
+
+
+                    checkbox.className =
+                        'visitor-checkbox';
+
+
+                    checkbox.name =
+                        'visit_ids';
+
+
+                    checkbox.value =
+                        visit.id;
+
+
+                    checkbox.addEventListener(
+                        'change',
+                        updateVisitorSelection
+                    );
+
+
+                    const selectCell =
+                        document.createElement(
+                            'td'
+                        );
+
+
+                    selectCell.appendChild(
+                        checkbox
+                    );
+
+
                     const logoutDisplay =
                         visit.active
 
                         ?
 
                         `
-                        <span
-                            class="active-session"
-                        >
-                            ● Active
-                        </span>
+                            <span
+                                class="active-session"
+                            >
+                                ● Active
+                            </span>
                         `
 
                         :
@@ -3740,8 +4392,12 @@ async function loadVisitorLogs(){
 
                     row.innerHTML = `
 
+                        <td></td>
+
                         <td>
-                            ${visit.id}
+                            ${escapeHtml(
+                                visit.id
+                            )}
                         </td>
 
                         <td>
@@ -3761,7 +4417,9 @@ async function loadVisitorLogs(){
                         </td>
 
                         <td>
-                            ${visit.pictures_viewed}
+                            ${escapeHtml(
+                                visit.pictures_viewed
+                            )}
                         </td>
 
                         <td>
@@ -3770,34 +4428,13 @@ async function loadVisitorLogs(){
                             )}
                         </td>
 
-                        <td>
-
-                            <form
-                                method="POST"
-
-                                action="/admin/visitor/delete/${visit.id}"
-
-                                onsubmit="
-                                    return confirm(
-                                        'Delete this visitor log permanently?'
-                                    );
-                                "
-                            >
-
-                                <button
-                                    type="submit"
-                                    class="del-btn"
-                                >
-
-                                    🗑 Delete
-
-                                </button>
-
-                            </form>
-
-                        </td>
-
                     `;
+
+
+                    row.replaceChild(
+                        selectCell,
+                        row.children[0]
+                    );
 
 
                     body.appendChild(
@@ -3833,6 +4470,9 @@ async function loadVisitorLogs(){
                 new Date().toLocaleTimeString();
 
         }
+
+
+        resetVisitorSelection();
 
     }
 
@@ -3889,7 +4529,7 @@ function escapeHtml(
 
 
 /* =========================================================
-   START REAL-TIME REFRESH
+   AUTO REFRESH
 ========================================================= */
 
 function startVisitorLogRefresh(){
@@ -3928,7 +4568,6 @@ function startVisitorLogRefresh(){
                 }
 
             },
-
             5000
         );
 
@@ -4074,6 +4713,8 @@ document.addEventListener(
     function(){
 
         startVisitorLogRefresh();
+
+        updateVisitorSelection();
 
     }
 );

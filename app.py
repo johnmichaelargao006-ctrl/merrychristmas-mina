@@ -11,8 +11,9 @@ Features:
 - Persistent likes
 - Persistent comments
 - Visitor logs
-- Real-time visitor logs for admin
-- Delete visitor logs
+- Real-time visitor logs
+- Delete one visitor log
+- Delete multiple visitor logs
 - Admin/Mina messages
 """
 
@@ -238,6 +239,7 @@ class VisitorSession(db.Model):
     def duration_display(self):
 
         if not self.logout_time:
+
             return "Active"
 
         delta = (
@@ -349,6 +351,7 @@ class Message(db.Model):
 # ============================================================
 
 with app.app_context():
+
     db.create_all()
 
 
@@ -721,9 +724,6 @@ def memory_detail(memory_id):
         memory_id
     )
 
-    # Hidden memories redirect back to
-    # the gallery instead of showing 404.
-
     if memory.is_hidden:
 
         flash(
@@ -1027,33 +1027,27 @@ def admin_visitor_logs():
             ),
 
             "pictures_viewed": (
-                visit.pictures_viewed
-                or 0
+                visit.pictures_viewed or 0
             ),
 
             "ip_address": (
-                visit.ip_address
-                or "Unknown"
+                visit.ip_address or "Unknown"
             ),
 
             "active": (
-                visit.logout_time
-                is None
+                visit.logout_time is None
             )
 
         })
 
     return jsonify({
-
         "success": True,
-
         "visits": visit_data
-
     })
 
 
 # ============================================================
-# DELETE VISITOR LOG
+# DELETE ONE VISITOR LOG
 # ============================================================
 
 @app.route(
@@ -1067,12 +1061,7 @@ def delete_visitor_log(visit_id):
         visit_id
     )
 
-    # Delete likes associated with this
-    # visitor session first.
-    #
-    # Comments are NOT connected to the
-    # visitor session, so comments remain.
-
+    # Delete likes connected to this session.
     Like.query.filter_by(
         visit_id=visit.id
     ).delete(
@@ -1087,6 +1076,76 @@ def delete_visitor_log(visit_id):
 
     flash(
         "Visitor log deleted."
+    )
+
+    return redirect(
+        url_for(
+            "admin_dashboard"
+        )
+    )
+
+
+# ============================================================
+# DELETE MULTIPLE VISITOR LOGS
+# ============================================================
+
+@app.route(
+    "/admin/visitor/delete-multiple",
+    methods=["POST"]
+)
+@admin_required
+def delete_multiple_visitor_logs():
+
+    visit_ids = request.form.getlist(
+        "visit_ids"
+    )
+
+    deleted_count = 0
+
+    for visit_id in visit_ids:
+
+        try:
+
+            visit_id = int(
+                visit_id
+            )
+
+        except (
+            TypeError,
+            ValueError
+        ):
+
+            continue
+
+        visit = (
+            VisitorSession.query.get(
+                visit_id
+            )
+        )
+
+        if not visit:
+
+            continue
+
+        # Delete likes connected to
+        # this visitor session.
+
+        Like.query.filter_by(
+            visit_id=visit.id
+        ).delete(
+            synchronize_session=False
+        )
+
+        db.session.delete(
+            visit
+        )
+
+        deleted_count += 1
+
+    db.session.commit()
+
+    flash(
+        f"{deleted_count} visitor log(s) deleted."
     )
 
     return redirect(
@@ -1399,6 +1458,19 @@ def delete_memory(memory_id):
         memory_id
     )
 
+    # Delete likes and comments first.
+    Like.query.filter_by(
+        memory_id=memory.id
+    ).delete(
+        synchronize_session=False
+    )
+
+    Comment.query.filter_by(
+        memory_id=memory.id
+    ).delete(
+        synchronize_session=False
+    )
+
     for photo in memory.photos:
 
         path = os.path.join(
@@ -1425,6 +1497,10 @@ def delete_memory(memory_id):
     )
 
     db.session.commit()
+
+    flash(
+        "Memory deleted."
+    )
 
     return redirect(
         url_for(
