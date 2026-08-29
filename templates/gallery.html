@@ -11,7 +11,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
 
-
 :root {
     --pink-deep: #b84075;
     --pink-accent: #d65890;
@@ -21,7 +20,6 @@
     --text-medium: #1a1a1a;
 
     --card-bg: rgba(0, 0, 0, 0.82);
-    --card-bg-dark: rgba(0, 0, 0, 0.92);
 }
 
 
@@ -50,7 +48,9 @@ body {
     font-family: 'Segoe UI', serif;
     position: relative;
     overflow-x: hidden;
+
     color: var(--text-dark);
+
     background: none;
 
     min-height: 100vh;
@@ -254,6 +254,8 @@ header p::after {
 
     text-decoration: none;
 
+    color: inherit;
+
     display: block;
 
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -283,7 +285,8 @@ header p::after {
 
     height: 340px;
 
-    background: rgba(20, 15, 18, 0.5);
+    background:
+        rgba(20, 15, 18, 0.5);
 
     display: flex;
 
@@ -323,7 +326,7 @@ header p::after {
 
 
 /* =========================================================
-   CARD TITLE
+   CARD FOOTER
 ========================================================= */
 
 .card-footer {
@@ -337,7 +340,8 @@ header p::after {
 
     gap: 10px;
 
-    background: rgba(0, 0, 0, 0.88);
+    background:
+        rgba(0, 0, 0, 0.88);
 }
 
 
@@ -370,7 +374,8 @@ header p::after {
 .card-date {
     display: block;
 
-    color: rgba(255, 255, 255, 0.65);
+    color:
+        rgba(255, 255, 255, 0.65);
 
     font-size: 11px;
 
@@ -399,12 +404,17 @@ header p::after {
     font-weight: 600;
 
     box-shadow:
-        0 3px 12px rgba(214, 88, 144, 0.4);
+        0 3px 12px rgba(
+            214,
+            88,
+            144,
+            0.4
+        );
 }
 
 
 /* =========================================================
-   INTERACTION BAR
+   LIKE + COMMENT BAR
 ========================================================= */
 
 .interaction-bar {
@@ -445,6 +455,8 @@ header p::after {
     gap: 5px;
 
     padding: 4px 0;
+
+    font-family: inherit;
 
     transition:
         transform 0.2s ease,
@@ -522,7 +534,8 @@ header p::after {
 
     background: none;
 
-    color: rgba(255,255,255,0.65);
+    color:
+        rgba(255,255,255,0.65);
 
     cursor: pointer;
 
@@ -598,7 +611,7 @@ header p::after {
 
 
 /* =========================================================
-   ADD COMMENT
+   COMMENT FORM
 ========================================================= */
 
 .comment-form {
@@ -734,7 +747,12 @@ header p::after {
     font-weight: 600;
 
     box-shadow:
-        0 4px 15px rgba(0, 0, 0, 0.4);
+        0 4px 15px rgba(
+            0,
+            0,
+            0,
+            0.4
+        );
 
     transition:
         transform 0.3s ease,
@@ -743,10 +761,16 @@ header p::after {
 
 
 .exit:hover {
-    transform: scale(1.06);
+    transform:
+        scale(1.06);
 
     box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.5);
+        0 8px 25px rgba(
+            0,
+            0,
+            0,
+            0.5
+        );
 
     color: #fff;
 }
@@ -791,7 +815,12 @@ header p::after {
     text-decoration: none;
 
     box-shadow:
-        0 6px 20px rgba(0, 0, 0, 0.4);
+        0 6px 20px rgba(
+            0,
+            0,
+            0,
+            0.4
+        );
 
     transition:
         transform 0.3s ease;
@@ -810,9 +839,13 @@ header p::after {
 ========================================================= */
 
 footer {
+    flex-shrink: 0;
+
     text-align: center;
 
     padding: 25px 15px;
+
+    margin-top: auto;
 
     color: #000000;
 
@@ -825,8 +858,6 @@ footer {
     position: relative;
 
     z-index: 2;
-
-    margin-top: auto;
 }
 
 
@@ -849,7 +880,7 @@ footer strong {
 
 
 /* =========================================================
-   TABLET — 3 CARDS
+   TABLET
 ========================================================= */
 
 @media (max-width: 1200px) {
@@ -863,7 +894,7 @@ footer strong {
 
 
 /* =========================================================
-   PHONE — 2 CARDS PER ROW
+   PHONE — 2 CARDS
 ========================================================= */
 
 @media (max-width: 768px) {
@@ -1229,9 +1260,11 @@ footer strong {
             ✧ ✧ ✧
         </div>
 
+
         <h1>
             Your Memory
         </h1>
+
 
         <p>
             Every photo holds a special memory just for you
@@ -1257,8 +1290,13 @@ footer strong {
              MEMORY CARD
         ================================================== -->
 
-        <article
+        <a
             class="card memory-card"
+
+            href="{{ url_for(
+                'memory_detail',
+                memory_id=memory.id
+            ) }}"
 
             data-memory-id="{{ memory.id }}"
         >
@@ -1289,7 +1327,13 @@ footer strong {
                 {% else %}
 
                 <span class="alt-text">
-                    {{ memory.description or 'No photos yet' }}
+
+                    {{
+                        memory.description
+                        or
+                        'No photos yet'
+                    }}
+
                 </span>
 
                 {% endif %}
@@ -1306,14 +1350,18 @@ footer strong {
                 <div class="card-title-area">
 
                     <span class="card-text">
+
                         {{
                             memory.description
                             or
                             'Untitled Memory'
                         }}
+
                     </span>
 
+
                     <span class="card-date">
+
                         {{
                             memory.uploaded_at.strftime(
                                 '%B %d, %Y'
@@ -1321,6 +1369,7 @@ footer strong {
                             if memory.uploaded_at
                             else ''
                         }}
+
                     </span>
 
                 </div>
@@ -1346,7 +1395,7 @@ footer strong {
 
 
             <!-- =================================================
-                 LIKE + COMMENT BUTTONS
+                 LIKE + COMMENT
             ================================================== -->
 
             <div class="interaction-bar">
@@ -1383,6 +1432,7 @@ footer strong {
 
                     </span>
 
+
                     <span class="interaction-count like-count">
 
                         {{ memory.like_count }}
@@ -1409,6 +1459,7 @@ footer strong {
                         💬
                     </span>
 
+
                     <span class="interaction-count comment-count">
 
                         {{ memory.comment_count }}
@@ -1422,7 +1473,7 @@ footer strong {
 
 
             <!-- =================================================
-                 COMMENTS SECTION
+                 COMMENTS
             ================================================== -->
 
             <div
@@ -1464,6 +1515,7 @@ footer strong {
 
                         {{ comment.body }}
 
+
                         <span class="comment-date">
 
                             {{
@@ -1475,6 +1527,7 @@ footer strong {
                         </span>
 
                     </div>
+
 
                     {% else %}
 
@@ -1489,9 +1542,7 @@ footer strong {
                 </div>
 
 
-                <!-- =================================================
-                     ADD COMMENT FORM
-                ================================================== -->
+                <!-- COMMENT FORM -->
 
                 <form
                     class="comment-form"
@@ -1529,14 +1580,13 @@ footer strong {
                 </form>
 
 
-                <div class="comment-error">
-                </div>
+                <div class="comment-error"></div>
 
 
             </div>
 
 
-        </article>
+        </a>
 
 
         {% else %}
@@ -1572,7 +1622,7 @@ footer strong {
 
 
     <!-- =====================================================
-         LEAVE BUTTON
+         LEAVE
     ====================================================== -->
 
     <div class="exit-wrap">
@@ -1594,7 +1644,7 @@ footer strong {
 
 
 <!-- =========================================================
-     FLOATING MESSAGE BUTTON
+     FLOATING MESSAGE
 ========================================================= -->
 
 <a
@@ -1622,6 +1672,7 @@ footer strong {
         Ian Argao "Koian"
     </strong>
 
+
     <span class="footer-date">
 
         ✨ Created:
@@ -1636,12 +1687,14 @@ footer strong {
 
 
 <!-- =========================================================
-     AUTO DATE
+     DATE
 ========================================================= -->
 
 <script>
 
-const today = new Date();
+const today =
+    new Date();
+
 
 const dateString =
     today.toLocaleDateString(
@@ -1653,9 +1706,11 @@ const dateString =
         }
     );
 
+
 document.getElementById(
     'currentDate'
-).textContent = dateString;
+).textContent =
+    dateString;
 
 </script>
 
@@ -1667,11 +1722,13 @@ document.getElementById(
 <script>
 
 const sparkleColors = [
+
     '#fff8e8',
     '#ffeef2',
     '#ffe4ee',
     '#ffdce8',
     '#fff0f5'
+
 ];
 
 
@@ -1682,7 +1739,10 @@ for (
 ) {
 
     const sparkle =
-        document.createElement('div');
+        document.createElement(
+            'div'
+        );
+
 
     sparkle.className =
         'sparkle';
@@ -1694,6 +1754,7 @@ for (
 
     sparkle.style.width =
         size + 'px';
+
 
     sparkle.style.height =
         size + 'px';
@@ -1734,113 +1795,122 @@ for (
 
 
 <!-- =========================================================
-     LIKE SYSTEM
+     LIKE
 ========================================================= -->
 
 <script>
 
 document
     .querySelectorAll('.like-button')
-    .forEach(function(button) {
+    .forEach(
+        function(button) {
+
+            button.addEventListener(
+                'click',
+                async function(event) {
+
+                    /*
+                     * IMPORTANT:
+                     * Prevent the card link from
+                     * opening memory.html.
+                     */
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
 
 
-        button.addEventListener(
-            'click',
-            async function(event) {
-
-                event.preventDefault();
-
-                event.stopPropagation();
+                    const memoryId =
+                        button.dataset.memoryId;
 
 
-                const memoryId =
-                    button.dataset.memoryId;
-
-
-                const countElement =
-                    button.querySelector(
-                        '.like-count'
-                    );
-
-
-                const iconElement =
-                    button.querySelector(
-                        '.like-icon'
-                    );
-
-
-                try {
-
-                    const response =
-                        await fetch(
-                            `/gallery/like/${memoryId}`,
-                            {
-                                method: 'POST',
-
-                                headers: {
-                                    'Content-Type':
-                                        'application/json'
-                                }
-                            }
+                    const countElement =
+                        button.querySelector(
+                            '.like-count'
                         );
 
 
-                    const data =
-                        await response.json();
+                    const iconElement =
+                        button.querySelector(
+                            '.like-icon'
+                        );
 
 
-                    if (!data.success) {
+                    try {
+
+                        const response =
+                            await fetch(
+                                `/gallery/like/${memoryId}`,
+                                {
+                                    method: 'POST',
+
+                                    headers: {
+                                        'Content-Type':
+                                            'application/json'
+                                    }
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        if (!data.success) {
+
+                            alert(
+                                data.error ||
+                                'Unable to like this memory.'
+                            );
+
+                            return;
+
+                        }
+
+
+                        countElement.textContent =
+                            data.like_count;
+
+
+                        if (data.liked) {
+
+                            button.classList.add(
+                                'liked'
+                            );
+
+                            iconElement.textContent =
+                                '❤️';
+
+                        }
+
+                        else {
+
+                            button.classList.remove(
+                                'liked'
+                            );
+
+                            iconElement.textContent =
+                                '♡';
+
+                        }
+
+                    }
+
+                    catch(error) {
+
+                        console.error(error);
 
                         alert(
-                            data.error ||
-                            'Unable to like this memory.'
+                            'Something went wrong. Please try again.'
                         );
-
-                        return;
-
-                    }
-
-
-                    countElement.textContent =
-                        data.like_count;
-
-
-                    if (data.liked) {
-
-                        button.classList.add(
-                            'liked'
-                        );
-
-                        iconElement.textContent =
-                            '❤️';
-
-                    } else {
-
-                        button.classList.remove(
-                            'liked'
-                        );
-
-                        iconElement.textContent =
-                            '♡';
 
                     }
 
                 }
+            );
 
-                catch (error) {
-
-                    console.error(error);
-
-                    alert(
-                        'Something went wrong. Please try again.'
-                    );
-
-                }
-
-            }
-        );
-
-    });
+        }
+    );
 
 </script>
 
@@ -1853,119 +1923,135 @@ document
 
 document
     .querySelectorAll('.comment-button')
-    .forEach(function(button) {
+    .forEach(
+        function(button) {
+
+            button.addEventListener(
+                'click',
+                function(event) {
+
+                    /*
+                     * IMPORTANT:
+                     * Prevent memory.html from
+                     * opening when clicking 💬.
+                     */
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
 
 
-        button.addEventListener(
-            'click',
-            function(event) {
-
-                event.preventDefault();
-
-                event.stopPropagation();
+                    const memoryId =
+                        button.dataset.memoryId;
 
 
-                const memoryId =
-                    button.dataset.memoryId;
+                    const section =
+                        document.getElementById(
+                            'comments-' + memoryId
+                        );
 
 
-                const section =
-                    document.getElementById(
-                        'comments-' + memoryId
+                    /*
+                     * Close other comments
+                     */
+
+                    document
+                        .querySelectorAll(
+                            '.comments-section.open'
+                        )
+                        .forEach(
+                            function(other) {
+
+                                if(
+                                    other !== section
+                                ) {
+
+                                    other.classList.remove(
+                                        'open'
+                                    );
+
+                                }
+
+                            }
+                        );
+
+
+                    section.classList.toggle(
+                        'open'
                     );
 
 
-                document
-                    .querySelectorAll(
-                        '.comments-section.open'
-                    )
-                    .forEach(function(other) {
+                    if(
+                        section.classList.contains(
+                            'open'
+                        )
+                    ) {
 
-                        if (
-                            other !== section
-                        ) {
+                        const input =
+                            section.querySelector(
+                                '.comment-input'
+                            );
 
-                            other.classList.remove(
-                                'open'
+
+                        if(input) {
+
+                            setTimeout(
+                                function() {
+
+                                    input.focus();
+
+                                },
+                                100
                             );
 
                         }
 
-                    });
-
-
-                section.classList.toggle(
-                    'open'
-                );
-
-
-                if (
-                    section.classList.contains(
-                        'open'
-                    )
-                ) {
-
-                    const input =
-                        section.querySelector(
-                            '.comment-input'
-                        );
-
-
-                    if (input) {
-
-                        setTimeout(
-                            function() {
-
-                                input.focus();
-
-                            },
-                            100
-                        );
-
                     }
 
                 }
+            );
 
-            }
-        );
-
-    });
+        }
+    );
 
 
-/* CLOSE COMMENT SECTION */
+/* =========================================================
+   CLOSE COMMENTS
+========================================================= */
 
 document
     .querySelectorAll('.close-comments')
-    .forEach(function(button) {
+    .forEach(
+        function(button) {
+
+            button.addEventListener(
+                'click',
+                function(event) {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
 
 
-        button.addEventListener(
-            'click',
-            function(event) {
-
-                event.preventDefault();
-
-                event.stopPropagation();
+                    const memoryId =
+                        button.dataset.memoryId;
 
 
-                const memoryId =
-                    button.dataset.memoryId;
+                    const section =
+                        document.getElementById(
+                            'comments-' + memoryId
+                        );
 
 
-                const section =
-                    document.getElementById(
-                        'comments-' + memoryId
+                    section.classList.remove(
+                        'open'
                     );
 
+                }
+            );
 
-                section.classList.remove(
-                    'open'
-                );
-
-            }
-        );
-
-    });
+        }
+    );
 
 </script>
 
@@ -1978,203 +2064,190 @@ document
 
 document
     .querySelectorAll('.comment-form')
-    .forEach(function(form) {
+    .forEach(
+        function(form) {
+
+            form.addEventListener(
+                'submit',
+                async function(event) {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
 
 
-        form.addEventListener(
-            'submit',
-            async function(event) {
-
-                event.preventDefault();
+                    const memoryId =
+                        form.dataset.memoryId;
 
 
-                const memoryId =
-                    form.dataset.memoryId;
-
-
-                const input =
-                    form.querySelector(
-                        '.comment-input'
-                    );
-
-
-                const errorElement =
-                    form.parentElement.querySelector(
-                        '.comment-error'
-                    );
-
-
-                const commentList =
-                    form.parentElement.querySelector(
-                        '.comment-list'
-                    );
-
-
-                const commentCount =
-                    document.querySelector(
-                        `.comment-button[data-memory-id="${memoryId}"] .comment-count`
-                    );
-
-
-                const commentText =
-                    input.value.trim();
-
-
-                if (!commentText) {
-
-                    return;
-
-                }
-
-
-                errorElement.style.display =
-                    'none';
-
-
-                try {
-
-                    const response =
-                        await fetch(
-                            `/gallery/comment/${memoryId}`,
-                            {
-
-                                method: 'POST',
-
-                                headers: {
-                                    'Content-Type':
-                                        'application/json'
-                                },
-
-                                body: JSON.stringify({
-                                    comment:
-                                        commentText
-                                })
-
-                            }
+                    const input =
+                        form.querySelector(
+                            '.comment-input'
                         );
 
 
-                    const data =
-                        await response.json();
+                    const errorElement =
+                        form.parentElement.querySelector(
+                            '.comment-error'
+                        );
 
 
-                    if (!data.success) {
+                    const commentList =
+                        form.parentElement.querySelector(
+                            '.comment-list'
+                        );
 
-                        errorElement.textContent =
-                            data.error ||
-                            'Unable to add comment.';
 
-                        errorElement.style.display =
-                            'block';
+                    const commentCount =
+                        document.querySelector(
+                            `.comment-button[data-memory-id="${memoryId}"] .comment-count`
+                        );
+
+
+                    const commentText =
+                        input.value.trim();
+
+
+                    if(!commentText) {
+
+                        input.focus();
 
                         return;
 
                     }
 
 
-                    /* =====================================
-                       REMOVE "NO COMMENTS"
-                    ===================================== */
-
-                    const noComments =
-                        commentList.querySelector(
-                            '.no-comments'
-                        );
-
-
-                    if (noComments) {
-
-                        noComments.remove();
-
-                    }
-
-
-                    /* =====================================
-                       CREATE NEW COMMENT
-                    ===================================== */
-
-                    const newComment =
-                        document.createElement(
-                            'div'
-                        );
-
-
-                    newComment.className =
-                        'comment-item';
-
-
-                    newComment.textContent =
-                        data.comment.body;
-
-
-                    const date =
-                        document.createElement(
-                            'span'
-                        );
-
-
-                    date.className =
-                        'comment-date';
-
-
-                    date.textContent =
-                        data.comment.created_at;
-
-
-                    newComment.appendChild(
-                        date
-                    );
-
-
-                    commentList.appendChild(
-                        newComment
-                    );
-
-
-                    /* =====================================
-                       UPDATE COMMENT COUNT
-                    ===================================== */
-
-                    if (commentCount) {
-
-                        commentCount.textContent =
-                            data.comment_count;
-
-                    }
-
-
-                    /* =====================================
-                       CLEAR INPUT
-                    ===================================== */
-
-                    input.value = '';
-
-
-                    /* =====================================
-                       SCROLL TO NEW COMMENT
-                    ===================================== */
-
-                    commentList.scrollTop =
-                        commentList.scrollHeight;
-
-                }
-
-                catch (error) {
-
-                    console.error(error);
-
-                    errorElement.textContent =
-                        'Something went wrong. Please try again.';
-
                     errorElement.style.display =
-                        'block';
+                        'none';
+
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                `/gallery/comment/${memoryId}`,
+                                {
+
+                                    method: 'POST',
+
+                                    headers: {
+                                        'Content-Type':
+                                            'application/json'
+                                    },
+
+                                    body:
+                                        JSON.stringify({
+                                            comment:
+                                                commentText
+                                        })
+
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        if(!data.success) {
+
+                            errorElement.textContent =
+                                data.error ||
+                                'Unable to add comment.';
+
+                            errorElement.style.display =
+                                'block';
+
+                            return;
+
+                        }
+
+
+                        const noComments =
+                            commentList.querySelector(
+                                '.no-comments'
+                            );
+
+
+                        if(noComments) {
+
+                            noComments.remove();
+
+                        }
+
+
+                        const newComment =
+                            document.createElement(
+                                'div'
+                            );
+
+
+                        newComment.className =
+                            'comment-item';
+
+
+                        newComment.textContent =
+                            data.comment.body;
+
+
+                        const date =
+                            document.createElement(
+                                'span'
+                            );
+
+
+                        date.className =
+                            'comment-date';
+
+
+                        date.textContent =
+                            data.comment.created_at;
+
+
+                        newComment.appendChild(
+                            date
+                        );
+
+
+                        commentList.appendChild(
+                            newComment
+                        );
+
+
+                        if(commentCount) {
+
+                            commentCount.textContent =
+                                data.comment_count;
+
+                        }
+
+
+                        input.value =
+                            '';
+
+
+                        commentList.scrollTop =
+                            commentList.scrollHeight;
+
+                    }
+
+                    catch(error) {
+
+                        console.error(error);
+
+                        errorElement.textContent =
+                            'Something went wrong. Please try again.';
+
+                        errorElement.style.display =
+                            'block';
+
+                    }
 
                 }
+            );
 
-            }
-        );
-
-    });
+        }
+    );
 
 </script>
 
