@@ -11,6 +11,8 @@ Features:
 - Persistent likes
 - Persistent comments
 - Visitor logs
+- Real-time visitor logs for admin
+- Delete visitor logs
 - Admin/Mina messages
 """
 
@@ -31,14 +33,19 @@ from flask import (
 )
 
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
 
 
 # ============================================================
 # CONFIG
 # ============================================================
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = os.path.abspath(
+    os.path.dirname(__file__)
+)
 
 UPLOAD_FOLDER = os.path.join(
     BASE_DIR,
@@ -62,8 +69,11 @@ app.config["SECRET_KEY"] = os.environ.get(
 )
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "sqlite:///" +
-    os.path.join(BASE_DIR, "site.db")
+    "sqlite:///"
+    + os.path.join(
+        BASE_DIR,
+        "site.db"
+    )
 )
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -73,6 +83,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = (
     16 * 1024 * 1024
 )
+
 
 GALLERY_PASSWORD = os.environ.get(
     "GALLERY_PASSWORD",
@@ -95,6 +106,7 @@ ADMIN_PASSWORD_HASH = os.environ.get(
         ADMIN_PASSWORD_PLAIN
     )
 )
+
 
 db = SQLAlchemy(app)
 
@@ -189,7 +201,9 @@ class Photo(db.Model):
 
     memory_id = db.Column(
         db.Integer,
-        db.ForeignKey("memory.id"),
+        db.ForeignKey(
+            "memory.id"
+        ),
         nullable=False
     )
 
@@ -227,21 +241,22 @@ class VisitorSession(db.Model):
             return "Active"
 
         delta = (
-            self.logout_time -
-            self.login_time
+            self.logout_time
+            - self.login_time
         )
 
         minutes, seconds = divmod(
-            int(delta.total_seconds()),
+            int(
+                delta.total_seconds()
+            ),
             60
         )
 
-        return f"{minutes}m {seconds}s"
+        return (
+            f"{minutes}m "
+            f"{seconds}s"
+        )
 
-
-# ============================================================
-# LIKE MODEL
-# ============================================================
 
 class Like(db.Model):
 
@@ -252,13 +267,17 @@ class Like(db.Model):
 
     memory_id = db.Column(
         db.Integer,
-        db.ForeignKey("memory.id"),
+        db.ForeignKey(
+            "memory.id"
+        ),
         nullable=False
     )
 
     visit_id = db.Column(
         db.Integer,
-        db.ForeignKey("visitor_session.id"),
+        db.ForeignKey(
+            "visitor_session.id"
+        ),
         nullable=False
     )
 
@@ -276,10 +295,6 @@ class Like(db.Model):
     )
 
 
-# ============================================================
-# COMMENT MODEL
-# ============================================================
-
 class Comment(db.Model):
 
     id = db.Column(
@@ -289,7 +304,9 @@ class Comment(db.Model):
 
     memory_id = db.Column(
         db.Integer,
-        db.ForeignKey("memory.id"),
+        db.ForeignKey(
+            "memory.id"
+        ),
         nullable=False
     )
 
@@ -303,10 +320,6 @@ class Comment(db.Model):
         default=datetime.utcnow
     )
 
-
-# ============================================================
-# MESSAGE MODEL
-# ============================================================
 
 class Message(db.Model):
 
@@ -336,7 +349,6 @@ class Message(db.Model):
 # ============================================================
 
 with app.app_context():
-
     db.create_all()
 
 
@@ -347,7 +359,8 @@ with app.app_context():
 def allowed_file(filename):
 
     return (
-        "." in filename
+        "."
+        in filename
         and
         filename.rsplit(
             ".",
@@ -369,10 +382,15 @@ def gallery_required(view):
         ):
 
             return redirect(
-                url_for("gallery_login")
+                url_for(
+                    "gallery_login"
+                )
             )
 
-        return view(*args, **kwargs)
+        return view(
+            *args,
+            **kwargs
+        )
 
     return wrapped
 
@@ -389,10 +407,15 @@ def admin_required(view):
         ):
 
             return redirect(
-                url_for("admin_login")
+                url_for(
+                    "admin_login"
+                )
             )
 
-        return view(*args, **kwargs)
+        return view(
+            *args,
+            **kwargs
+        )
 
     return wrapped
 
@@ -437,16 +460,24 @@ def gallery_login():
                 )
             )
 
-            db.session.add(visit)
+            db.session.add(
+                visit
+            )
 
             db.session.commit()
 
-            session["gallery_authed"] = True
+            session[
+                "gallery_authed"
+            ] = True
 
-            session["visit_id"] = visit.id
+            session[
+                "visit_id"
+            ] = visit.id
 
             return redirect(
-                url_for("gallery")
+                url_for(
+                    "gallery"
+                )
             )
 
         error = (
@@ -487,9 +518,13 @@ def gallery():
 
     if visit_id:
 
-        liked_rows = Like.query.filter_by(
-            visit_id=visit_id
-        ).all()
+        liked_rows = (
+            Like.query
+            .filter_by(
+                visit_id=visit_id
+            )
+            .all()
+        )
 
         liked_memory_ids = {
             like.memory_id
@@ -536,10 +571,14 @@ def like_memory(memory_id):
             "error": "Gallery session expired."
         }), 401
 
-    existing_like = Like.query.filter_by(
-        memory_id=memory.id,
-        visit_id=visit_id
-    ).first()
+    existing_like = (
+        Like.query
+        .filter_by(
+            memory_id=memory.id,
+            visit_id=visit_id
+        )
+        .first()
+    )
 
     if existing_like:
 
@@ -564,9 +603,13 @@ def like_memory(memory_id):
 
     db.session.commit()
 
-    total_likes = Like.query.filter_by(
-        memory_id=memory.id
-    ).count()
+    total_likes = (
+        Like.query
+        .filter_by(
+            memory_id=memory.id
+        )
+        .count()
+    )
 
     return jsonify({
         "success": True,
@@ -610,10 +653,12 @@ def add_comment(memory_id):
 
     if not comment_text:
 
-        comment_text = request.form.get(
-            "comment",
-            ""
-        ).strip()
+        comment_text = (
+            request.form.get(
+                "comment",
+                ""
+            ).strip()
+        )
 
     if not comment_text:
 
@@ -640,9 +685,13 @@ def add_comment(memory_id):
 
     db.session.commit()
 
-    total_comments = Comment.query.filter_by(
-        memory_id=memory.id
-    ).count()
+    total_comments = (
+        Comment.query
+        .filter_by(
+            memory_id=memory.id
+        )
+        .count()
+    )
 
     return jsonify({
         "success": True,
@@ -650,9 +699,10 @@ def add_comment(memory_id):
         "comment": {
             "id": new_comment.id,
             "body": new_comment.body,
-            "created_at": new_comment.created_at.strftime(
-                "%B %d, %Y %I:%M %p"
-            )
+            "created_at":
+                new_comment.created_at.strftime(
+                    "%B %d, %Y %I:%M %p"
+                )
         }
     })
 
@@ -671,14 +721,8 @@ def memory_detail(memory_id):
         memory_id
     )
 
-    # ========================================================
-    # IMPORTANT FIX
-    #
-    # If a memory was hidden by the admin, do not show
-    # a 404 / URL error to the visitor.
-    #
-    # Send the visitor back to the gallery instead.
-    # ========================================================
+    # Hidden memories redirect back to
+    # the gallery instead of showing 404.
 
     if memory.is_hidden:
 
@@ -687,12 +731,10 @@ def memory_detail(memory_id):
         )
 
         return redirect(
-            url_for("gallery")
+            url_for(
+                "gallery"
+            )
         )
-
-    # ========================================================
-    # COUNT PICTURE VIEW
-    # ========================================================
 
     visit_id = session.get(
         "visit_id"
@@ -700,8 +742,10 @@ def memory_detail(memory_id):
 
     if visit_id:
 
-        visit = VisitorSession.query.get(
-            visit_id
+        visit = (
+            VisitorSession.query.get(
+                visit_id
+            )
         )
 
         if visit:
@@ -731,11 +775,17 @@ def gallery_logout():
 
     if visit_id:
 
-        visit = VisitorSession.query.get(
-            visit_id
+        visit = (
+            VisitorSession.query.get(
+                visit_id
+            )
         )
 
-        if visit and not visit.logout_time:
+        if (
+            visit
+            and
+            not visit.logout_time
+        ):
 
             visit.logout_time = (
                 datetime.utcnow()
@@ -754,7 +804,9 @@ def gallery_logout():
     )
 
     return redirect(
-        url_for("welcome")
+        url_for(
+            "welcome"
+        )
     )
 
 
@@ -788,7 +840,9 @@ def mina_messages():
             db.session.commit()
 
         return redirect(
-            url_for("mina_messages")
+            url_for(
+                "mina_messages"
+            )
         )
 
     thread = (
@@ -838,10 +892,14 @@ def admin_login():
             )
         ):
 
-            session["is_admin"] = True
+            session[
+                "is_admin"
+            ] = True
 
             return redirect(
-                url_for("admin_dashboard")
+                url_for(
+                    "admin_dashboard"
+                )
             )
 
         error = (
@@ -867,7 +925,9 @@ def admin_logout():
     )
 
     return redirect(
-        url_for("admin_login")
+        url_for(
+            "admin_login"
+        )
     )
 
 
@@ -921,6 +981,122 @@ def admin_dashboard():
 
 
 # ============================================================
+# REAL-TIME VISITOR LOGS
+# ============================================================
+
+@app.route(
+    "/admin/visitor-logs"
+)
+@admin_required
+def admin_visitor_logs():
+
+    visits = (
+        VisitorSession.query
+        .order_by(
+            VisitorSession.login_time.desc()
+        )
+        .all()
+    )
+
+    visit_data = []
+
+    for visit in visits:
+
+        visit_data.append({
+
+            "id": visit.id,
+
+            "login_time": (
+                visit.login_time.strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
+                if visit.login_time
+                else ""
+            ),
+
+            "logout_time": (
+                visit.logout_time.strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
+                if visit.logout_time
+                else "Active"
+            ),
+
+            "duration": (
+                visit.duration_display
+            ),
+
+            "pictures_viewed": (
+                visit.pictures_viewed
+                or 0
+            ),
+
+            "ip_address": (
+                visit.ip_address
+                or "Unknown"
+            ),
+
+            "active": (
+                visit.logout_time
+                is None
+            )
+
+        })
+
+    return jsonify({
+
+        "success": True,
+
+        "visits": visit_data
+
+    })
+
+
+# ============================================================
+# DELETE VISITOR LOG
+# ============================================================
+
+@app.route(
+    "/admin/visitor/delete/<int:visit_id>",
+    methods=["POST"]
+)
+@admin_required
+def delete_visitor_log(visit_id):
+
+    visit = VisitorSession.query.get_or_404(
+        visit_id
+    )
+
+    # Delete likes associated with this
+    # visitor session first.
+    #
+    # Comments are NOT connected to the
+    # visitor session, so comments remain.
+
+    Like.query.filter_by(
+        visit_id=visit.id
+    ).delete(
+        synchronize_session=False
+    )
+
+    db.session.delete(
+        visit
+    )
+
+    db.session.commit()
+
+    flash(
+        "Visitor log deleted."
+    )
+
+    return redirect(
+        url_for(
+            "admin_dashboard"
+        )
+    )
+
+
+# ============================================================
 # ADMIN DELETE COMMENT
 # ============================================================
 
@@ -946,7 +1122,9 @@ def delete_comment(comment_id):
     )
 
     return redirect(
-        url_for("admin_dashboard")
+        url_for(
+            "admin_dashboard"
+        )
     )
 
 
@@ -965,7 +1143,9 @@ def toggle_hide_memory(memory_id):
         memory_id
     )
 
-    memory.is_hidden = not memory.is_hidden
+    memory.is_hidden = (
+        not memory.is_hidden
+    )
 
     db.session.commit()
 
@@ -974,7 +1154,9 @@ def toggle_hide_memory(memory_id):
     )
 
     return redirect(
-        url_for("admin_dashboard")
+        url_for(
+            "admin_dashboard"
+        )
     )
 
 
@@ -996,12 +1178,13 @@ def upload():
                 "description",
                 ""
             ).strip()
-            or
-            "A special memory"
+            or "A special memory"
         )
 
-        files = request.files.getlist(
-            "photos"
+        files = (
+            request.files.getlist(
+                "photos"
+            )
         )
 
         saved_any = False
@@ -1067,13 +1250,17 @@ def upload():
             )
 
             return redirect(
-                url_for("upload")
+                url_for(
+                    "upload"
+                )
             )
 
         db.session.commit()
 
         return redirect(
-            url_for("admin_dashboard")
+            url_for(
+                "admin_dashboard"
+            )
         )
 
     return render_template(
@@ -1103,8 +1290,7 @@ def edit_memory(memory_id):
                 "description",
                 ""
             ).strip()
-            or
-            memory.description
+            or memory.description
         )
 
         remove_ids = {
@@ -1127,9 +1313,13 @@ def edit_memory(memory_id):
                     photo.filename
                 )
 
-                if os.path.exists(path):
+                if os.path.exists(
+                    path
+                ):
 
-                    os.remove(path)
+                    os.remove(
+                        path
+                    )
 
                 db.session.delete(
                     photo
@@ -1183,7 +1373,9 @@ def edit_memory(memory_id):
         )
 
         return redirect(
-            url_for("admin_dashboard")
+            url_for(
+                "admin_dashboard"
+            )
         )
 
     return render_template(
@@ -1216,9 +1408,13 @@ def delete_memory(memory_id):
             photo.filename
         )
 
-        if os.path.exists(path):
+        if os.path.exists(
+            path
+        ):
 
-            os.remove(path)
+            os.remove(
+                path
+            )
 
         db.session.delete(
             photo
@@ -1231,7 +1427,9 @@ def delete_memory(memory_id):
     db.session.commit()
 
     return redirect(
-        url_for("admin_dashboard")
+        url_for(
+            "admin_dashboard"
+        )
     )
 
 
@@ -1265,7 +1463,9 @@ def admin_messages():
             db.session.commit()
 
         return redirect(
-            url_for("admin_messages")
+            url_for(
+                "admin_messages"
+            )
         )
 
     thread = (
@@ -1304,7 +1504,9 @@ def delete_message(message_id):
     db.session.commit()
 
     return redirect(
-        url_for("admin_messages")
+        url_for(
+            "admin_messages"
+        )
     )
 
 
