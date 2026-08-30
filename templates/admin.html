@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,21 +32,13 @@
 :root{
 
     --ink:#1b1b1f;
-
     --panel:#232328;
-
     --panel-2:#28282e;
-
     --parchment:#ece5d6;
-
     --parchment-dim:#a7a297;
-
     --brass:#b98f4f;
-
     --brass-dim:#8a6c3e;
-
     --alert:#c1666b;
-
     --muted:#6b6b72;
 
 }
@@ -56,16 +49,12 @@
 ========================================================= */
 
 *{
-
     box-sizing:border-box;
-
 }
 
 
 html{
-
     min-height:100%;
-
 }
 
 
@@ -1993,11 +1982,7 @@ footer{
         <button
             type="button"
             class="sidebar-close"
-
-            onclick="
-                closeSidebar()
-            "
-
+            onclick="closeSidebar()"
             aria-label="Close menu"
         >
 
@@ -2010,30 +1995,16 @@ footer{
 
     <nav class="sidebar-nav">
 
-
         <div class="sidebar-section-title">
             Dashboard
         </div>
 
 
-        <!-- VISITOR LOGS -->
-
         <button
             type="button"
-
-            class="
-                sidebar-item
-                active
-            "
-
+            class="sidebar-item active"
             data-section="visitorSection"
-
-            onclick="
-                showSection(
-                    'visitorSection',
-                    this
-                )
-            "
+            onclick="showSection('visitorSection', this)"
         >
 
             📊
@@ -2045,21 +2016,11 @@ footer{
         </button>
 
 
-        <!-- MEMORIES -->
-
         <button
             type="button"
-
             class="sidebar-item"
-
             data-section="memoriesSection"
-
-            onclick="
-                showSection(
-                    'memoriesSection',
-                    this
-                )
-            "
+            onclick="showSection('memoriesSection', this)"
         >
 
             📷
@@ -2071,21 +2032,11 @@ footer{
         </button>
 
 
-        <!-- COMMENTS -->
-
         <button
             type="button"
-
             class="sidebar-item"
-
             data-section="commentsSection"
-
-            onclick="
-                showSection(
-                    'commentsSection',
-                    this
-                )
-            "
+            onclick="showSection('commentsSection', this)"
         >
 
             💬
@@ -2105,8 +2056,6 @@ footer{
         </div>
 
 
-        <!-- MESSAGES -->
-
         <a
             class="sidebar-item"
             href="{{ url_for('admin_messages') }}"
@@ -2120,8 +2069,6 @@ footer{
 
         </a>
 
-
-        <!-- UPLOAD -->
 
         <a
             class="sidebar-item"
@@ -2137,8 +2084,6 @@ footer{
         </a>
 
 
-        <!-- LOGOUT -->
-
         <a
             class="sidebar-item"
             href="{{ url_for('admin_logout') }}"
@@ -2152,7 +2097,6 @@ footer{
 
         </a>
 
-
     </nav>
 
 </aside>
@@ -2165,28 +2109,14 @@ footer{
 <div class="main-content">
 
 
-    <!-- =====================================================
-         TOP
-    ====================================================== -->
-
     <div class="top">
-
-
-        <!-- MAIN BURGER -->
 
         <button
             type="button"
-
             class="mobile-menu-btn"
-
             id="mainMenuButton"
-
-            onclick="
-                toggleSidebar()
-            "
-
+            onclick="toggleSidebar()"
             aria-label="Open admin menu"
-
             aria-expanded="false"
         >
 
@@ -2200,10 +2130,7 @@ footer{
         </h1>
 
 
-        <!-- DESKTOP ACTION BUTTONS -->
-
         <div class="actions">
-
 
             <a
                 class="btn ghost"
@@ -2234,7 +2161,6 @@ footer{
 
             </a>
 
-
         </div>
 
     </div>
@@ -2248,9 +2174,7 @@ footer{
 
         {% if messages %}
 
-        <div
-            class="panel"
-        >
+        <div class="panel">
 
             <div
                 style="
@@ -2281,14 +2205,11 @@ footer{
 
     <div
         class="mobile-section active"
-
         id="visitorSection"
     >
 
         <div class="panel">
 
-
-            <!-- HEADER -->
 
             <div
                 class="
@@ -2307,13 +2228,8 @@ footer{
 
                 <button
                     type="button"
-
                     class="visitor-refresh-btn"
-
-                    onclick="
-                        loadVisitorLogs()
-                    "
-
+                    onclick="loadVisitorLogs()"
                     title="Refresh"
                 >
 
@@ -2324,10 +2240,7 @@ footer{
             </div>
 
 
-            <!-- STATUS -->
-
             <div class="visitor-status">
-
 
                 <span
                     class="status-dot"
@@ -2335,29 +2248,22 @@ footer{
                 ></span>
 
 
-                <span
-                    id="visitorLiveText"
-                >
+                <span id="visitorLiveText">
 
                     Connecting...
 
                 </span>
 
 
-                <span
-                    class="visitor-update-time"
-                >
+                <span class="visitor-update-time">
 
                     Updated:
 
-                    <span
-                        id="visitorUpdated"
-                    >
+                    <span id="visitorUpdated">
                         --
                     </span>
 
                 </span>
-
 
             </div>
 
@@ -2366,15 +2272,8 @@ footer{
 
             <form
                 method="POST"
-
-                action="{{
-                    url_for(
-                        'delete_multiple_visitor_logs'
-                    )
-                }}"
-
+                action="{{ url_for('delete_multiple_visitor_logs') }}"
                 id="bulkDeleteForm"
-
                 onsubmit="
                     return confirm(
                         'Delete all selected visitor logs?'
@@ -2382,24 +2281,15 @@ footer{
                 "
             >
 
-
-                <div
-                    class="bulk-action-bar"
-                >
+                <div class="bulk-action-bar">
 
 
-                    <label
-                        class="select-all-label"
-                    >
+                    <label class="select-all-label">
 
                         <input
                             type="checkbox"
-
                             id="selectAllVisitors"
-
-                            onchange="
-                                toggleAllVisitors(this)
-                            "
+                            onchange="toggleAllVisitors(this)"
                         >
 
 
@@ -2412,7 +2302,6 @@ footer{
 
                     <span
                         class="selected-count"
-
                         id="selectedVisitorCount"
                     >
 
@@ -2423,18 +2312,14 @@ footer{
 
                     <button
                         type="submit"
-
                         class="bulk-delete-btn"
-
                         id="bulkDeleteButton"
-
                         disabled
                     >
 
                         🗑 Delete Selected
 
                     </button>
-
 
                 </div>
 
@@ -2443,58 +2328,44 @@ footer{
 
                 <div class="table-scroll">
 
-
                     <table>
-
 
                         <thead>
 
                             <tr>
 
-
                                 <th>
                                     Select
                                 </th>
-
 
                                 <th>
                                     #
                                 </th>
 
+                                <!-- NEW DAY COLUMN -->
+
+                                <th>
+                                    📅 Day
+                                </th>
 
                                 <th>
                                     📅 Login Time
                                 </th>
 
-
                                 <th>
                                     ⏱ Logout Time
                                 </th>
 
-
-                                <th>
-                                    ⏳ Duration
-                                </th>
-
-
-                                <th>
-                                    🖼 Pictures Viewed
-                                </th>
-
-
                                 <th>
                                     📍 IP Address
                                 </th>
-
 
                             </tr>
 
                         </thead>
 
 
-                        <tbody
-                            id="visitorLogsBody"
-                        >
+                        <tbody id="visitorLogsBody">
 
 
                             {% for v in visits %}
@@ -2507,16 +2378,10 @@ footer{
 
                                     <input
                                         type="checkbox"
-
                                         class="visitor-checkbox"
-
                                         name="visit_ids"
-
                                         value="{{ v.id }}"
-
-                                        onchange="
-                                            updateVisitorSelection()
-                                        "
+                                        onchange="updateVisitorSelection()"
                                     >
 
                                 </td>
@@ -2529,6 +2394,17 @@ footer{
                                 </td>
 
 
+                                <!-- NEW DAY -->
+
+                                <td>
+
+                                    {{ v.login_time.strftime('%A') }}
+
+                                </td>
+
+
+                                <!-- LOGIN TIME -->
+
                                 <td>
 
                                     {{
@@ -2539,6 +2415,8 @@ footer{
 
                                 </td>
 
+
+                                <!-- LOGOUT -->
 
                                 <td class="dim">
 
@@ -2556,9 +2434,7 @@ footer{
                                     {% else %}
 
 
-                                        <span
-                                            class="active-session"
-                                        >
+                                        <span class="active-session">
 
                                             ● Active
 
@@ -2571,24 +2447,7 @@ footer{
                                 </td>
 
 
-                                <td>
-
-                                    {{
-                                        v.duration_display
-                                    }}
-
-                                </td>
-
-
-                                <td>
-
-                                    {{
-                                        v.pictures_viewed
-                                        or 0
-                                    }}
-
-                                </td>
-
+                                <!-- IP -->
 
                                 <td>
 
@@ -2606,11 +2465,9 @@ footer{
                             {% else %}
 
 
-                            <tr
-                                class="empty-row"
-                            >
+                            <tr class="empty-row">
 
-                                <td colspan="7">
+                                <td colspan="6">
 
                                     No visits logged yet.
 
@@ -2624,15 +2481,11 @@ footer{
 
                         </tbody>
 
-
                     </table>
-
 
                 </div>
 
-
             </form>
-
 
         </div>
 
@@ -2645,12 +2498,10 @@ footer{
 
     <div
         class="mobile-section"
-
         id="memoriesSection"
     >
 
         <div class="panel">
-
 
             <div class="panel-header">
 
@@ -2662,41 +2513,25 @@ footer{
 
             <div class="table-scroll">
 
-
                 <table>
-
 
                     <thead>
 
                         <tr>
 
-                            <th>
-                                ID
-                            </th>
+                            <th>ID</th>
 
-                            <th>
-                                Photo
-                            </th>
+                            <th>Photo</th>
 
-                            <th>
-                                Description
-                            </th>
+                            <th>Description</th>
 
-                            <th>
-                                Uploaded
-                            </th>
+                            <th>Uploaded</th>
 
-                            <th>
-                                ❤️ Likes
-                            </th>
+                            <th>❤️ Likes</th>
 
-                            <th>
-                                💬 Comments
-                            </th>
+                            <th>💬 Comments</th>
 
-                            <th>
-                                Action
-                            </th>
+                            <th>Action</th>
 
                         </tr>
 
@@ -2711,7 +2546,6 @@ footer{
 
                         <tr
                             id="row-{{ m.id }}"
-
                             class="
                                 {% if m.is_hidden %}
                                 hidden-row
@@ -2720,16 +2554,10 @@ footer{
                         >
 
 
-                            <!-- ID -->
-
                             <td>
-
                                 {{ m.id }}
-
                             </td>
 
-
-                            <!-- PHOTO -->
 
                             <td>
 
@@ -2739,7 +2567,6 @@ footer{
 
                                 <img
                                     class="thumb-sm"
-
                                     src="{{
                                         url_for(
                                             'static',
@@ -2748,11 +2575,7 @@ footer{
                                                 m.cover_photo.filename
                                         )
                                     }}"
-
-                                    alt="
-                                        Memory #{{ m.id }}
-                                    "
-
+                                    alt="Memory #{{ m.id }}"
                                     onclick='openLightbox(
                                         {{
                                             url_for(
@@ -2762,7 +2585,6 @@ footer{
                                                     m.cover_photo.filename
                                             )|tojson
                                         }},
-
                                         {{
                                             (
                                                 m.description
@@ -2775,9 +2597,7 @@ footer{
 
                                 {% else %}
 
-
                                     —
-
 
                                 {% endif %}
 
@@ -2785,22 +2605,14 @@ footer{
                             </td>
 
 
-                            <!-- DESCRIPTION -->
-
-                            <td
-                                class="dim"
-                            >
+                            <td class="dim">
 
                                 {{ m.description }}
 
                             </td>
 
 
-                            <!-- UPLOADED -->
-
-                            <td
-                                class="dim"
-                            >
+                            <td class="dim">
 
                                 {{
                                     m.uploaded_at.strftime(
@@ -2811,13 +2623,9 @@ footer{
                             </td>
 
 
-                            <!-- LIKES -->
-
                             <td>
 
-                                <span
-                                    class="like-count"
-                                >
+                                <span class="like-count">
 
                                     ❤️
                                     {{ m.like_count }}
@@ -2827,8 +2635,6 @@ footer{
                             </td>
 
 
-                            <!-- COMMENTS -->
-
                             <td>
 
 
@@ -2837,23 +2643,14 @@ footer{
 
                                 <button
                                     type="button"
-
                                     class="comment-button"
-
-                                    onclick="
-                                        openComments(
-                                            {{ m.id }}
-                                        )
-                                    "
-
+                                    onclick="openComments({{ m.id }})"
                                     title="View comments"
                                 >
 
                                     💬
 
-                                    <span
-                                        class="comment-count"
-                                    >
+                                    <span class="comment-count">
 
                                         {{ m.comment_count }}
 
@@ -2867,12 +2664,10 @@ footer{
 
                                 <button
                                     type="button"
-
                                     class="
                                         comment-button
                                         no-comments
                                     "
-
                                     disabled
                                 >
 
@@ -2891,25 +2686,17 @@ footer{
                             </td>
 
 
-                            <!-- ACTION -->
-
                             <td>
 
 
-                                <div
-                                    class="menu-wrap"
-                                >
+                                <div class="menu-wrap">
 
 
                                     <button
                                         type="button"
-
                                         class="burger-btn"
-
                                         aria-label="Memory actions"
-
                                         aria-expanded="false"
-
                                         onclick="
                                             toggleRowMenu(
                                                 event,
@@ -2925,16 +2712,12 @@ footer{
 
                                     <div
                                         class="dropdown-menu"
-
                                         id="menu-{{ m.id }}"
                                     >
 
 
-                                        <!-- HIDE -->
-
                                         <form
                                             method="POST"
-
                                             action="{{
                                                 url_for(
                                                     'toggle_hide_memory',
@@ -2943,24 +2726,17 @@ footer{
                                             }}"
                                         >
 
-
-                                            <label
-                                                class="menu-item"
-                                            >
-
+                                            <label class="menu-item">
 
                                                 <input
                                                     type="checkbox"
-
                                                     onchange="
                                                         this.form.submit()
                                                     "
-
                                                     {% if m.is_hidden %}
                                                         checked
                                                     {% endif %}
                                                 >
-
 
                                                 <span>
 
@@ -2972,18 +2748,13 @@ footer{
 
                                                 </span>
 
-
                                             </label>
-
 
                                         </form>
 
 
-                                        <!-- EDIT -->
-
                                         <a
                                             class="menu-item"
-
                                             href="{{
                                                 url_for(
                                                     'edit_memory',
@@ -2997,18 +2768,14 @@ footer{
                                         </a>
 
 
-                                        <!-- DELETE -->
-
                                         <form
                                             method="POST"
-
                                             action="{{
                                                 url_for(
                                                     'delete_memory',
                                                     memory_id=m.id
                                                 )
                                             }}"
-
                                             onsubmit="
                                                 return confirm(
                                                     'Delete this memory permanently?'
@@ -3018,7 +2785,6 @@ footer{
 
                                             <button
                                                 type="submit"
-
                                                 class="
                                                     menu-item
                                                     menu-item-danger
@@ -3034,9 +2800,7 @@ footer{
 
                                     </div>
 
-
                                 </div>
-
 
                             </td>
 
@@ -3047,9 +2811,7 @@ footer{
                         {% else %}
 
 
-                        <tr
-                            class="empty-row"
-                        >
+                        <tr class="empty-row">
 
                             <td colspan="7">
 
@@ -3065,12 +2827,9 @@ footer{
 
                     </tbody>
 
-
                 </table>
 
-
             </div>
-
 
         </div>
 
@@ -3083,12 +2842,10 @@ footer{
 
     <div
         class="mobile-section"
-
         id="commentsSection"
     >
 
         <div class="panel">
-
 
             <div class="panel-header">
 
@@ -3099,29 +2856,19 @@ footer{
 
             <div class="table-scroll">
 
-
                 <table>
-
 
                     <thead>
 
                         <tr>
 
-                            <th>
-                                Memory
-                            </th>
+                            <th>Memory</th>
 
-                            <th>
-                                Comment
-                            </th>
+                            <th>Comment</th>
 
-                            <th>
-                                Date / Time
-                            </th>
+                            <th>Date / Time</th>
 
-                            <th>
-                                Action
-                            </th>
+                            <th>Action</th>
 
                         </tr>
 
@@ -3137,14 +2884,9 @@ footer{
                         <tr>
 
 
-                            <!-- MEMORY -->
-
                             <td>
 
-
-                                <div
-                                    class="memory-mini"
-                                >
+                                <div class="memory-mini">
 
 
                                     {% if
@@ -3163,7 +2905,6 @@ footer{
                                                     comment.memory.cover_photo.filename
                                             )
                                         }}"
-
                                         alt="Memory"
                                     >
 
@@ -3171,9 +2912,7 @@ footer{
                                     {% endif %}
 
 
-                                    <span
-                                        class="memory-mini-title"
-                                    >
+                                    <span class="memory-mini-title">
 
                                         {{
                                             comment.memory.description
@@ -3183,35 +2922,23 @@ footer{
 
                                     </span>
 
-
                                 </div>
-
 
                             </td>
 
 
-                            <!-- COMMENT -->
-
                             <td>
 
-
-                                <div
-                                    class="interaction-message"
-                                >
+                                <div class="interaction-message">
 
                                     "{{ comment.body }}"
 
                                 </div>
 
-
                             </td>
 
 
-                            <!-- DATE -->
-
-                            <td
-                                class="dim"
-                            >
+                            <td class="dim">
 
                                 {{
                                     comment.created_at.strftime(
@@ -3222,28 +2949,22 @@ footer{
                             </td>
 
 
-                            <!-- DELETE -->
-
                             <td>
-
 
                                 <form
                                     method="POST"
-
                                     action="{{
                                         url_for(
                                             'delete_comment',
                                             comment_id=comment.id
                                         )
                                     }}"
-
                                     onsubmit="
                                         return confirm(
                                             'Delete this comment permanently?'
                                         );
                                     "
                                 >
-
 
                                     <button
                                         type="submit"
@@ -3254,9 +2975,7 @@ footer{
 
                                     </button>
 
-
                                 </form>
-
 
                             </td>
 
@@ -3267,9 +2986,7 @@ footer{
                         {% else %}
 
 
-                        <tr
-                            class="empty-row"
-                        >
+                        <tr class="empty-row">
 
                             <td colspan="4">
 
@@ -3285,12 +3002,9 @@ footer{
 
                     </tbody>
 
-
                 </table>
 
-
             </div>
-
 
         </div>
 
@@ -3321,9 +3035,7 @@ footer{
 
 <div
     class="comments-overlay"
-
     id="commentsOverlay"
-
     onclick="
         if(event.target === this){
             closeComments();
@@ -3332,22 +3044,16 @@ footer{
 >
 
 
-    <div
-        class="comments-modal"
-    >
+    <div class="comments-modal">
 
 
-        <div
-            class="comments-modal-header"
-        >
+        <div class="comments-modal-header">
 
 
             <div>
 
-
                 <h2
                     class="comments-modal-title"
-
                     id="commentsModalTitle"
                 >
 
@@ -3358,7 +3064,6 @@ footer{
 
                 <div
                     class="comments-modal-subtitle"
-
                     id="commentsModalSubtitle"
                 >
 
@@ -3366,19 +3071,13 @@ footer{
 
                 </div>
 
-
             </div>
 
 
             <button
                 type="button"
-
                 class="comments-close"
-
-                onclick="
-                    closeComments()
-                "
-
+                onclick="closeComments()"
                 aria-label="Close comments"
             >
 
@@ -3392,7 +3091,6 @@ footer{
 
         <div
             class="comments-list"
-
             id="commentsList"
         >
 
@@ -3410,9 +3108,7 @@ footer{
 
 <div
     class="lightbox-overlay"
-
     id="lightbox"
-
     onclick="
         if(event.target === this){
             closeLightbox();
@@ -3423,13 +3119,8 @@ footer{
 
     <button
         type="button"
-
         class="lightbox-close"
-
-        onclick="
-            closeLightbox()
-        "
-
+        onclick="closeLightbox()"
         aria-label="Close"
     >
 
@@ -3438,23 +3129,18 @@ footer{
     </button>
 
 
-    <div
-        class="lightbox-content"
-    >
+    <div class="lightbox-content">
 
 
         <img
             id="lightbox-img"
-
             src=""
-
             alt=""
         >
 
 
         <div
             class="lightbox-caption"
-
             id="lightbox-caption"
         ></div>
 
@@ -3525,6 +3211,21 @@ const commentsData = {
 
 
 /* =========================================================
+   REMEMBER SELECTED VISITOR LOGS
+========================================================= */
+
+/*
+   This Set remembers the selected visitor IDs.
+
+   When the visitor table refreshes every 5 seconds,
+   the selected checkboxes are restored instead of
+   being automatically unchecked.
+*/
+
+let selectedVisitorIds = new Set();
+
+
+/* =========================================================
    SIDEBAR
 ========================================================= */
 
@@ -3535,12 +3236,10 @@ function openSidebar(){
             'adminSidebar'
         );
 
-
     const overlay =
         document.getElementById(
             'sidebarOverlay'
         );
-
 
     const menuButton =
         document.getElementById(
@@ -3548,26 +3247,16 @@ function openSidebar(){
         );
 
 
-    sidebar.classList.add(
-        'open'
-    );
+    sidebar.classList.add('open');
 
+    overlay.classList.add('open');
 
-    overlay.classList.add(
-        'open'
-    );
-
-
-    menuButton.classList.add(
-        'open'
-    );
-
+    menuButton.classList.add('open');
 
     menuButton.setAttribute(
         'aria-expanded',
         'true'
     );
-
 
     document.body.style.overflow =
         'hidden';
@@ -3582,12 +3271,10 @@ function closeSidebar(){
             'adminSidebar'
         );
 
-
     const overlay =
         document.getElementById(
             'sidebarOverlay'
         );
-
 
     const menuButton =
         document.getElementById(
@@ -3595,26 +3282,16 @@ function closeSidebar(){
         );
 
 
-    sidebar.classList.remove(
-        'open'
-    );
+    sidebar.classList.remove('open');
 
+    overlay.classList.remove('open');
 
-    overlay.classList.remove(
-        'open'
-    );
-
-
-    menuButton.classList.remove(
-        'open'
-    );
-
+    menuButton.classList.remove('open');
 
     menuButton.setAttribute(
         'aria-expanded',
         'false'
     );
-
 
     document.body.style.overflow =
         '';
@@ -3631,9 +3308,7 @@ function toggleSidebar(){
 
 
     if(
-        sidebar.classList.contains(
-            'open'
-        )
+        sidebar.classList.contains('open')
     ){
 
         closeSidebar();
@@ -3712,12 +3387,21 @@ function showSection(
     }
 
 
+    localStorage.setItem(
+        'adminSection',
+        sectionId
+    );
+
+
     closeSidebar();
 
 
     window.scrollTo({
+
         top:0,
+
         behavior:'smooth'
+
     });
 
 
@@ -3800,9 +3484,7 @@ function openComments(
 
         list.innerHTML = `
 
-            <div
-                class="no-comments-message"
-            >
+            <div class="no-comments-message">
 
                 No comments yet.
 
@@ -3851,15 +3533,9 @@ function openComments(
 
 
                         <form
-
-                            class="
-                                comment-delete-form
-                            "
-
+                            class="comment-delete-form"
                             method="POST"
-
                             action="/admin/comment/delete/${comment.id}"
-
                             onsubmit="
                                 return confirm(
                                     'Delete this comment permanently?'
@@ -3869,10 +3545,7 @@ function openComments(
 
                             <button
                                 type="submit"
-
-                                class="
-                                    comment-delete-btn
-                                "
+                                class="comment-delete-btn"
                             >
 
                                 🗑 Delete
@@ -4064,12 +3737,6 @@ function updateVisitorSelection(){
         );
 
 
-    const checked =
-        document.querySelectorAll(
-            '.visitor-checkbox:checked'
-        );
-
-
     const selectAll =
         document.getElementById(
             'selectAllVisitors'
@@ -4088,13 +3755,50 @@ function updateVisitorSelection(){
         );
 
 
-    const total =
-        checkboxes.length;
+    /*
+       Update the saved Set.
+
+       IMPORTANT:
+       We only remove an ID when the user
+       actually unchecks that checkbox.
+    */
+
+    checkboxes.forEach(
+        function(checkbox){
+
+            const id =
+                String(
+                    checkbox.value
+                );
+
+
+            if(checkbox.checked){
+
+                selectedVisitorIds.add(
+                    id
+                );
+
+            }
+
+            else{
+
+                selectedVisitorIds.delete(
+                    id
+                );
+
+            }
+
+        }
+    );
 
 
     const selected =
-        checked.length;
+        selectedVisitorIds.size;
 
+
+    /*
+       Update selected count.
+    */
 
     if(count){
 
@@ -4105,6 +3809,11 @@ function updateVisitorSelection(){
     }
 
 
+    /*
+       Enable delete button when
+       at least one visitor is selected.
+    */
+
     if(deleteButton){
 
         deleteButton.disabled =
@@ -4113,16 +3822,42 @@ function updateVisitorSelection(){
     }
 
 
+    /*
+       Update Select All.
+
+       If every currently visible checkbox
+       is selected, Select All stays checked.
+
+       If some are selected, it becomes
+       indeterminate.
+    */
+
     if(selectAll){
+
+        const total =
+            checkboxes.length;
+
+
+        const visibleSelected =
+            Array.from(
+                checkboxes
+            ).filter(
+                function(checkbox){
+
+                    return checkbox.checked;
+
+                }
+            ).length;
+
 
         selectAll.checked =
             total > 0 &&
-            selected === total;
+            visibleSelected === total;
 
 
         selectAll.indeterminate =
-            selected > 0 &&
-            selected < total;
+            visibleSelected > 0 &&
+            visibleSelected < total;
 
     }
 
@@ -4143,11 +3878,42 @@ function toggleAllVisitors(
         );
 
 
+    /*
+       If Select All is checked,
+       add every visible visitor ID.
+
+       If manually unchecked,
+       remove every visible visitor ID.
+    */
+
     checkboxes.forEach(
         function(item){
 
+            const id =
+                String(
+                    item.value
+                );
+
+
             item.checked =
                 checkbox.checked;
+
+
+            if(checkbox.checked){
+
+                selectedVisitorIds.add(
+                    id
+                );
+
+            }
+
+            else{
+
+                selectedVisitorIds.delete(
+                    id
+                );
+
+            }
 
         }
     );
@@ -4159,10 +3925,44 @@ function toggleAllVisitors(
 
 
 /* =========================================================
-   RESET VISITOR SELECTION
+   RESTORE SELECTION AFTER REFRESH
+========================================================= */
+
+function restoreVisitorSelection(){
+
+    const checkboxes =
+        document.querySelectorAll(
+            '.visitor-checkbox'
+        );
+
+
+    checkboxes.forEach(
+        function(checkbox){
+
+            checkbox.checked =
+                selectedVisitorIds.has(
+                    String(
+                        checkbox.value
+                    )
+                );
+
+        }
+    );
+
+
+    updateVisitorSelection();
+
+}
+
+
+/* =========================================================
+   CLEAR SELECTION
 ========================================================= */
 
 function resetVisitorSelection(){
+
+    selectedVisitorIds.clear();
+
 
     const selectAll =
         document.getElementById(
@@ -4257,7 +4057,6 @@ async function loadVisitorLogs(){
         const response =
             await fetch(
                 "{{ url_for('admin_visitor_logs') }}",
-
                 {
                     method:'GET',
 
@@ -4304,11 +4103,9 @@ async function loadVisitorLogs(){
 
             body.innerHTML = `
 
-                <tr
-                    class="empty-row"
-                >
+                <tr class="empty-row">
 
-                    <td colspan="7">
+                    <td colspan="6">
 
                         No visits logged yet.
 
@@ -4330,6 +4127,10 @@ async function loadVisitorLogs(){
                             'tr'
                         );
 
+
+                    /*
+                       Checkbox
+                    */
 
                     const checkbox =
                         document.createElement(
@@ -4353,6 +4154,20 @@ async function loadVisitorLogs(){
                         visit.id;
 
 
+                    /*
+                       IMPORTANT:
+                       Restore the checkbox state
+                       from selectedVisitorIds.
+                    */
+
+                    checkbox.checked =
+                        selectedVisitorIds.has(
+                            String(
+                                visit.id
+                            )
+                        );
+
+
                     checkbox.addEventListener(
                         'change',
                         updateVisitorSelection
@@ -4370,6 +4185,10 @@ async function loadVisitorLogs(){
                     );
 
 
+                    /*
+                       Logout display
+                    */
+
                     const logoutDisplay =
                         visit.active
 
@@ -4379,7 +4198,9 @@ async function loadVisitorLogs(){
                             <span
                                 class="active-session"
                             >
+
                                 ● Active
+
                             </span>
                         `
 
@@ -4390,6 +4211,13 @@ async function loadVisitorLogs(){
                         );
 
 
+                    /*
+                       Visitor row
+
+                       Duration and Pictures Viewed
+                       have been removed.
+                    */
+
                     row.innerHTML = `
 
                         <td></td>
@@ -4397,6 +4225,13 @@ async function loadVisitorLogs(){
                         <td>
                             ${escapeHtml(
                                 visit.id
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                visit.day
+                                || ''
                             )}
                         </td>
 
@@ -4412,19 +4247,8 @@ async function loadVisitorLogs(){
 
                         <td>
                             ${escapeHtml(
-                                visit.duration
-                            )}
-                        </td>
-
-                        <td>
-                            ${escapeHtml(
-                                visit.pictures_viewed
-                            )}
-                        </td>
-
-                        <td>
-                            ${escapeHtml(
                                 visit.ip_address
+                                || 'Unknown'
                             )}
                         </td>
 
@@ -4467,14 +4291,21 @@ async function loadVisitorLogs(){
         if(updated){
 
             updated.textContent =
-                new Date().toLocaleTimeString();
+                new Date()
+                    .toLocaleTimeString();
 
         }
 
 
-        resetVisitorSelection();
+        /*
+           Restore selection after
+           rebuilding the table.
+        */
+
+        restoreVisitorSelection();
 
     }
+
 
     catch(error){
 
@@ -4712,9 +4543,75 @@ document.addEventListener(
     'DOMContentLoaded',
     function(){
 
+        /*
+           Restore the last dashboard section.
+        */
+
+        const savedSection =
+            localStorage.getItem(
+                'adminSection'
+            ) || 'visitorSection';
+
+
+        const savedSectionElement =
+            document.getElementById(
+                savedSection
+            );
+
+
+        if(savedSectionElement){
+
+            document
+                .querySelectorAll(
+                    '.mobile-section'
+                )
+                .forEach(
+                    function(section){
+
+                        section.classList.remove(
+                            'active'
+                        );
+
+                    }
+                );
+
+
+            savedSectionElement.classList.add(
+                'active'
+            );
+
+
+            document
+                .querySelectorAll(
+                    '.sidebar-item[data-section]'
+                )
+                .forEach(
+                    function(item){
+
+                        item.classList.toggle(
+                            'active',
+                            item.dataset.section ===
+                            savedSection
+                        );
+
+                    }
+                );
+
+        }
+
+
+        /*
+           Start real-time visitor logs.
+        */
+
         startVisitorLogRefresh();
 
-        updateVisitorSelection();
+
+        /*
+           Restore current selection.
+        */
+
+        restoreVisitorSelection();
 
     }
 );
@@ -4725,3 +4622,4 @@ document.addEventListener(
 </body>
 
 </html>
+```

@@ -7,6 +7,8 @@
 
 <title>Your Memory</title>
 
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='uploads/maam-carmina-logo.png') }}">
+
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
@@ -51,7 +53,13 @@ body {
 
     color: var(--text-dark);
 
-    background: none;
+    background:
+        linear-gradient(
+            135deg,
+            #ead0da 0%,
+            #d9b5c4 45%,
+            #c89cad 100%
+        );
 
     min-height: 100vh;
 
@@ -89,7 +97,11 @@ body {
     width: 100%;
     height: 100%;
 
-    background: rgba(255, 245, 250, 0.25);
+    background:
+        linear-gradient(
+            rgba(120, 45, 78, 0.22),
+            rgba(70, 28, 50, 0.26)
+        );
 
     pointer-events: none;
 
@@ -273,6 +285,119 @@ header p::after {
 
     box-shadow:
         0 18px 45px rgba(0, 0, 0, 0.5);
+}
+
+/* =========================================================
+   DARK MODE — PINK MEMORY CARD BORDER
+========================================================= */
+
+body.dark-mode .card {
+    border: 2px solid #ff7eb8;
+    box-shadow:
+        0 8px 30px rgba(255, 126, 184, 0.18),
+        0 0 12px rgba(255, 126, 184, 0.12);
+}
+
+body.dark-mode .card:hover {
+    border-color: #ff5fa8;
+    box-shadow:
+        0 18px 45px rgba(255, 126, 184, 0.30),
+        0 0 20px rgba(255, 126, 184, 0.20);
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark-mode {
+    --text-dark: #ffffff;
+    --text-medium: #f1f1f1;
+    background: #111111;
+}
+
+body.dark-mode .bg-overlay {
+    background: rgba(0, 0, 0, 0.58);
+}
+
+body.dark-mode header {
+    background: rgba(20, 20, 20, 0.90);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+body.dark-mode h1 {
+    color: #ff8fbe;
+}
+
+body.dark-mode header p {
+    color: #f5f5f5;
+}
+
+body.dark-mode .card-footer {
+    background: rgba(8, 8, 8, 0.95);
+}
+
+body.dark-mode .interaction-bar {
+    background: rgba(5, 5, 5, 0.95);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.dark-mode .comments-section {
+    background: rgba(5, 5, 5, 0.96);
+}
+
+body.dark-mode footer {
+    color: #ffffff;
+}
+
+body.dark-mode footer strong {
+    color: #ff7eb8;
+}
+
+/* =========================================================
+   DARK MODE BUTTON
+========================================================= */
+
+.theme-toggle {
+    position: fixed;
+    right: 28px;
+    bottom: 100px;
+
+    width: 58px;
+    height: 58px;
+
+    border: 2px solid rgba(255,255,255,0.45);
+    border-radius: 50%;
+
+    background: #29242a;
+    color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 24px;
+    cursor: pointer;
+
+    z-index: 9999;
+
+    box-shadow:
+        0 6px 20px rgba(0,0,0,0.35);
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.12) rotate(-8deg);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
+.theme-toggle.dark-active {
+    background: linear-gradient(135deg, #ffd86b, #ffae42);
+    color: #222222;
 }
 
 
@@ -787,7 +912,7 @@ header p::after {
 
     right: 28px;
 
-    z-index: 10;
+    z-index: 9998;
 
     width: 58px;
 
@@ -831,6 +956,100 @@ header p::after {
     transform:
         scale(1.12)
         rotate(5deg);
+}
+
+
+
+/* =========================================================
+   THEME BUTTON RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+    .theme-toggle {
+        width: 48px;
+        height: 48px;
+        right: 15px;
+        bottom: 78px;
+        font-size: 19px;
+    }
+}
+
+@media (max-width: 480px) {
+    .theme-toggle {
+        width: 44px;
+        height: 44px;
+        right: 15px;
+        bottom: 72px;
+        font-size: 18px;
+    }
+}
+
+/* =========================================================
+   FLOATING HEART BUBBLES
+========================================================= */
+
+.heart-bubble {
+    position: fixed;
+    bottom: -60px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: rgba(184, 64, 117, 0.90);
+    pointer-events: none;
+    z-index: 1;
+    animation: floatHeart linear infinite;
+    box-shadow: 0 4px 15px rgba(140, 45, 90, 0.15);
+}
+
+@keyframes floatHeart {
+    0% {
+        transform: translateY(0) translateX(0) scale(0.8);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-45vh) translateX(18px) scale(1);
+    }
+    100% {
+        transform: translateY(-110vh) translateX(-15px) scale(1.15);
+        opacity: 0;
+    }
+}
+
+body.dark-mode {
+    background:
+        linear-gradient(
+            135deg,
+            #24131d 0%,
+            #321827 45%,
+            #1a0d15 100%
+        );
+}
+
+body.dark-mode .bg-overlay {
+    background: rgba(0, 0, 0, 0.42);
+}
+
+body.dark-mode .heart-bubble {
+    background: rgba(255, 126, 184, 0.10);
+    border-color: rgba(255, 126, 184, 0.28);
+    color: #ff7eb8;
+    box-shadow: 0 4px 18px rgba(255, 126, 184, 0.14);
+}
+
+@media (max-width: 480px) {
+    .heart-bubble {
+        opacity: 0.75;
+    }
 }
 
 
@@ -1644,19 +1863,70 @@ footer strong {
 
 
 <!-- =========================================================
+     FLOATING HEART BUBBLES
+========================================================= -->
+
+<script>
+
+for (let i = 0; i < 18; i++) {
+
+    const heart = document.createElement('div');
+
+    heart.className = 'heart-bubble';
+
+    heart.textContent =
+        Math.random() > 0.5 ? '♥' : '♡';
+
+    const size =
+        18 + Math.random() * 25;
+
+    heart.style.width = size + 'px';
+    heart.style.height = size + 'px';
+    heart.style.left = Math.random() * 100 + 'vw';
+
+    heart.style.animationDuration =
+        (8 + Math.random() * 10) + 's';
+
+    heart.style.animationDelay =
+        (-Math.random() * 12) + 's';
+
+    heart.style.fontSize =
+        (size * 0.45) + 'px';
+
+    document.body.appendChild(heart);
+
+}
+
+</script>
+
+
+<!-- =========================================================
      FLOATING MESSAGE
 ========================================================= -->
 
+<!-- =========================================================
+     DARK MODE BUTTON
+========================================================= -->
+<button
+    type="button"
+    class="theme-toggle"
+    id="themeToggle"
+    aria-label="Toggle dark mode"
+    title="Toggle dark mode"
+>
+    🌙
+</button>
+
+
+<!-- =========================================================
+     FLOATING MESSAGE BUTTON
+========================================================= -->
 <a
     class="fab"
-
     href="{{ url_for('mina_messages') }}"
-
     title="Message Admin"
 >
-
     💬
-
 </a>
 
 
@@ -2251,6 +2521,39 @@ document
 
 </script>
 
+
+
+<script>
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+const themeToggle = document.getElementById('themeToggle');
+
+function setDarkMode(enabled) {
+    if (!themeToggle) return;
+
+    document.body.classList.toggle('dark-mode', enabled);
+
+    themeToggle.textContent = enabled ? '☀️' : '🌙';
+    themeToggle.classList.toggle('dark-active', enabled);
+
+    themeToggle.title = enabled
+        ? 'Switch to light mode'
+        : 'Switch to dark mode';
+}
+
+const savedTheme = localStorage.getItem('galleryTheme');
+setDarkMode(savedTheme === 'dark');
+
+if (themeToggle) {
+    themeToggle.addEventListener('click', function () {
+        const enabled = !document.body.classList.contains('dark-mode');
+        localStorage.setItem('galleryTheme', enabled ? 'dark' : 'light');
+        setDarkMode(enabled);
+    });
+}
+</script>
 
 </body>
 

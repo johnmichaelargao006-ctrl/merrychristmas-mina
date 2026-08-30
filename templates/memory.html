@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Memory — {{ memory.title or 'Special Memory' }}</title>
+
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='uploads/maam-carmina-logo.png') }}">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
 
@@ -339,6 +341,83 @@
     margin-top: 5px;
     display: block;
   }
+body.dark-mode {
+    color: #ffffff;
+  }
+
+  body.dark-mode .bg-video {
+    filter: brightness(0.55) contrast(1.08) saturate(1.05);
+  }
+
+  body.dark-mode .bg-overlay {
+    background: rgba(0, 0, 0, 0.58);
+  }
+
+  body.dark-mode h1 {
+    color: #ff8fbe;
+    text-shadow: 0 0 12px rgba(255, 126, 184, 0.35);
+  }
+
+  body.dark-mode .photo-viewer {
+    background: rgba(5, 5, 5, 0.94);
+    border: 2px solid #ff7eb8;
+    box-shadow:
+      0 10px 40px rgba(0, 0, 0, 0.65),
+      0 0 18px rgba(255, 126, 184, 0.14);
+  }
+
+  body.dark-mode .main-photo-container {
+    background: rgba(0, 0, 0, 0.72);
+  }
+
+  body.dark-mode .photo-counter {
+    color: #ffffff;
+  }
+
+  body.dark-mode .memory-nav a {
+    background: rgba(0, 0, 0, 0.72);
+    border-color: rgba(255, 126, 184, 0.35);
+  }
+
+  body.dark-mode .memory-nav a:hover {
+    background: linear-gradient(135deg, #ff7eb8, #c94880);
+    border-color: transparent;
+  }
+
+  body.dark-mode .thumbnails-title {
+    color: #ff7eb8;
+  }
+
+  body.dark-mode .thumb {
+    border-color: rgba(255, 126, 184, 0.18);
+  }
+
+  body.dark-mode .thumb.active {
+    border-color: #ff7eb8;
+    box-shadow: 0 0 10px rgba(255, 126, 184, 0.28);
+  }
+
+  body.dark-mode footer {
+    color: #ffffff;
+  }
+
+  body.dark-mode footer strong {
+    color: #ff7eb8;
+  }
+
+  body.dark-mode .footer-date {
+    color: #ffffff;
+  }
+
+  @media (max-width: 600px) {
+    .theme-toggle {
+      width: 48px;
+      height: 48px;
+      right: 15px;
+      bottom: 18px;
+      font-size: 19px;
+    }
+  }
 
   /* ✅ MOBILE */
   @media (max-width: 600px) {
@@ -353,7 +432,6 @@
 </style>
 </head>
 <body>
-
 <!-- ✅ BRIGHT BACKGROUND VIDEO -->
 <video class="bg-video" autoplay muted loop playsinline>
   <source src="{{ url_for('static', filename='uploads/petal-bg.mp4') }}" type="video/mp4">
@@ -558,6 +636,24 @@
     s.style.left = (Math.random() * 100) + 'vw';
     s.style.opacity = 0.2 + Math.random() * 0.3;
     document.body.appendChild(s);
+  }
+</script>
+
+
+<script>
+  /* =========================================================
+     SHARED DARK MODE
+     The theme is controlled from gallery.html.
+     memory.html only reads the saved "galleryTheme" value.
+  ========================================================= */
+
+  const savedTheme =
+    localStorage.getItem('galleryTheme');
+
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
   }
 </script>
 

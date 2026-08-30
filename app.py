@@ -12,6 +12,8 @@ Features:
 - Persistent comments
 - Visitor logs
 - Real-time visitor logs
+- Philippine time display
+- Day display in visitor logs
 - Delete one visitor log
 - Delete multiple visitor logs
 - Admin/Mina messages
@@ -19,7 +21,12 @@ Features:
 
 import os
 import uuid
-from datetime import datetime
+
+from datetime import (
+    datetime,
+    timezone,
+    timedelta
+)
 
 from flask import (
     Flask,
@@ -29,11 +36,11 @@ from flask import (
     url_for,
     session,
     flash,
-    abort,
     jsonify
 )
 
 from flask_sqlalchemy import SQLAlchemy
+
 from werkzeug.security import (
     generate_password_hash,
     check_password_hash
@@ -48,11 +55,13 @@ BASE_DIR = os.path.abspath(
     os.path.dirname(__file__)
 )
 
+
 UPLOAD_FOLDER = os.path.join(
     BASE_DIR,
     "static",
     "uploads"
 )
+
 
 ALLOWED_EXTENSIONS = {
     "png",
@@ -62,12 +71,15 @@ ALLOWED_EXTENSIONS = {
     "webp"
 }
 
+
 app = Flask(__name__)
+
 
 app.config["SECRET_KEY"] = os.environ.get(
     "SECRET_KEY",
     "dev-change-me"
 )
+
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     "sqlite:///"
@@ -77,29 +89,39 @@ app.config["SQLALCHEMY_DATABASE_URI"] = (
     )
 )
 
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
 
 app.config["MAX_CONTENT_LENGTH"] = (
     16 * 1024 * 1024
 )
 
 
+# ============================================================
+# PASSWORDS
+# ============================================================
+
 GALLERY_PASSWORD = os.environ.get(
     "GALLERY_PASSWORD",
     "Ma'am_Carmina"
 )
+
 
 ADMIN_USERNAME = os.environ.get(
     "ADMIN_USERNAME",
     "cafemocha"
 )
 
+
 ADMIN_PASSWORD_PLAIN = os.environ.get(
     "ADMIN_PASSWORD",
     "ianargao"
 )
+
 
 ADMIN_PASSWORD_HASH = os.environ.get(
     "ADMIN_PASSWORD_HASH",
@@ -109,7 +131,25 @@ ADMIN_PASSWORD_HASH = os.environ.get(
 )
 
 
-db = SQLAlchemy(app)
+# ============================================================
+# PHILIPPINE TIME
+# ============================================================
+
+PH_TIMEZONE = timezone(
+    timedelta(
+        hours=8
+    )
+)
+
+
+# ============================================================
+# DATABASE
+# ============================================================
+
+db = SQLAlchemy(
+    app
+)
+
 
 os.makedirs(
     UPLOAD_FOLDER,
@@ -176,16 +216,24 @@ class Memory(db.Model):
     @property
     def like_count(self):
 
-        return Like.query.filter_by(
-            memory_id=self.id
-        ).count()
+        return (
+            Like.query
+            .filter_by(
+                memory_id=self.id
+            )
+            .count()
+        )
 
     @property
     def comment_count(self):
 
-        return Comment.query.filter_by(
-            memory_id=self.id
-        ).count()
+        return (
+            Comment.query
+            .filter_by(
+                memory_id=self.id
+            )
+            .count()
+        )
 
 
 class Photo(db.Model):
@@ -238,21 +286,69 @@ class VisitorSession(db.Model):
     @property
     def duration_display(self):
 
-        if not self.logout_time:
+        if not self.login_time:
 
-            return "Active"
+            return "0m 0s"
 
-        delta = (
-            self.logout_time
-            - self.login_time
+        login_utc = (
+            self.login_time
+        )
+
+        if login_utc.tzinfo is None:
+
+            login_utc = (
+                login_utc.replace(
+                    tzinfo=timezone.utc
+                )
+            )
+
+        if self.logout_time:
+
+            end_utc = (
+                self.logout_time
+            )
+
+            if end_utc.tzinfo is None:
+
+                end_utc = (
+                    end_utc.replace(
+                        tzinfo=timezone.utc
+                    )
+                )
+
+        else:
+
+            end_utc = datetime.now(
+                timezone.utc
+            )
+
+        total_seconds = max(
+            0,
+            int(
+                (
+                    end_utc -
+                    login_utc
+                ).total_seconds()
+            )
+        )
+
+        hours, remainder = divmod(
+            total_seconds,
+            3600
         )
 
         minutes, seconds = divmod(
-            int(
-                delta.total_seconds()
-            ),
+            remainder,
             60
         )
+
+        if hours > 0:
+
+            return (
+                f"{hours}h "
+                f"{minutes}m "
+                f"{seconds}s"
+            )
 
         return (
             f"{minutes}m "
@@ -370,6 +466,127 @@ def allowed_file(filename):
             1
         )[1].lower()
         in ALLOWED_EXTENSIONS
+    )
+
+
+def ph_time(dt):
+
+    """
+    Convert stored UTC datetime
+    to Philippine time.
+
+    Existing SQLite records are
+    stored as naive UTC datetimes.
+    """
+
+    if not dt:
+
+        return None
+
+    if dt.tzinfo is None:
+
+        dt = dt.replace(
+            tzinfo=timezone.utc
+        )
+
+    return dt.astimezone(
+        PH_TIMEZONE
+    )
+
+
+def utc_now_naive():
+
+    """
+    Current UTC time as a naive
+    datetime.
+
+    This keeps compatibility
+    with the existing SQLite
+    DateTime columns.
+    """
+
+    return datetime.utcnow()
+
+
+def visitor_duration_display(visit):
+
+    """
+    Calculate the visitor duration.
+
+    Closed session:
+        logout_time - login_time
+
+    Active session:
+        current UTC time - login_time
+    """
+
+    if not visit.login_time:
+
+        return "0m 0s"
+
+    login_utc = (
+        visit.login_time
+    )
+
+    if login_utc.tzinfo is None:
+
+        login_utc = (
+            login_utc.replace(
+                tzinfo=timezone.utc
+            )
+        )
+
+    if visit.logout_time:
+
+        end_utc = (
+            visit.logout_time
+        )
+
+        if end_utc.tzinfo is None:
+
+            end_utc = (
+                end_utc.replace(
+                    tzinfo=timezone.utc
+                )
+            )
+
+    else:
+
+        end_utc = datetime.now(
+            timezone.utc
+        )
+
+    total_seconds = max(
+        0,
+        int(
+            (
+                end_utc -
+                login_utc
+            ).total_seconds()
+        )
+    )
+
+    hours, remainder = divmod(
+        total_seconds,
+        3600
+    )
+
+    minutes, seconds = divmod(
+        remainder,
+        60
+    )
+
+    if hours > 0:
+
+        return (
+            f"{hours}h "
+            f"{minutes}m "
+            f"{seconds}s"
+        )
+
+    return (
+        f"{minutes}m "
+        f"{seconds}s"
     )
 
 
@@ -498,7 +715,9 @@ def gallery_login():
 # GALLERY
 # ============================================================
 
-@app.route("/gallery")
+@app.route(
+    "/gallery"
+)
 @gallery_required
 def gallery():
 
@@ -552,8 +771,10 @@ def gallery():
 @gallery_required
 def like_memory(memory_id):
 
-    memory = Memory.query.get_or_404(
-        memory_id
+    memory = (
+        Memory.query.get_or_404(
+            memory_id
+        )
     )
 
     if memory.is_hidden:
@@ -632,8 +853,10 @@ def like_memory(memory_id):
 @gallery_required
 def add_comment(memory_id):
 
-    memory = Memory.query.get_or_404(
-        memory_id
+    memory = (
+        Memory.query.get_or_404(
+            memory_id
+        )
     )
 
     if memory.is_hidden:
@@ -697,16 +920,27 @@ def add_comment(memory_id):
     )
 
     return jsonify({
+
         "success": True,
-        "comment_count": total_comments,
+
+        "comment_count":
+            total_comments,
+
         "comment": {
-            "id": new_comment.id,
-            "body": new_comment.body,
+
+            "id":
+                new_comment.id,
+
+            "body":
+                new_comment.body,
+
             "created_at":
                 new_comment.created_at.strftime(
                     "%B %d, %Y %I:%M %p"
                 )
+
         }
+
     })
 
 
@@ -720,8 +954,10 @@ def add_comment(memory_id):
 @gallery_required
 def memory_detail(memory_id):
 
-    memory = Memory.query.get_or_404(
-        memory_id
+    memory = (
+        Memory.query.get_or_404(
+            memory_id
+        )
     )
 
     if memory.is_hidden:
@@ -766,7 +1002,9 @@ def memory_detail(memory_id):
 # GALLERY LOGOUT
 # ============================================================
 
-@app.route("/gallery-logout")
+@app.route(
+    "/gallery-logout"
+)
 def gallery_logout():
 
     visit_id = session.get(
@@ -788,7 +1026,7 @@ def gallery_logout():
         ):
 
             visit.logout_time = (
-                datetime.utcnow()
+                utc_now_naive()
             )
 
             db.session.commit()
@@ -916,7 +1154,9 @@ def admin_login():
 # ADMIN LOGOUT
 # ============================================================
 
-@app.route("/logout")
+@app.route(
+    "/logout"
+)
 def admin_logout():
 
     session.pop(
@@ -935,7 +1175,9 @@ def admin_logout():
 # ADMIN DASHBOARD
 # ============================================================
 
-@app.route("/admin")
+@app.route(
+    "/admin"
+)
 @admin_required
 def admin_dashboard():
 
@@ -1002,47 +1244,73 @@ def admin_visitor_logs():
 
     for visit in visits:
 
+        login_ph = ph_time(
+            visit.login_time
+        )
+
+        logout_ph = (
+            ph_time(
+                visit.logout_time
+            )
+            if visit.logout_time
+            else None
+        )
+
         visit_data.append({
 
-            "id": visit.id,
+            "id":
+                visit.id,
 
-            "login_time": (
-                visit.login_time.strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                )
-                if visit.login_time
-                else ""
-            ),
+            # NEW:
+            # Day based on Philippine time
+            "day":
+                (
+                    login_ph.strftime("%A")
+                    if login_ph
+                    else ""
+                ),
 
-            "logout_time": (
-                visit.logout_time.strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                )
-                if visit.logout_time
-                else "Active"
-            ),
+            "login_time":
+                (
+                    login_ph.strftime(
+                        "%Y-%m-%d %I:%M:%S %p"
+                    )
+                    if login_ph
+                    else ""
+                ),
 
-            "duration": (
-                visit.duration_display
-            ),
+            "logout_time":
+                (
+                    logout_ph.strftime(
+                        "%Y-%m-%d %I:%M:%S %p"
+                    )
+                    if logout_ph
+                    else ""
+                ),
 
-            "pictures_viewed": (
-                visit.pictures_viewed or 0
-            ),
+            "duration":
+                visitor_duration_display(
+                    visit
+                ),
 
-            "ip_address": (
-                visit.ip_address or "Unknown"
-            ),
+            "pictures_viewed":
+                visit.pictures_viewed or 0,
 
-            "active": (
+            "ip_address":
+                visit.ip_address or "Unknown",
+
+            "active":
                 visit.logout_time is None
-            )
 
         })
 
     return jsonify({
+
         "success": True,
-        "visits": visit_data
+
+        "visits":
+            visit_data
+
     })
 
 
@@ -1055,13 +1323,16 @@ def admin_visitor_logs():
     methods=["POST"]
 )
 @admin_required
-def delete_visitor_log(visit_id):
+def delete_visitor_log(
+    visit_id
+):
 
-    visit = VisitorSession.query.get_or_404(
-        visit_id
+    visit = (
+        VisitorSession.query.get_or_404(
+            visit_id
+        )
     )
 
-    # Delete likes connected to this session.
     Like.query.filter_by(
         visit_id=visit.id
     ).delete(
@@ -1127,9 +1398,6 @@ def delete_multiple_visitor_logs():
 
             continue
 
-        # Delete likes connected to
-        # this visitor session.
-
         Like.query.filter_by(
             visit_id=visit.id
         ).delete(
@@ -1164,10 +1432,14 @@ def delete_multiple_visitor_logs():
     methods=["POST"]
 )
 @admin_required
-def delete_comment(comment_id):
+def delete_comment(
+    comment_id
+):
 
-    comment = Comment.query.get_or_404(
-        comment_id
+    comment = (
+        Comment.query.get_or_404(
+            comment_id
+        )
     )
 
     db.session.delete(
@@ -1196,10 +1468,14 @@ def delete_comment(comment_id):
     methods=["POST"]
 )
 @admin_required
-def toggle_hide_memory(memory_id):
+def toggle_hide_memory(
+    memory_id
+):
 
-    memory = Memory.query.get_or_404(
-        memory_id
+    memory = (
+        Memory.query.get_or_404(
+            memory_id
+        )
     )
 
     memory.is_hidden = (
@@ -1336,10 +1612,14 @@ def upload():
     methods=["GET", "POST"]
 )
 @admin_required
-def edit_memory(memory_id):
+def edit_memory(
+    memory_id
+):
 
-    memory = Memory.query.get_or_404(
-        memory_id
+    memory = (
+        Memory.query.get_or_404(
+            memory_id
+        )
     )
 
     if request.method == "POST":
@@ -1352,12 +1632,24 @@ def edit_memory(memory_id):
             or memory.description
         )
 
-        remove_ids = {
-            int(i)
-            for i in request.form.getlist(
-                "remove_photos"
-            )
-        }
+        remove_ids = set()
+
+        for item in request.form.getlist(
+            "remove_photos"
+        ):
+
+            try:
+
+                remove_ids.add(
+                    int(item)
+                )
+
+            except (
+                TypeError,
+                ValueError
+            ):
+
+                continue
 
         for photo in list(
             memory.photos
@@ -1452,13 +1744,16 @@ def edit_memory(memory_id):
     methods=["POST"]
 )
 @admin_required
-def delete_memory(memory_id):
+def delete_memory(
+    memory_id
+):
 
-    memory = Memory.query.get_or_404(
-        memory_id
+    memory = (
+        Memory.query.get_or_404(
+            memory_id
+        )
     )
 
-    # Delete likes and comments first.
     Like.query.filter_by(
         memory_id=memory.id
     ).delete(
@@ -1471,7 +1766,9 @@ def delete_memory(memory_id):
         synchronize_session=False
     )
 
-    for photo in memory.photos:
+    for photo in list(
+        memory.photos
+    ):
 
         path = os.path.join(
             app.config[
@@ -1567,10 +1864,14 @@ def admin_messages():
     methods=["POST"]
 )
 @admin_required
-def delete_message(message_id):
+def delete_message(
+    message_id
+):
 
-    msg = Message.query.get_or_404(
-        message_id
+    msg = (
+        Message.query.get_or_404(
+            message_id
+        )
     )
 
     db.session.delete(
