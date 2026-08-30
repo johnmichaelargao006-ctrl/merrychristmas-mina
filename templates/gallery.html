@@ -461,7 +461,9 @@ body.dark-mode footer strong {
 
     justify-content: space-between;
 
-    align-items: center;
+    align-items: flex-start;   /* FIX: was "center" — kept badge from
+                                   drifting to the vertical middle when
+                                   the title wraps to multiple lines */
 
     gap: 10px;
 
@@ -476,13 +478,27 @@ body.dark-mode footer strong {
 
 
 .card-text {
-    display: block;
+    /* FIX: clamp long captions to 2 lines with an ellipsis instead of
+       letting them wrap endlessly and stretch the card taller than
+       its neighbours. Replaces the old "display: block;" */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     font-size: 15px;
 
     color: #ffffff;
 
     font-weight: 600;
+
+    line-height: 1.35;
+
+    /* FIX: reserve room for 2 lines even when the title is short,
+       so every card-footer is the same height and the grid stays
+       even instead of some cards being shorter than others */
+    min-height: calc(1.35em * 2);
 
     text-shadow:
         0 0 6px rgba(0, 0, 0, 0.6);
@@ -510,6 +526,9 @@ body.dark-mode footer strong {
 
 .photo-badge {
     flex-shrink: 0;
+
+    margin-top: 2px;   /* FIX: aligns badge with first line of title
+                           now that footer is top-aligned */
 
     background:
         linear-gradient(
@@ -1568,7 +1587,10 @@ footer strong {
 
                 <div class="card-title-area">
 
-                    <span class="card-text">
+                    <span
+                        class="card-text"
+                        title="{{ memory.description or 'Untitled Memory' }}"
+                    >
 
                         {{
                             memory.description
