@@ -18,8 +18,7 @@ Features:
 - Delete multiple visitor logs
 - Admin/Mina messages
 """
-from dotenv import load_dotenv
-load_dotenv()
+
 import os
 import uuid
 
@@ -114,7 +113,11 @@ cloudinary.config(
     cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
     api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
-    secure=True
+    secure=True,
+    # NEW: only set on PythonAnywhere via .env — required there
+    # so uploads reach api.cloudinary.com through their proxy.
+    # Left unset locally, so local dev is unaffected.
+    api_proxy=os.environ.get("PYTHONANYWHERE_PROXY") or None
 )
 
 

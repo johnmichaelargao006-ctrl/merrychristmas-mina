@@ -41,7 +41,13 @@ cloudinary.config(
     cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
     api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
-    secure=True
+    secure=True,
+    # NEW: required on PythonAnywhere free-tier accounts so
+    # outbound requests to api.cloudinary.com go through their
+    # whitelisting proxy. Harmless to include when running
+    # locally too (ignored if unreachable... actually only set
+    # this when on PythonAnywhere — see note below).
+    api_proxy=os.environ.get("PYTHONANYWHERE_PROXY") or None
 )
 
 
