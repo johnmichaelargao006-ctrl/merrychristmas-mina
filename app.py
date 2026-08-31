@@ -19,6 +19,9 @@ Features:
 - Admin/Mina messages
 """
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
 import uuid
 
@@ -46,9 +49,10 @@ from werkzeug.security import (
     check_password_hash
 )
 
-# NEW: Cloudinary imports
+# NEW: import bare `cloudinary` here. cloudinary.uploader is
+# imported further below, AFTER cloudinary.config() runs — this
+# order matters for the PythonAnywhere proxy setting to take effect.
 import cloudinary
-import cloudinary.uploader
 
 
 # ============================================================
@@ -114,11 +118,16 @@ cloudinary.config(
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
     api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
     secure=True,
-    # NEW: only set on PythonAnywhere via .env — required there
+    # Only set on PythonAnywhere via .env — required there
     # so uploads reach api.cloudinary.com through their proxy.
     # Left unset locally, so local dev is unaffected.
     api_proxy=os.environ.get("PYTHONANYWHERE_PROXY") or None
 )
+
+# IMPORTANT: cloudinary.uploader must be imported AFTER config()
+# runs, or the proxy setting above won't take effect (confirmed
+# via Cloudinary's own docs and testing on PythonAnywhere).
+import cloudinary.uploader
 
 
 # ============================================================

@@ -26,29 +26,25 @@ import sqlite3
 from dotenv import load_dotenv
 load_dotenv()
 
+# IMPORTANT: import bare `cloudinary` and call config() with the
+# proxy BEFORE importing cloudinary.uploader. Per Cloudinary's own
+# docs, the proxy is only picked up correctly if config() runs
+# before that submodule is first imported anywhere in the process.
 import cloudinary
-import cloudinary.uploader
-
-from app import app, db, Photo, UPLOAD_FOLDER, BASE_DIR
-
-
-# ============================================================
-# CLOUDINARY CONFIG
-# (uses the same env vars as app.py)
-# ============================================================
 
 cloudinary.config(
     cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
     api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
     secure=True,
-    # NEW: required on PythonAnywhere free-tier accounts so
-    # outbound requests to api.cloudinary.com go through their
-    # whitelisting proxy. Harmless to include when running
-    # locally too (ignored if unreachable... actually only set
-    # this when on PythonAnywhere — see note below).
+    # Only set on PythonAnywhere via .env — required there so
+    # uploads reach api.cloudinary.com through their proxy.
     api_proxy=os.environ.get("PYTHONANYWHERE_PROXY") or None
 )
+
+import cloudinary.uploader
+
+from app import app, db, Photo, UPLOAD_FOLDER, BASE_DIR
 
 
 DB_PATH = os.path.join(BASE_DIR, "site.db")
