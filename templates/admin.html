@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -2567,24 +2566,10 @@ footer{
 
                                 <img
                                     class="thumb-sm"
-                                    src="{{
-                                        url_for(
-                                            'static',
-                                            filename=
-                                                'uploads/' +
-                                                m.cover_photo.filename
-                                        )
-                                    }}"
+                                    src="{{ m.cover_photo.display_url }}"
                                     alt="Memory #{{ m.id }}"
                                     onclick='openLightbox(
-                                        {{
-                                            url_for(
-                                                "static",
-                                                filename=
-                                                    "uploads/" +
-                                                    m.cover_photo.filename
-                                            )|tojson
-                                        }},
+                                        {{ m.cover_photo.display_url|tojson }},
                                         {{
                                             (
                                                 m.description
@@ -2897,14 +2882,7 @@ footer{
 
 
                                     <img
-                                        src="{{
-                                            url_for(
-                                                'static',
-                                                filename=
-                                                    'uploads/' +
-                                                    comment.memory.cover_photo.filename
-                                            )
-                                        }}"
+                                        src="{{ comment.memory.cover_photo.display_url }}"
                                         alt="Memory"
                                     >
 
@@ -4622,4 +4600,3 @@ document.addEventListener(
 </body>
 
 </html>
-```

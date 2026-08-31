@@ -140,7 +140,7 @@
       <div class="photo-grid">
         {% for photo in memory.photos %}
         <div class="photo-item">
-          <img src="{{ url_for('static', filename='uploads/' + photo.filename) }}" alt="">
+          <img src="{{ photo.display_url }}" alt="">
           <label class="remove">
             <input type="checkbox" name="remove_photos" value="{{ photo.id }}">
             Remove

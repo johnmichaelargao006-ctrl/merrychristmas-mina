@@ -1547,13 +1547,7 @@ footer strong {
                 {% if memory.cover_photo %}
 
                 <img
-                    src="{{
-                        url_for(
-                            'static',
-                            filename='uploads/' +
-                            memory.cover_photo.filename
-                        )
-                    }}"
+                    src="{{ memory.cover_photo.display_url }}"
 
                     alt="{{
                         memory.description

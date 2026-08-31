@@ -6,7 +6,7 @@ Flask app for the memory gallery.
 Features:
 - Mina gallery
 - Admin dashboard
-- Upload memories
+- Upload memories (now via Cloudinary)
 - Hide/unhide memories
 - Persistent likes
 - Persistent comments
@@ -18,7 +18,8 @@ Features:
 - Delete multiple visitor logs
 - Admin/Mina messages
 """
-
+from dotenv import load_dotenv
+load_dotenv()
 import os
 import uuid
 
@@ -45,6 +46,10 @@ from werkzeug.security import (
     generate_password_hash,
     check_password_hash
 )
+
+# NEW: Cloudinary imports
+import cloudinary
+import cloudinary.uploader
 
 
 # ============================================================
@@ -98,6 +103,18 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 app.config["MAX_CONTENT_LENGTH"] = (
     16 * 1024 * 1024
+)
+
+
+# ============================================================
+# CLOUDINARY CONFIG (NEW)
+# ============================================================
+
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    secure=True
 )
 
 
@@ -243,9 +260,17 @@ class Photo(db.Model):
         primary_key=True
     )
 
+    # CHANGED: nullable=True — old local-disk photos still use this.
+    # New photos leave this empty and use `url` instead.
     filename = db.Column(
         db.String(300),
-        nullable=False
+        nullable=True
+    )
+
+    # NEW: Cloudinary secure_url for newly uploaded photos.
+    url = db.Column(
+        db.String(500),
+        nullable=True
     )
 
     memory_id = db.Column(
@@ -255,6 +280,23 @@ class Photo(db.Model):
         ),
         nullable=False
     )
+
+    @property
+    def display_url(self):
+        """
+        NEW: single place templates call to get a photo's src.
+        Prefers Cloudinary url; falls back to the old local file
+        for photos uploaded before this change.
+        """
+
+        if self.url:
+
+            return self.url
+
+        return url_for(
+            "static",
+            filename="uploads/" + self.filename
+        )
 
 
 class VisitorSession(db.Model):
@@ -467,6 +509,26 @@ def allowed_file(filename):
         )[1].lower()
         in ALLOWED_EXTENSIONS
     )
+
+
+def upload_to_cloudinary(file):
+    """
+    NEW: uploads a file-like object to Cloudinary and returns
+    its secure (https) URL. Auto-compresses and caps width at
+    1600px so storage/bandwidth credits go further.
+    """
+
+    result = cloudinary.uploader.upload(
+        file,
+        folder="merrychristmasmina",
+        quality="auto",
+        fetch_format="auto",
+        transformation=[
+            {"width": 1600, "crop": "limit"}
+        ]
+    )
+
+    return result["secure_url"]
 
 
 def ph_time(dt):
@@ -1261,7 +1323,6 @@ def admin_visitor_logs():
             "id":
                 visit.id,
 
-            # NEW:
             # Day based on Philippine time
             "day":
                 (
@@ -1496,7 +1557,7 @@ def toggle_hide_memory(
 
 
 # ============================================================
-# UPLOAD
+# UPLOAD (CHANGED: now uploads to Cloudinary)
 # ============================================================
 
 @app.route(
@@ -1544,31 +1605,12 @@ def upload():
                 )
             ):
 
-                ext = (
-                    f.filename
-                    .rsplit(
-                        ".",
-                        1
-                    )[1]
-                    .lower()
-                )
-
-                unique_name = (
-                    f"{uuid.uuid4().hex}.{ext}"
-                )
-
-                f.save(
-                    os.path.join(
-                        app.config[
-                            "UPLOAD_FOLDER"
-                        ],
-                        unique_name
-                    )
-                )
+                # CHANGED: upload to Cloudinary instead of local disk
+                photo_url = upload_to_cloudinary(f)
 
                 db.session.add(
                     Photo(
-                        filename=unique_name,
+                        url=photo_url,
                         memory_id=memory.id
                     )
                 )
@@ -1604,7 +1646,7 @@ def upload():
 
 
 # ============================================================
-# EDIT MEMORY
+# EDIT MEMORY (CHANGED: new photos go to Cloudinary)
 # ============================================================
 
 @app.route(
@@ -1657,20 +1699,25 @@ def edit_memory(
 
             if photo.id in remove_ids:
 
-                path = os.path.join(
-                    app.config[
-                        "UPLOAD_FOLDER"
-                    ],
-                    photo.filename
-                )
+                # CHANGED: only touch local disk for old local photos.
+                # Cloudinary photos (photo.filename is None) have
+                # nothing to remove on disk.
+                if photo.filename:
 
-                if os.path.exists(
-                    path
-                ):
-
-                    os.remove(
-                        path
+                    path = os.path.join(
+                        app.config[
+                            "UPLOAD_FOLDER"
+                        ],
+                        photo.filename
                     )
+
+                    if os.path.exists(
+                        path
+                    ):
+
+                        os.remove(
+                            path
+                        )
 
                 db.session.delete(
                     photo
@@ -1688,31 +1735,12 @@ def edit_memory(
                 )
             ):
 
-                ext = (
-                    f.filename
-                    .rsplit(
-                        ".",
-                        1
-                    )[1]
-                    .lower()
-                )
-
-                unique_name = (
-                    f"{uuid.uuid4().hex}.{ext}"
-                )
-
-                f.save(
-                    os.path.join(
-                        app.config[
-                            "UPLOAD_FOLDER"
-                        ],
-                        unique_name
-                    )
-                )
+                # CHANGED: upload to Cloudinary instead of local disk
+                photo_url = upload_to_cloudinary(f)
 
                 db.session.add(
                     Photo(
-                        filename=unique_name,
+                        url=photo_url,
                         memory_id=memory.id
                     )
                 )
@@ -1736,7 +1764,7 @@ def edit_memory(
 
 
 # ============================================================
-# DELETE MEMORY
+# DELETE MEMORY (CHANGED: guard local-file cleanup)
 # ============================================================
 
 @app.route(
@@ -1770,20 +1798,23 @@ def delete_memory(
         memory.photos
     ):
 
-        path = os.path.join(
-            app.config[
-                "UPLOAD_FOLDER"
-            ],
-            photo.filename
-        )
+        # CHANGED: only remove from local disk for old local photos.
+        if photo.filename:
 
-        if os.path.exists(
-            path
-        ):
-
-            os.remove(
-                path
+            path = os.path.join(
+                app.config[
+                    "UPLOAD_FOLDER"
+                ],
+                photo.filename
             )
+
+            if os.path.exists(
+                path
+            ):
+
+                os.remove(
+                    path
+                )
 
         db.session.delete(
             photo

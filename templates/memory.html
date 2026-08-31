@@ -461,7 +461,7 @@ body.dark-mode {
     <div class="main-photo-container" id="mainPhotoContainer">
       {% set first_photo = memory.photos[0] if memory.photos else None %}
       {% if first_photo %}
-      <img id="mainImage" class="main-photo" src="{{ url_for('static', filename='uploads/' + first_photo.filename) }}" alt="Memory Photo">
+      <img id="mainImage" class="main-photo" src="{{ first_photo.display_url }}" alt="Memory Photo">
       {% else %}
       <p style="font-size:18px; color:#fff; font-weight:bold;">No photos in this memory yet</p>
       {% endif %}
@@ -497,7 +497,7 @@ body.dark-mode {
   <div class="thumbnails">
     {% for photo in memory.photos %}
     <img class="thumb {% if loop.index == 1 %}active{% endif %}" 
-         src="{{ url_for('static', filename='uploads/' + photo.filename) }}" 
+         src="{{ photo.display_url }}" 
          alt="Thumbnail"
          loading="lazy"
          onclick="showPhoto({{ loop.index0 }})">
@@ -519,7 +519,7 @@ body.dark-mode {
   // ✅ PHOTO NAVIGATION
   const photos = [
     {% for photo in memory.photos %}
-      "{{ url_for('static', filename='uploads/' + photo.filename) }}",
+      "{{ photo.display_url }}",
     {% endfor %}
   ];
   let currentIndex = 0;
