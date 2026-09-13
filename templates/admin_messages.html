@@ -4,25 +4,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Messages — Admin</title>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap');
 
   :root{
-    --ink:#1b1b1f; --panel:#232328; --panel-2:#28282e;
-    --parchment:#ece5d6; --parchment-dim:#a7a297;
-    --brass:#b98f4f; --brass-dim:#8a6c3e; --alert:#c1666b;
+    --ink:#1b1b1f;
+    --panel:#232328;
+    --panel-2:#28282e;
+    --parchment:#ece5d6;
+    --parchment-dim:#a7a297;
+    --brass:#b98f4f;
+    --brass-dim:#8a6c3e;
+    --alert:#c1666b;
   }
-  *{box-sizing:border-box;}
+
+  *{
+    box-sizing:border-box;
+  }
+
   body{
-    margin:0; min-height:100vh;
+    margin:0;
+    min-height:100vh;
     font-family:'JetBrains Mono', monospace;
     background:radial-gradient(circle at 50% 0%, #26262c, var(--ink) 60%);
     color:var(--parchment);
-    display:flex; flex-direction:column; align-items:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
     padding:48px 16px 40px;
   }
+
   body::before{
-    content:""; position:fixed; inset:0;
+    content:"";
+    position:fixed;
+    inset:0;
     background-image:
       linear-gradient(rgba(236,229,214,.028) 1px, transparent 1px),
       linear-gradient(90deg, rgba(236,229,214,.028) 1px, transparent 1px);
@@ -30,22 +46,37 @@
     pointer-events:none;
   }
 
-  header{ text-align:center; margin-bottom:24px; position:relative; z-index:1; }
-  .eyebrow{
-    font-size:11px; letter-spacing:.22em; text-transform:uppercase;
-    color:var(--brass); margin-bottom:8px;
+  header{
+    text-align:center;
+    margin-bottom:24px;
+    position:relative;
+    z-index:1;
   }
+
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin-bottom:8px;
+  }
+
   h1{
-    font-family:'Fraunces', serif; font-weight:600; font-size:26px; margin:0;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:26px;
+    margin:0;
   }
 
   .thread-card{
-    position:relative; z-index:1;
+    position:relative;
+    z-index:1;
     width:min(560px, 94vw);
     background:var(--panel);
     border:2px solid #000000;
     border-radius:2px;
-    display:flex; flex-direction:column;
+    display:flex;
+    flex-direction:column;
     height:min(58vh, 480px);
     overflow:hidden;
   }
@@ -64,8 +95,18 @@
     align-items:flex-end;
     gap:6px;
   }
-  .bubble-row.admin{ align-self:flex-end; flex-direction:row; justify-content:flex-end; }
-  .bubble-row.mina{ align-self:flex-start; flex-direction:row-reverse; justify-content:flex-end; }
+
+  .bubble-row.admin{
+    align-self:flex-end;
+    flex-direction:row;
+    justify-content:flex-end;
+  }
+
+  .bubble-row.mina{
+    align-self:flex-start;
+    flex-direction:row-reverse;
+    justify-content:flex-end;
+  }
 
   .bubble{
     max-width:78%;
@@ -74,17 +115,23 @@
     font-size:13px;
     line-height:1.5;
   }
+
   .bubble .time{
     display:block;
     font-size:10px;
     margin-top:4px;
     color:var(--parchment-dim);
   }
+
   .bubble.admin{
     background:var(--brass);
     color:var(--ink);
   }
-  .bubble.admin .time{ color:rgba(27,27,31,.6); }
+
+  .bubble.admin .time{
+    color:rgba(27,27,31,.6);
+  }
+
   .bubble.mina{
     background:var(--panel-2);
     color:var(--parchment);
@@ -105,7 +152,10 @@
     text-transform:uppercase;
     letter-spacing:.03em;
   }
-  .del-btn:hover{ background:rgba(193,102,107,.15); }
+
+  .del-btn:hover{
+    background:rgba(193,102,107,.15);
+  }
 
   .empty{
     margin:auto;
@@ -121,6 +171,7 @@
     border-top:1px solid #333338;
     background:var(--panel-2);
   }
+
   form.composer textarea{
     flex:1;
     resize:none;
@@ -135,11 +186,17 @@
     min-height:40px;
     max-height:100px;
   }
-  form.composer textarea:focus{ border-color:var(--brass); }
+
+  form.composer textarea:focus{
+    border-color:var(--brass);
+  }
 
   form.composer button{
     font-family:'JetBrains Mono', monospace;
-    font-weight:500; font-size:12px; text-transform:uppercase; letter-spacing:.05em;
+    font-weight:500;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
     color:var(--ink);
     background:var(--brass);
     border:none;
@@ -147,18 +204,26 @@
     padding:0 18px;
     cursor:pointer;
   }
-  form.composer button:hover{ background:#c9a05e; }
+
+  form.composer button:hover{
+    background:#c9a05e;
+  }
 
   a.back{
-    position:relative; z-index:1;
+    position:relative;
+    z-index:1;
     margin-top:20px;
     font-size:12px;
     color:var(--parchment-dim);
     text-decoration:none;
   }
-  a.back:hover{ color:var(--brass); }
+
+  a.back:hover{
+    color:var(--brass);
+  }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -167,35 +232,77 @@
 </header>
 
 <div class="thread-card">
+
   <div class="thread" id="thread">
+
     {% for msg in thread %}
+
     <div class="bubble-row {{ msg.sender }}">
+
       <div class="bubble {{ msg.sender }}">
+
         {{ msg.body }}
-        <span class="time">{{ msg.sender|capitalize }} · {{ msg.created_at.strftime('%b %d, %I:%M %p') }}</span>
+
+        <span class="time">
+          {{ msg.sender|capitalize }} · {{ msg.created_at|ph_datetime }}
+        </span>
+
       </div>
-      <form method="POST" action="{{ url_for('delete_message', message_id=msg.id) }}"
+
+      <form method="POST"
+            action="{{ url_for('delete_message', message_id=msg.id) }}"
             onsubmit="return confirm('Delete this message?');">
-        <button class="del-btn" type="submit" title="Delete message">✕</button>
+
+        <button class="del-btn"
+                type="submit"
+                title="Delete message">
+          ✕
+        </button>
+
       </form>
+
     </div>
+
     {% else %}
+
     <p class="empty">No messages yet.</p>
+
     {% endfor %}
+
   </div>
 
-  <form class="composer" method="POST" action="{{ url_for('admin_messages') }}">
-    <textarea name="body" placeholder="Reply…" required></textarea>
-    <button type="submit">Send</button>
+  <form class="composer"
+        method="POST"
+        action="{{ url_for('admin_messages') }}">
+
+    <textarea
+      name="body"
+      placeholder="Reply…"
+      required></textarea>
+
+    <button type="submit">
+      Send
+    </button>
+
   </form>
+
 </div>
 
-<a class="back" href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+<a class="back"
+   href="{{ url_for('admin_dashboard') }}">
+  ← Back to Dashboard
+</a>
 
 <script>
   const thread = document.getElementById('thread');
-  thread.scrollTop = thread.scrollHeight;
-  setTimeout(() => window.location.reload(), 15000);
+
+  if (thread) {
+    thread.scrollTop = thread.scrollHeight;
+  }
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 15000);
 </script>
 
 </body>

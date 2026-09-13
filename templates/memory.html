@@ -6,6 +6,7 @@
 <title>Memory — {{ memory.title or 'Special Memory' }}</title>
 
 <link rel="icon" type="image/png" href="{{ url_for('static', filename='uploads/maam-carmina-logo.png') }}">
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
 
@@ -78,8 +79,14 @@
     margin-bottom: 10px;
     text-shadow: 0 0 10px rgba(0,0,0,0.7);
   }
-  h1::before { content: "✨ "; }
-  h1::after { content: " ✨"; }
+
+  h1::before {
+    content: "✨ ";
+  }
+
+  h1::after {
+    content: " ✨";
+  }
 
   /* ✅ PHOTO VIEWER */
   .photo-viewer {
@@ -134,8 +141,14 @@
     justify-content: center;
     z-index: 3;
   }
-  .nav-btn.prev-btn { left: 15px; }
-  .nav-btn.next-btn { right: 15px; }
+
+  .nav-btn.prev-btn {
+    left: 15px;
+  }
+
+  .nav-btn.next-btn {
+    right: 15px;
+  }
 
   /* ✅ PHOTO COUNTER */
   .photo-counter {
@@ -154,6 +167,7 @@
     margin-top: 12px;
     flex-wrap: wrap;
   }
+
   .photo-dots .dot {
     width: 8px;
     height: 8px;
@@ -164,9 +178,11 @@
     padding: 0;
     transition: all 0.25s ease;
   }
+
   .photo-dots .dot:hover {
     background: rgba(255, 255, 255, 0.6);
   }
+
   .photo-dots .dot.active {
     background: #ff7eb8;
     transform: scale(1.35);
@@ -186,6 +202,7 @@
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   }
+
   .view-message-btn:hover {
     transform: scale(1.05);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
@@ -208,6 +225,7 @@
     justify-content: center;
     transition: opacity 0.3s ease;
   }
+
   .modal.show {
     opacity: 1;
     visibility: visible;
@@ -227,6 +245,7 @@
     transform: scale(0.85) translateY(10px);
     transition: transform 0.3s ease;
   }
+
   .modal.show .modal-content {
     transform: scale(1) translateY(0);
   }
@@ -262,6 +281,7 @@
     margin-bottom: 15px;
     text-shadow: 0 0 5px rgba(0,0,0,0.6);
   }
+
   .thumbnails {
     display: flex;
     justify-content: center;
@@ -269,6 +289,7 @@
     flex-wrap: wrap;
     margin-bottom: 40px;
   }
+
   .thumb {
     width: 90px;
     height: 90px;
@@ -277,6 +298,7 @@
     cursor: pointer;
     border: 3px solid transparent;
   }
+
   .thumb.active {
     border-color: #d65890;
   }
@@ -289,6 +311,7 @@
     margin-bottom: 24px;
     flex-wrap: wrap;
   }
+
   .memory-nav a {
     display: inline-block;
     padding: 10px 22px;
@@ -301,6 +324,7 @@
     font-weight: 600;
     transition: all 0.25s ease;
   }
+
   .memory-nav a:hover {
     background: linear-gradient(135deg, #ff7eb8, #c94880);
     border-color: transparent;
@@ -326,22 +350,25 @@
     text-align: center;
     padding: 20px 15px;
     margin-top: 20px;
-    color: #000000; /* ✅ BLACK TEXT — EASY TO READ! */
+    color: #000000;
     font-size: 15px;
     letter-spacing: 1px;
     font-weight: bold;
   }
+
   footer strong {
-    color: #b84075; /* ✅ Your name stays pink and highlighted */
+    color: #b84075;
     font-weight: bold;
   }
+
   .footer-date {
     font-size: 13px;
-    color: #000000; /* ✅ BLACK DATE — EASY TO READ! */
+    color: #000000;
     margin-top: 5px;
     display: block;
   }
-body.dark-mode {
+
+  body.dark-mode {
     color: #ffffff;
   }
 
@@ -421,25 +448,52 @@ body.dark-mode {
 
   /* ✅ MOBILE */
   @media (max-width: 600px) {
-    h1 { font-size: 28px; }
-    .main-photo-container { min-height: 350px; }
-    .main-photo { max-height: 400px; }
-    .nav-btn { width: 42px; height: 42px; font-size: 18px; }
-    .thumb { width: 70px; height: 70px; }
-    .modal-content { padding: 25px; }
-    .modal-content p { font-size: 16px; }
+    h1 {
+      font-size: 28px;
+    }
+
+    .main-photo-container {
+      min-height: 350px;
+    }
+
+    .main-photo {
+      max-height: 400px;
+    }
+
+    .nav-btn {
+      width: 42px;
+      height: 42px;
+      font-size: 18px;
+    }
+
+    .thumb {
+      width: 70px;
+      height: 70px;
+    }
+
+    .modal-content {
+      padding: 25px;
+    }
+
+    .modal-content p {
+      font-size: 16px;
+    }
   }
 </style>
 </head>
+
 <body>
+
 <!-- ✅ BRIGHT BACKGROUND VIDEO -->
 <video class="bg-video" autoplay muted loop playsinline>
   <source src="{{ url_for('static', filename='uploads/petal-bg.mp4') }}" type="video/mp4">
   Your browser does not support the video tag.
 </video>
+
 <div class="bg-overlay"></div>
 
 <div class="container">
+
   <header>
     <h1>{{ memory.title or 'A Special Memory' }}</h1>
   </header>
@@ -447,215 +501,561 @@ body.dark-mode {
   <!-- ✅ MEMORY-TO-MEMORY NAVIGATION -->
   {% if prev_memory_id or next_memory_id %}
   <div class="memory-nav">
+
     {% if prev_memory_id %}
-    <a href="{{ url_for('memory_detail', memory_id=prev_memory_id) }}">← Previous Memory</a>
+    <a href="{{ url_for('memory_detail', memory_id=prev_memory_id) }}">
+      ← Previous Memory
+    </a>
     {% endif %}
+
     {% if next_memory_id %}
-    <a href="{{ url_for('memory_detail', memory_id=next_memory_id) }}">Next Memory →</a>
+    <a href="{{ url_for('memory_detail', memory_id=next_memory_id) }}">
+      Next Memory →
+    </a>
     {% endif %}
+
   </div>
   {% endif %}
 
   <!-- ✅ PHOTO VIEWER -->
   <div class="photo-viewer">
+
     <div class="main-photo-container" id="mainPhotoContainer">
+
       {% set first_photo = memory.photos[0] if memory.photos else None %}
+
       {% if first_photo %}
-      <img id="mainImage" class="main-photo" src="{{ first_photo.display_url }}" alt="Memory Photo">
+
+      <img
+        id="mainImage"
+        class="main-photo"
+        src="{{ first_photo.display_url }}"
+        alt="Memory Photo"
+      >
+
       {% else %}
-      <p style="font-size:18px; color:#fff; font-weight:bold;">No photos in this memory yet</p>
+
+      <p style="font-size:18px; color:#fff; font-weight:bold;">
+        No photos in this memory yet
+      </p>
+
       {% endif %}
+
     </div>
 
     {% if memory.photos and memory.photos|length > 0 %}
-    <button class="nav-btn prev-btn" onclick="prevPhoto()" aria-label="Previous photo">&#8249;</button>
-    <button class="nav-btn next-btn" onclick="nextPhoto()" aria-label="Next photo">&#8250;</button>
-    <p class="photo-counter">Photo <span id="photoIndex">1</span> of {{ memory.photos|length }}</p>
+
+    <button
+      class="nav-btn prev-btn"
+      onclick="prevPhoto()"
+      aria-label="Previous photo"
+    >
+      &#8249;
+    </button>
+
+    <button
+      class="nav-btn next-btn"
+      onclick="nextPhoto()"
+      aria-label="Next photo"
+    >
+      &#8250;
+    </button>
+
+    <p class="photo-counter">
+      Photo <span id="photoIndex">1</span>
+      of {{ memory.photos|length }}
+    </p>
+
     <div class="photo-dots" id="photoDots"></div>
+
     {% endif %}
+
   </div>
 
   <!-- ✅ VIEW MESSAGE BUTTON -->
-  <button class="view-message-btn" onclick="openMessage()">💌 Click to View My Message</button>
+  <button
+    class="view-message-btn"
+    onclick="openMessage()"
+  >
+    💌 Click to View My Message
+  </button>
 
   <!-- ✅ POPUP MESSAGE BOX -->
   <div id="messageModal" class="modal">
+
     <div class="modal-content">
+
       <h2>✨ Special Message ✨</h2>
+
       {% if memory.description %}
+
       <p>{{ memory.description }}</p>
+
       {% else %}
-      <p>You are so special to me. Thank you for being you. 🤍</p>
+
+      <p>
+        You are so special to me.
+        Thank you for being you. 🤍
+      </p>
+
       {% endif %}
-      <button class="close-btn" onclick="closeMessage()">Close</button>
+
+      <button
+        class="close-btn"
+        onclick="closeMessage()"
+      >
+        Close
+      </button>
+
     </div>
+
   </div>
 
   <!-- ✅ THUMBNAILS -->
   {% if memory.photos and memory.photos|length > 0 %}
-  <p class="thumbnails-title">✨ Click to view ✨</p>
+
+  <p class="thumbnails-title">
+    ✨ Click to view ✨
+  </p>
+
   <div class="thumbnails">
+
     {% for photo in memory.photos %}
-    <img class="thumb {% if loop.index == 1 %}active{% endif %}" 
-         src="{{ photo.display_url }}" 
-         alt="Thumbnail"
-         loading="lazy"
-         onclick="showPhoto({{ loop.index0 }})">
+
+    <img
+      class="thumb {% if loop.index == 1 %}active{% endif %}"
+      src="{{ photo.display_url }}"
+      alt="Thumbnail"
+      loading="lazy"
+      onclick="showPhoto({{ loop.index0 }})"
+    >
+
     {% endfor %}
+
   </div>
+
   {% endif %}
 
   <!-- ✅ BACK TO GALLERY BUTTON -->
-  <a class="back-btn" href="{{ url_for('gallery') }}">← Back to Gallery</a>
+  <a
+    class="back-btn"
+    href="{{ url_for('gallery') }}"
+  >
+    ← Back to Gallery
+  </a>
 
   <!-- ✅ FOOTER — BLACK TEXT, EASY TO READ -->
   <footer>
-    Made with ❤️ by <strong>Ian Argao "Koian"</strong>
-    <span class="footer-date">✨ Created: <span id="currentDate"></span> ✨</span>
+    Made by <strong>Ian Argao "Koian"</strong>
+
+    <span class="footer-date">
+      ✨ Created: August 27, 2026 ✨
+    </span>
   </footer>
+
 </div>
 
+
 <script>
+
+  // =========================================================
   // ✅ PHOTO NAVIGATION
+  // =========================================================
+
   const photos = [
     {% for photo in memory.photos %}
       "{{ photo.display_url }}",
     {% endfor %}
   ];
+
   let currentIndex = 0;
+
   const total = photos.length;
 
-  // ✅ Build the dot indicators once
-  const dotsContainer = document.getElementById('photoDots');
+
+  // =========================================================
+  // ✅ BUILD THE DOT INDICATORS ONCE
+  // =========================================================
+
+  const dotsContainer =
+    document.getElementById('photoDots');
+
   if (dotsContainer && total > 0) {
+
     for (let i = 0; i < total; i++) {
-      const dot = document.createElement('button');
-      dot.className = 'dot' + (i === 0 ? ' active' : '');
-      dot.setAttribute('aria-label', 'Go to photo ' + (i + 1));
-      dot.onclick = () => showPhoto(i);
+
+      const dot =
+        document.createElement('button');
+
+      dot.className =
+        'dot' + (i === 0 ? ' active' : '');
+
+      dot.setAttribute(
+        'aria-label',
+        'Go to photo ' + (i + 1)
+      );
+
+      dot.onclick = () =>
+        showPhoto(i);
+
       dotsContainer.appendChild(dot);
     }
   }
 
+
+  // =========================================================
+  // ✅ SHOW PHOTO
+  // =========================================================
+
   function showPhoto(index) {
+
     if (total === 0) return;
-    if (index < 0) index = total - 1;
-    if (index >= total) index = 0;
+
+    if (index < 0) {
+      index = total - 1;
+    }
+
+    if (index >= total) {
+      index = 0;
+    }
+
     currentIndex = index;
 
-    const img = document.getElementById('mainImage');
+
+    const img =
+      document.getElementById('mainImage');
+
     if (img) {
+
       img.style.opacity = '0';
+
       setTimeout(() => {
-        img.src = photos[currentIndex];
+
+        img.src =
+          photos[currentIndex];
+
         img.style.opacity = '1';
+
       }, 120);
+
     }
 
-    const counter = document.getElementById('photoIndex');
-    if (counter) counter.textContent = currentIndex + 1;
 
-    document.querySelectorAll('.thumb').forEach((t, i) => {
-      t.classList.toggle('active', i === currentIndex);
-    });
-    document.querySelectorAll('.photo-dots .dot').forEach((d, i) => {
-      d.classList.toggle('active', i === currentIndex);
-    });
+    const counter =
+      document.getElementById('photoIndex');
+
+    if (counter) {
+
+      counter.textContent =
+        currentIndex + 1;
+
+    }
+
+
+    document
+      .querySelectorAll('.thumb')
+      .forEach((t, i) => {
+
+        t.classList.toggle(
+          'active',
+          i === currentIndex
+        );
+
+      });
+
+
+    document
+      .querySelectorAll('.photo-dots .dot')
+      .forEach((d, i) => {
+
+        d.classList.toggle(
+          'active',
+          i === currentIndex
+        );
+
+      });
+
   }
-  function prevPhoto() { showPhoto(currentIndex - 1); }
-  function nextPhoto() { showPhoto(currentIndex + 1); }
 
-  // ✅ KEYBOARD NAVIGATION (← → for photos, Esc closes message)
-  document.addEventListener('keydown', (e) => {
-    const modalOpen = document.getElementById('messageModal').classList.contains('show');
-    if (e.key === 'Escape') {
-      closeMessage();
-      return;
+
+  function prevPhoto() {
+
+    showPhoto(
+      currentIndex - 1
+    );
+
+  }
+
+
+  function nextPhoto() {
+
+    showPhoto(
+      currentIndex + 1
+    );
+
+  }
+
+
+  // =========================================================
+  // ✅ KEYBOARD NAVIGATION
+  // ← → FOR PHOTOS
+  // ESC CLOSES MESSAGE
+  // =========================================================
+
+  document.addEventListener(
+    'keydown',
+    (e) => {
+
+      const modalOpen =
+        document
+          .getElementById('messageModal')
+          .classList
+          .contains('show');
+
+
+      if (e.key === 'Escape') {
+
+        closeMessage();
+
+        return;
+
+      }
+
+
+      if (modalOpen) return;
+
+
+      if (e.key === 'ArrowLeft') {
+
+        prevPhoto();
+
+      }
+
+
+      if (e.key === 'ArrowRight') {
+
+        nextPhoto();
+
+      }
+
     }
-    if (modalOpen) return; // don't change photos while message is open
-    if (e.key === 'ArrowLeft') prevPhoto();
-    if (e.key === 'ArrowRight') nextPhoto();
-  });
+  );
 
-  // ✅ SWIPE NAVIGATION (mobile touch)
-  const swipeArea = document.getElementById('mainPhotoContainer');
+
+  // =========================================================
+  // ✅ SWIPE NAVIGATION
+  // MOBILE TOUCH
+  // =========================================================
+
+  const swipeArea =
+    document.getElementById(
+      'mainPhotoContainer'
+    );
+
+
   if (swipeArea) {
+
     let touchStartX = 0;
+
     let touchEndX = 0;
+
     const SWIPE_THRESHOLD = 40;
 
-    swipeArea.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
 
-    swipeArea.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      const delta = touchEndX - touchStartX;
-      if (Math.abs(delta) < SWIPE_THRESHOLD) return;
-      if (delta < 0) nextPhoto();
-      else prevPhoto();
-    }, { passive: true });
+    swipeArea.addEventListener(
+      'touchstart',
+      (e) => {
+
+        touchStartX =
+          e.changedTouches[0].screenX;
+
+      },
+      {
+        passive: true
+      }
+    );
+
+
+    swipeArea.addEventListener(
+      'touchend',
+      (e) => {
+
+        touchEndX =
+          e.changedTouches[0].screenX;
+
+
+        const delta =
+          touchEndX - touchStartX;
+
+
+        if (
+          Math.abs(delta) <
+          SWIPE_THRESHOLD
+        ) {
+          return;
+        }
+
+
+        if (delta < 0) {
+
+          nextPhoto();
+
+        } else {
+
+          prevPhoto();
+
+        }
+
+      },
+      {
+        passive: true
+      }
+    );
+
   }
 
+
+  // =========================================================
   // ✅ POPUP FUNCTIONS
+  // =========================================================
+
   function openMessage() {
-    document.getElementById('messageModal').classList.add('show');
+
+    document
+      .getElementById('messageModal')
+      .classList
+      .add('show');
+
   }
+
+
   function closeMessage() {
-    document.getElementById('messageModal').classList.remove('show');
-  }
-  window.onclick = function(e) {
-    const modal = document.getElementById('messageModal');
-    if (e.target === modal) {
-      modal.classList.remove('show');
-    }
+
+    document
+      .getElementById('messageModal')
+      .classList
+      .remove('show');
+
   }
 
-  // ✅ AUTO DATE IN FOOTER
-  const today = new Date();
-  const dateString = today.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-  document.getElementById('currentDate').textContent = dateString;
+
+  window.onclick =
+    function(e) {
+
+      const modal =
+        document.getElementById(
+          'messageModal'
+        );
+
+
+      if (e.target === modal) {
+
+        modal
+          .classList
+          .remove('show');
+
+      }
+
+    };
+
 </script>
 
+
 <script>
+
+  // =========================================================
   // ✅ SPARKLES EFFECT
-  const colors = ['#fff8e8', '#ffeef2', '#ffe4ee', '#ffdce8', '#fff0f5'];
+  // =========================================================
+
+  const colors = [
+    '#fff8e8',
+    '#ffeef2',
+    '#ffe4ee',
+    '#ffdce8',
+    '#fff0f5'
+  ];
+
+
   for (let i = 0; i < 35; i++) {
-    const s = document.createElement('div');
-    s.className = 'sparkle';
-    const size = 4 + Math.random() * 7;
-    s.style.width = size + 'px';
-    s.style.height = size + 'px';
-    s.style.background = colors[Math.floor(Math.random() * colors.length)];
-    s.style.boxShadow = `0 0 ${size * 2}px ${s.style.background}`;
-    s.style.top = (Math.random() * 100) + 'vh';
-    s.style.left = (Math.random() * 100) + 'vw';
-    s.style.opacity = 0.2 + Math.random() * 0.3;
+
+    const s =
+      document.createElement('div');
+
+    s.className =
+      'sparkle';
+
+
+    const size =
+      4 + Math.random() * 7;
+
+
+    s.style.width =
+      size + 'px';
+
+    s.style.height =
+      size + 'px';
+
+
+    s.style.background =
+      colors[
+        Math.floor(
+          Math.random() * colors.length
+        )
+      ];
+
+
+    s.style.boxShadow =
+      `0 0 ${size * 2}px ${s.style.background}`;
+
+
+    s.style.top =
+      (Math.random() * 100) + 'vh';
+
+
+    s.style.left =
+      (Math.random() * 100) + 'vw';
+
+
+    s.style.opacity =
+      0.2 + Math.random() * 0.3;
+
+
     document.body.appendChild(s);
+
   }
+
 </script>
 
 
 <script>
+
   /* =========================================================
      SHARED DARK MODE
      The theme is controlled from gallery.html.
      memory.html only reads the saved "galleryTheme" value.
   ========================================================= */
 
+
   const savedTheme =
     localStorage.getItem('galleryTheme');
 
+
   if (savedTheme === 'dark') {
-    document.body.classList.add('dark-mode');
+
+    document.body.classList.add(
+      'dark-mode'
+    );
+
   } else {
-    document.body.classList.remove('dark-mode');
+
+    document.body.classList.remove(
+      'dark-mode'
+    );
+
   }
+
 </script>
+
 
 </body>
 </html>

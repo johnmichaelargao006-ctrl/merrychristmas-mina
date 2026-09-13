@@ -6,7 +6,7 @@ Flask app for the memory gallery.
 Features:
 - Mina gallery
 - Admin dashboard
-- Upload memories (now via Cloudinary)
+- Upload memories via Cloudinary
 - Hide/unhide memories
 - Persistent likes
 - Persistent comments
@@ -14,16 +14,15 @@ Features:
 - Real-time visitor logs
 - Philippine time display
 - Day display in visitor logs
-- Delete one visitor log
-- Delete multiple visitor logs
+- Delete visitor logs
 - Admin/Mina messages
+- Real-time unread message notification
 """
 
 from dotenv import load_dotenv
 load_dotenv()
 
 import os
-import uuid
 
 from datetime import (
     datetime,
@@ -49,9 +48,6 @@ from werkzeug.security import (
     check_password_hash
 )
 
-# NEW: import bare `cloudinary` here. cloudinary.uploader is
-# imported further below, AFTER cloudinary.config() runs — this
-# order matters for the PythonAnywhere proxy setting to take effect.
 import cloudinary
 
 
@@ -63,13 +59,11 @@ BASE_DIR = os.path.abspath(
     os.path.dirname(__file__)
 )
 
-
 UPLOAD_FOLDER = os.path.join(
     BASE_DIR,
     "static",
     "uploads"
 )
-
 
 ALLOWED_EXTENSIONS = {
     "png",
@@ -79,15 +73,12 @@ ALLOWED_EXTENSIONS = {
     "webp"
 }
 
-
 app = Flask(__name__)
-
 
 app.config["SECRET_KEY"] = os.environ.get(
     "SECRET_KEY",
     "dev-change-me"
 )
-
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     "sqlite:///"
@@ -97,12 +88,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = (
     )
 )
 
-
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
 
 app.config["MAX_CONTENT_LENGTH"] = (
     16 * 1024 * 1024
@@ -110,23 +98,25 @@ app.config["MAX_CONTENT_LENGTH"] = (
 
 
 # ============================================================
-# CLOUDINARY CONFIG (NEW)
+# CLOUDINARY CONFIG
 # ============================================================
 
 cloudinary.config(
-    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    cloud_name=os.environ.get(
+        "CLOUDINARY_CLOUD_NAME"
+    ),
+    api_key=os.environ.get(
+        "CLOUDINARY_API_KEY"
+    ),
+    api_secret=os.environ.get(
+        "CLOUDINARY_API_SECRET"
+    ),
     secure=True,
-    # Only set on PythonAnywhere via .env — required there
-    # so uploads reach api.cloudinary.com through their proxy.
-    # Left unset locally, so local dev is unaffected.
-    api_proxy=os.environ.get("PYTHONANYWHERE_PROXY") or None
+    api_proxy=os.environ.get(
+        "PYTHONANYWHERE_PROXY"
+    ) or None
 )
 
-# IMPORTANT: cloudinary.uploader must be imported AFTER config()
-# runs, or the proxy setting above won't take effect (confirmed
-# via Cloudinary's own docs and testing on PythonAnywhere).
 import cloudinary.uploader
 
 
@@ -139,18 +129,15 @@ GALLERY_PASSWORD = os.environ.get(
     "Ma'am_Carmina"
 )
 
-
 ADMIN_USERNAME = os.environ.get(
     "ADMIN_USERNAME",
     "cafemocha"
 )
 
-
 ADMIN_PASSWORD_PLAIN = os.environ.get(
     "ADMIN_PASSWORD",
     "ianargao"
 )
-
 
 ADMIN_PASSWORD_HASH = os.environ.get(
     "ADMIN_PASSWORD_HASH",
@@ -178,7 +165,6 @@ PH_TIMEZONE = timezone(
 db = SQLAlchemy(
     app
 )
-
 
 os.makedirs(
     UPLOAD_FOLDER,
@@ -272,14 +258,11 @@ class Photo(db.Model):
         primary_key=True
     )
 
-    # CHANGED: nullable=True — old local-disk photos still use this.
-    # New photos leave this empty and use `url` instead.
     filename = db.Column(
         db.String(300),
         nullable=True
     )
 
-    # NEW: Cloudinary secure_url for newly uploaded photos.
     url = db.Column(
         db.String(500),
         nullable=True
@@ -295,11 +278,6 @@ class Photo(db.Model):
 
     @property
     def display_url(self):
-        """
-        NEW: single place templates call to get a photo's src.
-        Prefers Cloudinary url; falls back to the old local file
-        for photos uploaded before this change.
-        """
 
         if self.url:
 
@@ -344,30 +322,22 @@ class VisitorSession(db.Model):
 
             return "0m 0s"
 
-        login_utc = (
-            self.login_time
-        )
+        login_utc = self.login_time
 
         if login_utc.tzinfo is None:
 
-            login_utc = (
-                login_utc.replace(
-                    tzinfo=timezone.utc
-                )
+            login_utc = login_utc.replace(
+                tzinfo=timezone.utc
             )
 
         if self.logout_time:
 
-            end_utc = (
-                self.logout_time
-            )
+            end_utc = self.logout_time
 
             if end_utc.tzinfo is None:
 
-                end_utc = (
-                    end_utc.replace(
-                        tzinfo=timezone.utc
-                    )
+                end_utc = end_utc.replace(
+                    tzinfo=timezone.utc
                 )
 
         else:
@@ -524,11 +494,6 @@ def allowed_file(filename):
 
 
 def upload_to_cloudinary(file):
-    """
-    NEW: uploads a file-like object to Cloudinary and returns
-    its secure (https) URL. Auto-compresses and caps width at
-    1600px so storage/bandwidth credits go further.
-    """
 
     result = cloudinary.uploader.upload(
         file,
@@ -536,7 +501,10 @@ def upload_to_cloudinary(file):
         quality="auto",
         fetch_format="auto",
         transformation=[
-            {"width": 1600, "crop": "limit"}
+            {
+                "width": 1600,
+                "crop": "limit"
+            }
         ]
     )
 
@@ -544,14 +512,6 @@ def upload_to_cloudinary(file):
 
 
 def ph_time(dt):
-
-    """
-    Convert stored UTC datetime
-    to Philippine time.
-
-    Existing SQLite records are
-    stored as naive UTC datetimes.
-    """
 
     if not dt:
 
@@ -568,60 +528,59 @@ def ph_time(dt):
     )
 
 
+@app.template_filter("ph_time")
+def ph_time_filter(dt):
+
+    converted = ph_time(dt)
+
+    return (
+        converted
+        if converted
+        else None
+    )
+
+
+@app.template_filter("ph_datetime")
+def ph_datetime_filter(dt):
+
+    converted = ph_time(dt)
+
+    if not converted:
+
+        return ""
+
+    return converted.strftime(
+        "%B %d, %Y %I:%M %p"
+    )
+
+
 def utc_now_naive():
-
-    """
-    Current UTC time as a naive
-    datetime.
-
-    This keeps compatibility
-    with the existing SQLite
-    DateTime columns.
-    """
 
     return datetime.utcnow()
 
 
 def visitor_duration_display(visit):
 
-    """
-    Calculate the visitor duration.
-
-    Closed session:
-        logout_time - login_time
-
-    Active session:
-        current UTC time - login_time
-    """
-
     if not visit.login_time:
 
         return "0m 0s"
 
-    login_utc = (
-        visit.login_time
-    )
+    login_utc = visit.login_time
 
     if login_utc.tzinfo is None:
 
-        login_utc = (
-            login_utc.replace(
-                tzinfo=timezone.utc
-            )
+        login_utc = login_utc.replace(
+            tzinfo=timezone.utc
         )
 
     if visit.logout_time:
 
-        end_utc = (
-            visit.logout_time
-        )
+        end_utc = visit.logout_time
 
         if end_utc.tzinfo is None:
 
-            end_utc = (
-                end_utc.replace(
-                    tzinfo=timezone.utc
-                )
+            end_utc = end_utc.replace(
+                tzinfo=timezone.utc
             )
 
     else:
@@ -789,9 +748,7 @@ def gallery_login():
 # GALLERY
 # ============================================================
 
-@app.route(
-    "/gallery"
-)
+@app.route("/gallery")
 @gallery_required
 def gallery():
 
@@ -1009,12 +966,12 @@ def add_comment(memory_id):
                 new_comment.body,
 
             "created_at":
-                new_comment.created_at.strftime(
+                ph_time(
+                    new_comment.created_at
+                ).strftime(
                     "%B %d, %Y %I:%M %p"
                 )
-
         }
-
     })
 
 
@@ -1076,9 +1033,7 @@ def memory_detail(memory_id):
 # GALLERY LOGOUT
 # ============================================================
 
-@app.route(
-    "/gallery-logout"
-)
+@app.route("/gallery-logout")
 def gallery_logout():
 
     visit_id = session.get(
@@ -1172,6 +1127,112 @@ def mina_messages():
 
 
 # ============================================================
+# REAL-TIME MESSAGE NOTIFICATION
+# ============================================================
+
+@app.route(
+    "/messages/unread-count"
+)
+@gallery_required
+def unread_message_count():
+
+    latest_admin_message = (
+        Message.query
+        .filter_by(
+            sender="admin"
+        )
+        .order_by(
+            Message.id.desc()
+        )
+        .first()
+    )
+
+    if not latest_admin_message:
+
+        return jsonify({
+            "success": True,
+            "count": 0,
+            "latest_id": 0
+        })
+
+    last_seen_id = session.get(
+        "last_seen_admin_message_id",
+        0
+    )
+
+    try:
+
+        last_seen_id = int(
+            last_seen_id
+        )
+
+    except (
+        TypeError,
+        ValueError
+    ):
+
+        last_seen_id = 0
+
+    unread_count = (
+        Message.query
+        .filter(
+            Message.sender == "admin",
+            Message.id > last_seen_id
+        )
+        .count()
+    )
+
+    return jsonify({
+
+        "success": True,
+
+        "count":
+            unread_count,
+
+        "latest_id":
+            latest_admin_message.id
+
+    })
+
+
+@app.route(
+    "/messages/mark-read",
+    methods=["POST"]
+)
+@gallery_required
+def mark_messages_read():
+
+    latest_admin_message = (
+        Message.query
+        .filter_by(
+            sender="admin"
+        )
+        .order_by(
+            Message.id.desc()
+        )
+        .first()
+    )
+
+    if latest_admin_message:
+
+        session[
+            "last_seen_admin_message_id"
+        ] = latest_admin_message.id
+
+    return jsonify({
+
+        "success": True,
+
+        "latest_id":
+            (
+                latest_admin_message.id
+                if latest_admin_message
+                else 0
+            )
+    })
+
+
+# ============================================================
 # ADMIN LOGIN
 # ============================================================
 
@@ -1228,9 +1289,7 @@ def admin_login():
 # ADMIN LOGOUT
 # ============================================================
 
-@app.route(
-    "/logout"
-)
+@app.route("/logout")
 def admin_logout():
 
     session.pop(
@@ -1249,9 +1308,7 @@ def admin_logout():
 # ADMIN DASHBOARD
 # ============================================================
 
-@app.route(
-    "/admin"
-)
+@app.route("/admin")
 @admin_required
 def admin_dashboard():
 
@@ -1335,7 +1392,6 @@ def admin_visitor_logs():
             "id":
                 visit.id,
 
-            # Day based on Philippine time
             "day":
                 (
                     login_ph.strftime("%A")
@@ -1374,7 +1430,6 @@ def admin_visitor_logs():
 
             "active":
                 visit.logout_time is None
-
         })
 
     return jsonify({
@@ -1383,7 +1438,6 @@ def admin_visitor_logs():
 
         "visits":
             visit_data
-
     })
 
 
@@ -1558,7 +1612,7 @@ def toggle_hide_memory(
     db.session.commit()
 
     flash(
-        "✅ Hide status updated!"
+        "Hide status updated!"
     )
 
     return redirect(
@@ -1569,7 +1623,7 @@ def toggle_hide_memory(
 
 
 # ============================================================
-# UPLOAD (CHANGED: now uploads to Cloudinary)
+# UPLOAD
 # ============================================================
 
 @app.route(
@@ -1617,8 +1671,9 @@ def upload():
                 )
             ):
 
-                # CHANGED: upload to Cloudinary instead of local disk
-                photo_url = upload_to_cloudinary(f)
+                photo_url = (
+                    upload_to_cloudinary(f)
+                )
 
                 db.session.add(
                     Photo(
@@ -1658,7 +1713,7 @@ def upload():
 
 
 # ============================================================
-# EDIT MEMORY (CHANGED: new photos go to Cloudinary)
+# EDIT MEMORY
 # ============================================================
 
 @app.route(
@@ -1711,9 +1766,6 @@ def edit_memory(
 
             if photo.id in remove_ids:
 
-                # CHANGED: only touch local disk for old local photos.
-                # Cloudinary photos (photo.filename is None) have
-                # nothing to remove on disk.
                 if photo.filename:
 
                     path = os.path.join(
@@ -1747,8 +1799,9 @@ def edit_memory(
                 )
             ):
 
-                # CHANGED: upload to Cloudinary instead of local disk
-                photo_url = upload_to_cloudinary(f)
+                photo_url = (
+                    upload_to_cloudinary(f)
+                )
 
                 db.session.add(
                     Photo(
@@ -1776,7 +1829,7 @@ def edit_memory(
 
 
 # ============================================================
-# DELETE MEMORY (CHANGED: guard local-file cleanup)
+# DELETE MEMORY
 # ============================================================
 
 @app.route(
@@ -1810,7 +1863,6 @@ def delete_memory(
         memory.photos
     ):
 
-        # CHANGED: only remove from local disk for old local photos.
         if photo.filename:
 
             path = os.path.join(
