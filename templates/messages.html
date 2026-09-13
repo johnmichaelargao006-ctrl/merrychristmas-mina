@@ -1,767 +1,1385 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Messages</title>
+<title>A Little Note</title>
 
 <link rel="icon"
       type="image/png"
       href="{{ url_for('static', filename='uploads/maam-carmina-logo.png') }}">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+      rel="stylesheet">
+
 <style>
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-:root{
-  --pink-deep:#b84075;
-  --pink-accent:#d65890;
-  --pink-light:#ff7eb8;
+:root {
+    --pink-deep: #b84075;
+    --pink-accent: #d65890;
+    --pink-light: #ff7eb8;
 }
 
-body{
-  min-height:100vh;
-  font-family:'Segoe UI',sans-serif;
-  background:linear-gradient(
-    135deg,
-    #ead0da 0%,
-    #d9b5c4 45%,
-    #c89cad 100%
-  );
-  margin:0;
-  padding:0;
-  position:relative;
-  overflow-x:hidden;
-  color:#1f1f1f;
+/* =========================
+   BODY
+========================= */
+
+body {
+    min-height: 100vh;
+
+    font-family: "Segoe UI", sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ead0da 0%,
+            #d9b5c4 45%,
+            #c89cad 100%
+        );
+
+    color: #1f1f1f;
+
+    margin: 0;
+    padding: 0;
+
+    overflow-x: hidden;
 }
 
-.monitor-top{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:40px;
-  background:#000;
-  z-index:10;
+
+/* =========================
+   BLACK DEVICE BARS
+========================= */
+
+.monitor-top {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 40px;
+
+    background: #000;
+
+    z-index: 100;
 }
 
-.monitor-bottom{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  height:60px;
-  background:#000;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 40px;
+
+.monitor-bottom {
+    position: fixed;
+
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 60px;
+
+    background: #000;
+
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 40px;
 }
 
-.home-button{
-  width:36px;
-  height:36px;
-  background:#e0e0e0;
-  border-radius:50%;
-  margin:0 auto;
-  box-shadow:inset 0 0 4px rgba(0,0,0,.3);
+
+.home-button {
+    width: 36px;
+    height: 36px;
+
+    background: #e0e0e0;
+
+    border-radius: 50%;
+
+    margin: 0 auto;
+
+    box-shadow:
+        inset 0 0 4px rgba(0,0,0,.3);
 }
 
-.dog-icon{
-  font-size:32px;
+
+.dog-icon {
+    font-size: 32px;
 }
 
-.screen-content{
-  margin:40px 0 60px;
-  min-height:calc(100vh - 100px);
-  background:linear-gradient(
-    135deg,
-    #f1d5df,
-    #e4bfcc
-  );
-  background-size:cover;
-  background-position:center;
-  position:relative;
-  padding:40px 20px;
+
+/* =========================
+   MAIN SCREEN
+========================= */
+
+.screen-content {
+
+    position: relative;
+
+    margin: 40px 0 60px;
+
+    min-height: calc(100vh - 100px);
+
+    padding: 35px 25px 30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f1d5df,
+            #e4bfcc
+        );
+
+    overflow: hidden;
 }
 
-.screen-content::before{
-  content:'';
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background-image:radial-gradient(
-    #b96f8e 1px,
-    transparent 1px
-  );
-  background-size:30px 30px;
-  opacity:.22;
-  z-index:0;
-  pointer-events:none;
+
+/* Background dots */
+
+.screen-content::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background-image:
+        radial-gradient(
+            #b96f8e 1px,
+            transparent 1px
+        );
+
+    background-size: 30px 30px;
+
+    opacity: .22;
+
+    pointer-events: none;
 }
 
-.container{
-  position:relative;
-  z-index:1;
-  max-width:500px;
-  margin:0 auto;
+
+/* =========================
+   FULL WIDTH CONTAINER
+========================= */
+
+.container {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    max-width: none;
+
+    margin: 0 auto;
 }
 
-.header-title{
-  text-align:center;
-  margin-bottom:30px;
+
+/* =========================
+   HEADER
+========================= */
+
+.header-title {
+
+    text-align: center;
+
+    margin-bottom: 25px;
 }
 
-.header-title .dots{
-  color:#d65890;
-  letter-spacing:8px;
-  font-size:16px;
-  margin-bottom:8px;
+
+.header-title .dots {
+
+    color: var(--pink-accent);
+
+    letter-spacing: 8px;
+
+    font-size: 16px;
+
+    margin-bottom: 6px;
 }
 
-.header-title h1{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  font-size:28px;
-  color:#802b54;
-  margin-bottom:5px;
+
+.header-title h1 {
+
+    font-family: "Playfair Display", serif;
+
+    font-style: italic;
+
+    font-size: 36px;
+
+    color: #802b54;
+
+    margin-bottom: 5px;
 }
 
-.header-title p{
-  font-size:14px;
-  color:#996680;
-  font-style:italic;
+
+.header-title p {
+
+    font-size: 14px;
+
+    color: #996680;
+
+    font-style: italic;
 }
 
-.message-box{
-  background:#fff9f5;
-  border-radius:16px;
-  box-shadow:0 8px 30px rgba(184,64,117,.2);
-  overflow:hidden;
-  border:2px solid #000;
-  transition:
-    background .3s ease,
-    border-color .3s ease,
-    box-shadow .3s ease;
+
+/* =========================
+   MESSAGE BOX
+========================= */
+
+.message-box {
+
+    width: 100%;
+
+    height: calc(100vh - 235px);
+
+    min-height: 500px;
+
+    background: rgba(255, 249, 245, .92);
+
+    border-radius: 20px;
+
+    border: 2px solid #000;
+
+    box-shadow:
+        0 8px 30px rgba(184,64,117,.2);
+
+    overflow: hidden;
+
+    display: flex;
+
+    flex-direction: column;
+
+    transition:
+        background .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
 }
 
-.messages-area{
-  padding:25px;
-  height:400px;
-  overflow-y:auto;
-  display:flex;
-  flex-direction:column;
-  gap:16px;
+
+/* =========================
+   MESSAGE AREA
+========================= */
+
+.messages-area {
+
+    flex: 1;
+
+    min-height: 0;
+
+    padding: 30px 38px;
+
+    overflow-y: auto;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+
+    scroll-behavior: smooth;
 }
 
-.message-left{
-  align-self:flex-start;
-  background:#f2e5e9;
-  color:#4d2e3c;
-  padding:10px 14px;
-  border-radius:16px 16px 16px 4px;
-  max-width:75%;
+
+/* =========================
+   MESSAGE BUBBLES
+========================= */
+
+.message-left {
+
+    align-self: flex-start;
+
+    background: #f2e5e9;
+
+    color: #4d2e3c;
+
+    padding: 14px 18px;
+
+    border-radius:
+        18px
+        18px
+        18px
+        5px;
+
+    max-width: 65%;
+
+    min-width: 180px;
+
+    box-shadow:
+        0 3px 10px rgba(0,0,0,.05);
 }
 
-.message-right{
-  align-self:flex-end;
-  background:linear-gradient(
-    135deg,
-    #d65890,
-    #b84075
-  );
-  color:#fff;
-  padding:10px 14px;
-  border-radius:16px 16px 4px 16px;
-  max-width:75%;
+
+.message-right {
+
+    align-self: flex-end;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d65890,
+            #b84075
+        );
+
+    color: white;
+
+    padding: 14px 18px;
+
+    border-radius:
+        18px
+        18px
+        5px
+        18px;
+
+    max-width: 65%;
+
+    min-width: 180px;
+
+    box-shadow:
+        0 4px 12px rgba(184,64,117,.2);
 }
 
-.message-text{
-  font-size:15px;
-  margin-bottom:4px;
-  word-wrap:break-word;
+
+/* Message text */
+
+.message-text {
+
+    font-size: 16px;
+
+    line-height: 1.55;
+
+    margin-bottom: 5px;
+
+    word-wrap: break-word;
+
+    overflow-wrap: anywhere;
+
+    white-space: pre-wrap;
 }
 
-.message-time{
-  font-size:10px;
-  opacity:.7;
+
+/* Timestamp */
+
+.message-time {
+
+    font-size: 10px;
+
+    opacity: .7;
 }
 
-.empty-thread{
-  margin:auto;
-  text-align:center;
-  color:#996680;
-  font-style:italic;
-  font-size:15px;
+
+/* Empty */
+
+.empty-thread {
+
+    margin: auto;
+
+    text-align: center;
+
+    color: #996680;
+
+    font-style: italic;
+
+    font-size: 15px;
 }
 
-.input-area{
-  display:flex;
-  gap:10px;
-  padding:18px 20px;
-  border-top:1px solid #f0e0e6;
-  background:#fff;
-  transition:
-    background .3s ease,
-    border-color .3s ease;
+
+/* =========================
+   SEND AREA
+========================= */
+
+.input-area {
+
+    width: 100%;
+
+    display: flex;
+
+    gap: 12px;
+
+    padding: 18px 22px;
+
+    border-top:
+        1px solid #f0e0e6;
+
+    background: #fff;
+
+    flex-shrink: 0;
 }
 
-.input-area input{
-  flex:1;
-  min-width:0;
-  padding:12px 16px;
-  border:1px solid #f0d9e3;
-  border-radius:24px;
-  font-size:14px;
-  outline:none;
-  background:#fff9fb;
-  color:#222;
+
+.input-area input {
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 14px 18px;
+
+    border:
+        1px solid #f0d9e3;
+
+    border-radius: 28px;
+
+    font-size: 15px;
+
+    outline: none;
+
+    background: #fff9fb;
+
+    color: #222;
+
+    transition:
+        border .2s ease,
+        box-shadow .2s ease;
 }
 
-.input-area input::placeholder{
-  color:#999;
+
+.input-area input::placeholder {
+
+    color: #999;
 }
 
-.input-area input:focus{
-  border-color:#d65890;
+
+.input-area input:focus {
+
+    border-color: var(--pink-accent);
+
+    box-shadow:
+        0 0 8px rgba(214,88,144,.15);
 }
 
-.send-btn{
-  padding:12px 24px;
-  background:linear-gradient(
-    135deg,
-    #d65890,
-    #b84075
-  );
-  color:#fff;
-  border:none;
-  border-radius:24px;
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer;
-  transition:transform .2s ease;
+
+/* =========================
+   SEND BUTTON
+========================= */
+
+.send-btn {
+
+    padding: 13px 30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d65890,
+            #b84075
+        );
+
+    color: white;
+
+    border: none;
+
+    border-radius: 28px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
 }
 
-.send-btn:hover{
-  transform:scale(1.05);
+
+.send-btn:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 15px rgba(184,64,117,.3);
 }
 
-.back-link{
-  text-align:center;
-  margin-top:18px;
+
+.send-btn:active {
+
+    transform: scale(.97);
 }
 
-.back-link a{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:9px 18px;
-  border:1px solid #d65890;
-  border-radius:30px;
-  color:#b84075;
-  background:rgba(255,255,255,.40);
-  font-size:13px;
-  text-decoration:none;
-  font-style:italic;
-  box-shadow:0 3px 12px rgba(184,64,117,.12);
-  transition:
-    background .25s ease,
-    color .25s ease,
-    border-color .25s ease,
-    transform .2s ease,
-    box-shadow .25s ease;
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.back-link {
+
+    text-align: center;
+
+    margin-top: 15px;
 }
 
-.back-link a:hover{
-  background:linear-gradient(
-    135deg,
-    #d65890,
-    #b84075
-  );
-  border-color:#b84075;
-  color:#fff;
-  transform:translateY(-2px);
-  box-shadow:0 6px 18px rgba(184,64,117,.25);
+
+.back-link a {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 9px 20px;
+
+    border:
+        1px solid var(--pink-accent);
+
+    border-radius: 30px;
+
+    color: var(--pink-deep);
+
+    background:
+        rgba(255,255,255,.40);
+
+    font-size: 13px;
+
+    text-decoration: none;
+
+    font-style: italic;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        transform .2s ease;
 }
 
-.messages-area::-webkit-scrollbar{
-  width:6px;
+
+.back-link a:hover {
+
+    background:
+        linear-gradient(
+            135deg,
+            #d65890,
+            #b84075
+        );
+
+    color: white;
+
+    transform: translateY(-2px);
 }
 
-.messages-area::-webkit-scrollbar-thumb{
-  background:#f0d9e3;
-  border-radius:3px;
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.messages-area::-webkit-scrollbar {
+
+    width: 7px;
 }
 
-.heart-bubble{
-  position:fixed;
-  bottom:-60px;
-  width:24px;
-  height:24px;
-  border-radius:50%;
-  background:rgba(255,255,255,.25);
-  border:1px solid rgba(255,255,255,.35);
-  backdrop-filter:blur(5px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-  color:rgba(255,110,170,.85);
-  pointer-events:none;
-  z-index:1;
-  animation:floatHeart linear infinite;
-  box-shadow:0 4px 15px rgba(140,45,90,.15);
+
+.messages-area::-webkit-scrollbar-track {
+
+    background: transparent;
 }
 
-@keyframes floatHeart{
 
-  0%{
-    transform:translateY(0) translateX(0) scale(.8);
-    opacity:0;
-  }
+.messages-area::-webkit-scrollbar-thumb {
 
-  10%{
-    opacity:.8;
-  }
+    background: #e4a7bf;
 
-  50%{
-    transform:translateY(-45vh) translateX(18px) scale(1);
-  }
-
-  100%{
-    transform:translateY(-110vh) translateX(-15px) scale(1.15);
-    opacity:0;
-  }
-
+    border-radius: 10px;
 }
 
-/* Shared dark mode */
 
-body.dark-mode{
-  background:linear-gradient(
-    135deg,
-    #24131d 0%,
-    #321827 45%,
-    #180b13 100%
-  );
-  color:#fff;
+.messages-area::-webkit-scrollbar-thumb:hover {
+
+    background: #d65890;
 }
 
-body.dark-mode .screen-content{
-  background:linear-gradient(
-    135deg,
-    #24131d 0%,
-    #321827 45%,
-    #180b13 100%
-  );
+
+/* =========================
+   FLOATING HEARTS
+========================= */
+
+.heart-bubble {
+
+    position: fixed;
+
+    bottom: -60px;
+
+    width: 24px;
+    height: 24px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.25);
+
+    border:
+        1px solid rgba(255,255,255,.35);
+
+    backdrop-filter: blur(5px);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 12px;
+
+    color:
+        rgba(255,110,170,.85);
+
+    pointer-events: none;
+
+    z-index: 1;
+
+    animation:
+        floatHeart linear infinite;
+
+    box-shadow:
+        0 4px 15px rgba(140,45,90,.15);
 }
 
-body.dark-mode .screen-content::before{
-  background-image:radial-gradient(
-    rgba(255,126,184,.35) 1px,
-    transparent 1px
-  );
-  opacity:.18;
+
+@keyframes floatHeart {
+
+    0% {
+
+        transform:
+            translateY(0)
+            translateX(0)
+            scale(.8);
+
+        opacity: 0;
+    }
+
+    10% {
+
+        opacity: .8;
+    }
+
+    50% {
+
+        transform:
+            translateY(-45vh)
+            translateX(18px)
+            scale(1);
+    }
+
+    100% {
+
+        transform:
+            translateY(-110vh)
+            translateX(-15px)
+            scale(1.15);
+
+        opacity: 0;
+    }
 }
 
-body.dark-mode .header-title .dots{
-  color:#ff7eb8;
+
+/* ==================================================
+   DARK MODE
+================================================== */
+
+body.dark-mode {
+
+    background:
+        linear-gradient(
+            135deg,
+            #24131d 0%,
+            #321827 45%,
+            #180b13 100%
+        );
+
+    color: white;
 }
 
-body.dark-mode .header-title h1{
-  color:#ff8fbe;
-  text-shadow:0 0 12px rgba(255,126,184,.3);
+
+body.dark-mode .screen-content {
+
+    background:
+        linear-gradient(
+            135deg,
+            #24131d 0%,
+            #321827 45%,
+            #180b13 100%
+        );
 }
 
-body.dark-mode .header-title p{
-  color:#f0b6cf;
+
+body.dark-mode .screen-content::before {
+
+    background-image:
+        radial-gradient(
+            rgba(255,126,184,.35) 1px,
+            transparent 1px
+        );
+
+    opacity: .18;
 }
 
-body.dark-mode .message-box{
-  background:rgba(8,8,10,.96);
-  border:2px solid #ff7eb8;
-  box-shadow:
-    0 10px 40px rgba(0,0,0,.65),
-    0 0 18px rgba(255,126,184,.15);
+
+body.dark-mode .header-title .dots {
+
+    color: #ff7eb8;
 }
 
-body.dark-mode .messages-area{
-  background:rgba(5,5,7,.25);
+
+body.dark-mode .header-title h1 {
+
+    color: #ff8fbe;
+
+    text-shadow:
+        0 0 12px rgba(255,126,184,.3);
 }
 
-body.dark-mode .message-left{
-  background:#30232a;
-  color:#f8e8ef;
-  border:1px solid rgba(255,255,255,.08);
+
+body.dark-mode .header-title p {
+
+    color: #f0b6cf;
 }
 
-body.dark-mode .message-right{
-  background:linear-gradient(
-    135deg,
-    #ff6fae,
-    #b84075
-  );
+
+body.dark-mode .message-box {
+
+    background:
+        rgba(8,8,10,.96);
+
+    border:
+        2px solid #ff7eb8;
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.65),
+        0 0 18px rgba(255,126,184,.15);
 }
 
-body.dark-mode .empty-thread{
-  color:#e3a7c2;
+
+body.dark-mode .messages-area {
+
+    background:
+        rgba(5,5,7,.25);
 }
 
-body.dark-mode .input-area{
-  background:#111114;
-  border-top:1px solid rgba(255,126,184,.22);
+
+body.dark-mode .message-left {
+
+    background: #30232a;
+
+    color: #f8e8ef;
+
+    border:
+        1px solid rgba(255,255,255,.08);
 }
 
-body.dark-mode .input-area input{
-  background:#1d1b1f;
-  color:#fff;
-  border:1px solid rgba(255,126,184,.25);
+
+body.dark-mode .message-right {
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff6fae,
+            #b84075
+        );
 }
 
-body.dark-mode .input-area input::placeholder{
-  color:#9d9299;
+
+body.dark-mode .empty-thread {
+
+    color: #e3a7c2;
 }
 
-body.dark-mode .input-area input:focus{
-  border-color:#ff7eb8;
-  box-shadow:0 0 8px rgba(255,126,184,.12);
+
+body.dark-mode .input-area {
+
+    background: #111114;
+
+    border-top:
+        1px solid rgba(255,126,184,.22);
 }
 
-body.dark-mode .back-link a{
-  color:#ff8fbe;
-  background:rgba(255,126,184,.08);
-  border-color:#ff7eb8;
-  box-shadow:0 4px 15px rgba(255,126,184,.1);
+
+body.dark-mode .input-area input {
+
+    background: #1d1b1f;
+
+    color: white;
+
+    border:
+        1px solid rgba(255,126,184,.25);
 }
 
-body.dark-mode .back-link a:hover{
-  background:linear-gradient(
-    135deg,
-    #ff7eb8,
-    #b84075
-  );
-  border-color:#ff7eb8;
-  color:#fff;
+
+body.dark-mode .input-area input::placeholder {
+
+    color: #9d9299;
 }
 
-body.dark-mode .messages-area::-webkit-scrollbar-thumb{
-  background:#5f3048;
+
+body.dark-mode .input-area input:focus {
+
+    border-color: #ff7eb8;
+
+    box-shadow:
+        0 0 8px rgba(255,126,184,.12);
 }
 
-body.dark-mode .heart-bubble{
-  background:rgba(255,126,184,.10);
-  border-color:rgba(255,126,184,.28);
-  color:#ff7eb8;
-  box-shadow:0 4px 18px rgba(255,126,184,.14);
+
+body.dark-mode .back-link a {
+
+    color: #ff8fbe;
+
+    background:
+        rgba(255,126,184,.08);
+
+    border-color:
+        #ff7eb8;
 }
 
-@media (max-width:768px){
 
-  .monitor-top{
-    height:30px;
-  }
+body.dark-mode .back-link a:hover {
 
-  .monitor-bottom{
-    height:50px;
-    padding:0 20px;
-  }
+    background:
+        linear-gradient(
+            135deg,
+            #ff7eb8,
+            #b84075
+        );
 
-  .dog-icon{
-    font-size:24px;
-  }
-
-  .home-button{
-    width:30px;
-    height:30px;
-  }
-
-  .screen-content{
-    margin:30px 0 50px;
-    min-height:calc(100vh - 80px);
-    padding:30px 15px;
-  }
-
-  .messages-area{
-    height:400px;
-    padding:20px 16px;
-  }
-
-  .message-text{
-    font-size:14px;
-  }
-
-  .input-area{
-    padding:15px;
-  }
-
-  .input-area input{
-    font-size:13px;
-  }
-
-  .send-btn{
-    padding:12px 18px;
-    font-size:13px;
-  }
-
+    color: white;
 }
 
-@media (max-width:480px){
 
-  .screen-content{
-    padding:25px 12px;
-  }
+body.dark-mode .messages-area::-webkit-scrollbar-thumb {
 
-  .header-title{
-    margin-bottom:22px;
-  }
+    background: #5f3048;
+}
 
-  .header-title h1{
-    font-size:25px;
-  }
 
-  .header-title p{
-    font-size:12px;
-  }
+body.dark-mode .heart-bubble {
 
-  .messages-area{
-    height:380px;
-    padding:16px 12px;
-  }
+    background:
+        rgba(255,126,184,.10);
 
-  .message-left,
-  .message-right{
-    max-width:84%;
-  }
+    border-color:
+        rgba(255,126,184,.28);
 
-  .message-text{
-    font-size:13px;
-  }
+    color: #ff7eb8;
 
-  .message-time{
-    font-size:9px;
-  }
+    box-shadow:
+        0 4px 18px rgba(255,126,184,.14);
+}
 
-  .input-area{
-    gap:7px;
-    padding:12px;
-  }
 
-  .input-area input{
-    padding:10px 12px;
-    font-size:12px;
-  }
+/* ==================================================
+   TABLET
+================================================== */
 
-  .send-btn{
-    padding:10px 15px;
-    font-size:12px;
-  }
+@media (max-width: 768px) {
 
-  .back-link a{
-    padding:8px 15px;
-    font-size:11px;
-  }
+    .monitor-top {
 
+        height: 30px;
+    }
+
+
+    .monitor-bottom {
+
+        height: 50px;
+
+        padding: 0 20px;
+    }
+
+
+    .dog-icon {
+
+        font-size: 24px;
+    }
+
+
+    .home-button {
+
+        width: 30px;
+        height: 30px;
+    }
+
+
+    .screen-content {
+
+        margin:
+            30px 0 50px;
+
+        min-height:
+            calc(100vh - 80px);
+
+        padding:
+            25px 15px 25px;
+    }
+
+
+    .header-title h1 {
+
+        font-size: 30px;
+    }
+
+
+    .message-box {
+
+        height:
+            calc(100vh - 210px);
+
+        min-height: 450px;
+
+        border-radius: 16px;
+    }
+
+
+    .messages-area {
+
+        padding:
+            22px 20px;
+    }
+
+
+    .message-left,
+    .message-right {
+
+        max-width: 78%;
+    }
+
+
+    .message-text {
+
+        font-size: 14px;
+
+        line-height: 1.5;
+    }
+
+
+    .input-area {
+
+        padding:
+            14px;
+    }
+
+
+    .input-area input {
+
+        font-size: 14px;
+    }
+
+
+    .send-btn {
+
+        padding:
+            12px 22px;
+    }
+}
+
+
+/* ==================================================
+   PHONE
+================================================== */
+
+@media (max-width: 480px) {
+
+    .screen-content {
+
+        padding:
+            20px 10px;
+    }
+
+
+    .header-title {
+
+        margin-bottom: 18px;
+    }
+
+
+    .header-title .dots {
+
+        font-size: 12px;
+
+        letter-spacing: 5px;
+    }
+
+
+    .header-title h1 {
+
+        font-size: 25px;
+    }
+
+
+    .header-title p {
+
+        font-size: 11px;
+    }
+
+
+    .message-box {
+
+        height:
+            calc(100vh - 190px);
+
+        min-height: 400px;
+
+        border-radius: 14px;
+    }
+
+
+    .messages-area {
+
+        padding:
+            18px 12px;
+
+        gap: 12px;
+    }
+
+
+    .message-left,
+    .message-right {
+
+        max-width: 88%;
+
+        min-width: 0;
+
+        padding:
+            11px 13px;
+
+        border-radius: 15px;
+    }
+
+
+    .message-text {
+
+        font-size: 13px;
+
+        line-height: 1.45;
+    }
+
+
+    .message-time {
+
+        font-size: 9px;
+    }
+
+
+    .input-area {
+
+        gap: 7px;
+
+        padding:
+            10px;
+    }
+
+
+    .input-area input {
+
+        padding:
+            10px 12px;
+
+        font-size: 12px;
+    }
+
+
+    .send-btn {
+
+        padding:
+            10px 15px;
+
+        font-size: 12px;
+    }
+
+
+    .back-link {
+
+        margin-top: 10px;
+    }
+
+
+    .back-link a {
+
+        padding:
+            8px 15px;
+
+        font-size: 11px;
+    }
 }
 
 </style>
-
 </head>
+
 
 <body>
 
+
+<!-- TOP BLACK BAR -->
 <div class="monitor-top"></div>
 
+
+<!-- MAIN SCREEN -->
 <div class="screen-content">
 
-  <div class="container">
+    <div class="container">
 
-    <div class="header-title">
 
-      <div class="dots">
-        ✧ ✧ ✧
-      </div>
+        <!-- HEADER -->
+        <div class="header-title">
 
-      <h1>
-        A Little Note
-      </h1>
+            <div class="dots">
+                ✧ ✧ ✧
+            </div>
 
-      <p>
-        Say whatever's on your heart 🤍
-      </p>
+            <h1>
+                A Little Note
+            </h1>
 
-    </div>
-
-    <div class="message-box">
-
-      <div class="messages-area" id="messagesArea">
-
-        {% for msg in thread %}
-
-        <div class="message-{{ 'right' if msg.sender == 'mina' else 'left' }}">
-
-          <div class="message-text">
-            {{ msg.body }}
-          </div>
-
-          <div class="message-time">
-
-            {% if msg.created_at %}
-              {{ msg.created_at|ph_datetime }}
-            {% endif %}
-
-          </div>
+            <p>
+                Say whatever's on your heart 🤍
+            </p>
 
         </div>
 
-        {% else %}
 
-        <p class="empty-thread">
-          Say hello 🤍
-        </p>
+        <!-- MESSAGE BOX -->
+        <div class="message-box">
 
-        {% endfor %}
 
-      </div>
+            <!-- MESSAGES -->
+            <div
+                class="messages-area"
+                id="messagesArea"
+            >
 
-      <form method="POST"
-            action="{{ url_for('mina_messages') }}"
-            class="input-area">
+                {% for msg in thread %}
 
-        <input
-          type="text"
-          name="body"
-          id="messageInput"
-          placeholder="Type a message..."
-          required
-          autocomplete="off">
+                <div
+                    class="message-{{ 'right' if msg.sender == 'mina' else 'left' }}"
+                >
 
-        <button type="submit"
-                class="send-btn">
-          Send
-        </button>
+                    <div class="message-text">
+                        {{ msg.body }}
+                    </div>
 
-      </form>
+                    <div class="message-time">
+
+                        {% if msg.created_at %}
+
+                            {{ msg.created_at.strftime('%b %d, %I:%M %p') }}
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                    <p class="empty-thread">
+                        Say hello 🤍
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- SEND MESSAGE -->
+            <form
+                method="POST"
+                action="{{ url_for('mina_messages') }}"
+                class="input-area"
+            >
+
+                <input
+                    type="text"
+                    name="body"
+                    id="messageInput"
+                    placeholder="Type a message..."
+                    required
+                    autocomplete="off"
+                >
+
+                <button
+                    type="submit"
+                    class="send-btn"
+                >
+                    Send
+                </button>
+
+            </form>
+
+
+        </div>
+
+
+        <!-- BACK BUTTON -->
+        <div class="back-link">
+
+            <a href="{{ url_for('gallery') }}">
+                ← Back to Gallery
+            </a>
+
+        </div>
+
 
     </div>
-
-    <div class="back-link">
-
-      <a href="{{ url_for('gallery') }}">
-        ← Back to Gallery
-      </a>
-
-    </div>
-
-  </div>
 
 </div>
 
+
+<!-- BOTTOM BLACK BAR -->
 <div class="monitor-bottom">
 
-  <span class="dog-icon">
-    🐶
-  </span>
+    <span class="dog-icon">
+        🐶
+    </span>
 
-  <div class="home-button"></div>
+    <div class="home-button"></div>
 
-  <span class="dog-icon">
-    🐕
-  </span>
+    <span class="dog-icon">
+        🐕
+    </span>
 
 </div>
+
 
 <script>
 
+/* ==================================================
+   AUTO-SCROLL TO LATEST MESSAGE
+================================================== */
+
 const messagesArea =
-  document.getElementById('messagesArea');
+    document.getElementById("messagesArea");
 
 if (messagesArea) {
-  messagesArea.scrollTop =
-    messagesArea.scrollHeight;
+
+    messagesArea.scrollTop =
+        messagesArea.scrollHeight;
 }
 
 
-/* Floating hearts */
+/* ==================================================
+   ENTER KEY TO SEND
+================================================== */
+
+const messageInput =
+    document.getElementById("messageInput");
+
+if (messageInput) {
+
+    messageInput.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                const form =
+                    messageInput.closest("form");
+
+                if (form) {
+
+                    form.submit();
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+   FLOATING HEARTS
+================================================== */
 
 for (let i = 0; i < 14; i++) {
 
-  const heart =
-    document.createElement('div');
+    const heart =
+        document.createElement("div");
 
-  heart.className =
-    'heart-bubble';
+    heart.className =
+        "heart-bubble";
 
-  heart.textContent =
-    Math.random() > 0.5 ? '♥' : '♡';
+    heart.textContent =
+        Math.random() > 0.5
+            ? "♥"
+            : "♡";
 
-  const size =
-    18 + Math.random() * 22;
 
-  heart.style.width =
-    size + 'px';
+    const size =
+        18 + Math.random() * 22;
 
-  heart.style.height =
-    size + 'px';
 
-  heart.style.left =
-    Math.random() * 100 + 'vw';
+    heart.style.width =
+        size + "px";
 
-  heart.style.animationDuration =
-    (8 + Math.random() * 10) + 's';
+    heart.style.height =
+        size + "px";
 
-  heart.style.animationDelay =
-    (-Math.random() * 12) + 's';
 
-  heart.style.fontSize =
-    (size * 0.45) + 'px';
+    heart.style.left =
+        Math.random() * 100 + "vw";
 
-  document.body.appendChild(heart);
+
+    heart.style.animationDuration =
+        (8 + Math.random() * 10) + "s";
+
+
+    heart.style.animationDelay =
+        (-Math.random() * 12) + "s";
+
+
+    heart.style.fontSize =
+        (size * 0.45) + "px";
+
+
+    document.body.appendChild(heart);
 
 }
 
 
-/* Follow the same theme chosen in gallery.html */
+/* ==================================================
+   SHARED DARK MODE
+================================================== */
 
 function applySharedTheme() {
 
-  const dark =
-    localStorage.getItem('galleryTheme') === 'dark';
+    const dark =
+        localStorage.getItem("galleryTheme") === "dark";
 
-  document.body.classList.toggle(
-    'dark-mode',
-    dark
-  );
-
+    document.body.classList.toggle(
+        "dark-mode",
+        dark
+    );
 }
+
 
 applySharedTheme();
 
 
 window.addEventListener(
-  'storage',
-  function(event) {
+    "storage",
+    function(event) {
 
-    if (event.key === 'galleryTheme') {
-      applySharedTheme();
+        if (event.key === "galleryTheme") {
+
+            applySharedTheme();
+
+        }
+
     }
-
-  }
 );
 
 </script>
 
-</body>
 
+</body>
 </html>
